@@ -1,0 +1,20 @@
+.flex-container{
+    height: 100%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    
+}
+
+.center-form {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    justify-content: center;
+   // align-content: center;
+}
+
+.justify-content-center{
+    display: flex;
+    justify-content: center;
+}
