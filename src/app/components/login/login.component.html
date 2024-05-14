@@ -1,0 +1,15 @@
+<div class="flex-container">
+  <form class="center-form" [formGroup]="this.loginForm" (ngSubmit)="login()">
+    <div class="justify-content-center"><h2>Login</h2></div>
+
+    <mat-form-field appearance="outline">
+      <input matInput placeholder="Username" [formControlName]="'email'" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <input matInput placeholder="Password" [formControlName]="'password'"/>
+    </mat-form-field>
+    <div class="justify-content-center">
+    <button mat-raised-button color="primary" style="width: 50%;" type="submit">Login</button>
+    </div>
+  </form>
+</div>

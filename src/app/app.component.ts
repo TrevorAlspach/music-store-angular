@@ -10,7 +10,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     RouterOutlet,
     MatToolbarModule,
     RouterLink,
-    RouterLinkActive,
+    RouterLinkActive
+  ],
+  providers: [
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
