@@ -26,5 +26,9 @@ export class AuthService {
         .pipe(shareReplay())
     );
   }
+
+  signupUser(email: string, password: string, username: string){
+    return this.http.post<User>(this.apiBaseUrl + 'auth/signup', {email, password, username, roles:"USER"});
+  }
 }
           

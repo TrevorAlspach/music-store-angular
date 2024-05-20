@@ -32,6 +32,8 @@ export class LoginComponent {
         next: (response: User)=>{
           console.log('logged in');
           console.log(response);
+          //do logic to keep user stored in local storage
+          
         },
          error: (e: HttpErrorResponse) => {
           console.log(e);
