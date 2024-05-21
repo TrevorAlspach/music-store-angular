@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../../models/user.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class LoginComponent {
 
-  constructor(private authService: AuthService, private fb: FormBuilder){
+  constructor(private authService: AuthService, private fb: FormBuilder, private router: Router){
 
   }
 
@@ -32,6 +33,8 @@ export class LoginComponent {
         next: (response: User)=>{
           console.log('logged in');
           console.log(response);
+          this.router.navigate(['/'])
+
           //do logic to keep user stored in local storage
           
         },
