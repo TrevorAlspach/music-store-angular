@@ -17,6 +17,10 @@ export class AuthService {
     //this.apiBaseUrl = this.appConfigService.apiBaseUrl;
   }
 
+  isTokenValid() {
+    return this.http.get<boolean>(this.apiBaseUrl + 'auth/isTokenValid');
+  }
+
   login(email: string, password: string) {
     return (
       this.http
