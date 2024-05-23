@@ -8,7 +8,7 @@ import { AppConfigService } from './app-config.service';
   providedIn: 'root',
 })
 export class AuthService {
-  apiBaseUrl: string = 'http://localhost:8080/';;
+  apiBaseUrl: string = 'http://localhost:8080/';
 
   constructor(
     private http: HttpClient
@@ -29,6 +29,10 @@ export class AuthService {
         // we still need to handle the reception of the token
         .pipe(shareReplay())
     );
+  }
+
+  logout(){
+    return this.http.post<any>(this.apiBaseUrl + 'auth/logout', {});
   }
 
   signupUser(email: string, password: string, username: string){

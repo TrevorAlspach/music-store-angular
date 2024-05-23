@@ -7,7 +7,13 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const authenticated = await firstValueFrom(authService.isTokenValid());
+  let authenticated;
+  await firstValueFrom(authService.isTokenValid()).then((res)=>{
+    authenticated = res;
+  }
+  ).catch((e)=>{
+    authenticated = false;
+  });
   
    if (authenticated) {
     console.log('valid')

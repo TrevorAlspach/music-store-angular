@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { MatButtonModule } from '@angular/material/button';
+import { SongService } from '../../services/song.service';
 
 @Component({
   selector: 'app-home',
@@ -13,13 +14,23 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class HomeComponent {
 
-  constructor(private authService: AuthService){}
+  constructor(private authService: AuthService, private songService: SongService, private router: Router){}
 
-  isValid(){
-    this.authService.isTokenValid().subscribe({
+  hitapi(){
+    return this.songService.findSongByNmae('name').subscribe({
       next: (res)=>{
         console.log(res)
       }
-    });
+    })
   }
+
+  logout(){
+    this.authService.logout().subscribe({
+      next: (res)=>{
+        console.log(res);
+        this.router.navigate(["/login"]);
+      }
+    })
+  }
+
 }
