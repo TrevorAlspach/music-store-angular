@@ -18,7 +18,7 @@
   <mat-sidenav-container class="example-container" autosize>
   <mat-sidenav #drawer class="example-sidenav" mode="side">
     <mat-nav-list  *ngFor="let route of routeLinks">
-        <mat-list-item>
+        <mat-list-item [routerLink]="route.link">
           <mat-icon
             matListItemIcon
           >
@@ -33,7 +33,7 @@
   </mat-sidenav>
 
   <div class="example-sidenav-content">
-    Content
+    <router-outlet></router-outlet>
   </div>
 
 </mat-sidenav-container>

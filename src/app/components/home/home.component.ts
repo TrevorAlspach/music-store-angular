@@ -28,15 +28,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDividerModule,
     MatSidenavModule,
     MatListModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
   public routeLinks = [
-    { link: 'about', name: 'About', icon: 'dashboard' },
-    { link: 'locations', name: 'Locations', icon: 'account_balance' },
+    { link: '', name: 'Home', icon: 'home' },
+    { link: 'playlists', name: 'My Playlists', icon: 'library_music' },
+    { link: 'sync', name: 'Sync', icon: 'sync_alt' },
   ];
   public isExpanded = false;
 
