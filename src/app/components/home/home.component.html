@@ -1,12 +1,51 @@
  <mat-toolbar  color="primary" [class.mat-elevation-z20]="true" style="position: sticky !important; top: 0">
-    <span>Music Store</span>
+    <button mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>
+      Music Store
+    </span>
     <span class="example-spacer"></span>
     <nav class="right-button-padding">
     <!-- <a class="toolbar-button" (click)="scrollToTop()">Home</a>  -->
     <!-- <a routerLink="login" routerLinkActive="active"  class="toolbar-button portfolio-font">Login</a>
     <a routerLink="signup" routerLinkActive="active"  class="toolbar-button">Signup</a>  -->
-    <button mat-button class="toolbar-button" (click)="logout()">Log Out</button>
+   <!--  <button mat-button class="toolbar-button" (click)="logout()">Log Out</button> -->
+    <button mat-button class="toolbar-button" [matMenuTriggerFor]="menu">Account</button>
     </nav>
   </mat-toolbar>
 
-  <button mat-button (click)="hitapi()">button</button>
+  <mat-sidenav-container class="example-container" autosize>
+  <mat-sidenav #drawer class="example-sidenav" mode="side">
+    <mat-nav-list  *ngFor="let route of routeLinks">
+        <mat-list-item>
+          <mat-icon
+            matListItemIcon
+          >
+            {{ route.icon }}</mat-icon
+          >
+          <div matListItemTitle>{{ route.name }}</div>
+          
+          </mat-list-item>
+        
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <div class="example-sidenav-content">
+    Content
+  </div>
+
+</mat-sidenav-container>
+
+  <mat-menu #menu="matMenu" xPosition="before">
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+    <span>Settings</span></button>
+    <mat-divider></mat-divider>
+     <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+    <span>Logout</span></button>
+  </mat-menu>
+
+ <!--  <button mat-button (click)="hitapi()">button</button> -->

@@ -9,7 +9,7 @@ export class SongService {
 
   constructor(private http: HttpClient) {}
 
-  findSongByNmae(name: string) {
+  findSongByName(name: string) {
     return this.http.get<any>(this.apiBaseUrl + "api/song/findByName?name=123");
   }
 }
