@@ -6,6 +6,7 @@ import { User } from '../../models/user.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -20,7 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './signup.component.scss',
 })
 export class SignupComponent {
-  constructor(private authService: AuthService, private fb: FormBuilder) {}
+  constructor(private authService: AuthService, private fb: FormBuilder, private router: Router) {}
 
   signupForm: FormGroup = this.fb.group({
     email: [null, [Validators.required, Validators.email]],
@@ -41,6 +42,7 @@ export class SignupComponent {
           next: (response: User) => {
             console.log('signed up ');
             console.log(response);
+            this.router.navigate(["login"])
           },
           error: (e: HttpErrorResponse) => {
             console.log(e);

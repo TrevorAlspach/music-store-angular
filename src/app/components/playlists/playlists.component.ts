@@ -3,11 +3,12 @@ import { PlaylistsService } from '../../services/playlists.service';
 import { Playlist } from '../../models/music.model';
 import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-playlists',
   standalone: true,
-  imports: [CommonModule, MatListModule],
+  imports: [CommonModule, MatListModule, MatButtonModule],
   templateUrl: './playlists.component.html',
   styleUrl: './playlists.component.scss'
 })
