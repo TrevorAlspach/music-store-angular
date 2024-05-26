@@ -1,1 +1,11 @@
-<p>playlists works!</p>
+<button (click)="this.getPlaylistsForUser()">get all</button>
+
+<button mat-button (click)="this.createPlaylist()">create test</button>
+
+<mat-list >
+    <mat-list-item *ngFor="let playlist of this.playlists">
+        {{playlist.name}} {{"songs: "}} {{ playlist.songs.length}}
+    </mat-list-item>
+</mat-list>
+
+
