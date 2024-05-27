@@ -35,7 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class HomeComponent {
   public routeLinks = [
-    { link: '', name: 'Home', icon: 'home' },
+    { link: 'dashboard', name: 'Home', icon: 'home' },
     { link: 'playlists', name: 'My Playlists', icon: 'library_music' },
     { link: 'sync', name: 'Sync', icon: 'sync_alt' },
   ];

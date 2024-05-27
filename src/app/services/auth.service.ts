@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { shareReplay } from 'rxjs';
 import { AppConfigService } from './app-config.service';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  apiBaseUrl: string = 'http://localhost:8080/';
+  apiBaseUrl = environment.apiBaseUrl;
 
   constructor(
     private http: HttpClient
