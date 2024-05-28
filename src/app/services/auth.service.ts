@@ -12,9 +12,8 @@ export class AuthService {
   apiBaseUrl = environment.apiBaseUrl;
 
   constructor(
-    private http: HttpClient
-  ) //private appConfigService: AppConfigService
-  {
+    private http: HttpClient //private appConfigService: AppConfigService
+  ) {
     //this.apiBaseUrl = this.appConfigService.apiBaseUrl;
   }
 
@@ -32,12 +31,30 @@ export class AuthService {
     );
   }
 
-  logout(){
+  logout() {
     return this.http.post<any>(this.apiBaseUrl + 'auth/logout', {});
   }
 
-  signupUser(email: string, password: string, username: string){
-    return this.http.post<User>(this.apiBaseUrl + 'auth/signup', {email, password, username, roles:"USER"});
+  signupUser(email: string, password: string, username: string) {
+    return this.http.post<User>(this.apiBaseUrl + 'auth/signup', {
+      email,
+      password,
+      username,
+      roles: 'USER',
+    });
+  }
+
+  getSpotifyRefreshToken() {
+    return this.http.get<any>(this.apiBaseUrl + 'api/user/spotifyRefreshToken');
+  }
+
+  updateSpotifyRefreshToken(token : string){
+     return this.http.post<any>(
+       this.apiBaseUrl + 'api/user/spotifyRefreshToken',
+       {
+        token: token
+       }
+     );
   }
 }
           

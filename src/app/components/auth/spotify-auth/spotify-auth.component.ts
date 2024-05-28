@@ -39,7 +39,7 @@ export class SpotifyAuthComponent implements OnInit {
             next: (response)=>{
               console.log(response);
               //store access token
-              localStorage.setItem("spotify_access_token", response['access_token'])
+              localStorage.setItem("spotify_access_token", response['access_token']);
               this.successfulAuth = true;
             },
             error: (e: HttpErrorResponse) =>{

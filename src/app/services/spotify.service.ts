@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class SpotifyService {
   readonly authUrl = new URL(environment.spotifyAuthUrl);
   readonly tokenUrl = environment.spotifyTokenUrl
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   async getAuthorizationCode() {
     const codeVerifier = this.generateRandomString(64);
