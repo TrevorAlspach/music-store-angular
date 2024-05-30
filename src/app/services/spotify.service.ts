@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { AuthService } from './auth.service';
+import { Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
+import { SpotifyUser, TokenResponse } from '../models/spotify-auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +14,120 @@ export class SpotifyService {
 
   readonly scope = 'user-read-private user-read-email';
   readonly authUrl = new URL(environment.spotifyAuthUrl);
-  readonly tokenUrl = environment.spotifyTokenUrl
+  readonly tokenUrl = environment.spotifyTokenUrl;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
+
+  getUserProfile(): Observable<SpotifyUser> {
+    return this.http
+      .get<any>('https://api.spotify.com/v1/me', {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${this.getStoredAccessToken()}`,
+        }),
+      })
+      .pipe(
+        catchError((error) => {
+          if (error.status === HttpStatusCode.Unauthorized) {
+            return this.authService.getSpotifyRefreshToken().pipe(
+              switchMap((tokenResponse) => {
+                const refreshToken = tokenResponse.token;
+                return this.refreshAccessToken(refreshToken);
+              }),
+              switchMap(()=> {
+                console.log('access token here is' + this.getStoredAccessToken())
+                return this.http.get<any>('https://api.spotify.com/v1/me', {
+                  headers: new HttpHeaders({
+                    Authorization: `Bearer ${this.getStoredAccessToken()}`,
+                  }),
+                });
+              }),
+              catchError(err =>{
+                if (err.status === HttpStatusCode.Unauthorized || err.status === HttpStatusCode.BadRequest){
+                  //this.getAuthorizationCode();
+                  console.log(err)
+                }
+                return throwError(err);
+              })
+            );
+          }
+          return throwError(error);
+        })
+      );
+  }
+
+    getAccessToken(authCode: string) {
+    const codeVerifier = localStorage.getItem('code_verifier') as string;
+
+    const body = new URLSearchParams();
+    body.set('client_id', this.clientId);
+    body.set('grant_type', 'authorization_code');
+    body.set('code', authCode);
+    body.set('redirect_uri', this.redirectUri);
+    body.set('code_verifier', codeVerifier);
+
+    return this.http
+      .post<any>(this.tokenUrl, body.toString(), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+      .pipe(
+        switchMap((response) =>
+          this.storeAccessAndRefreshToken(
+            response['access_token'],
+            response['refresh_token']
+          ).pipe(switchMap(() => of(response)))
+        )
+      );
+  } 
+
+  refreshAccessToken(refreshToken: string) {
+    const body = new URLSearchParams();
+    body.set('grant_type', 'refresh_token');
+    body.set('refresh_token', refreshToken);
+    body.set('client_id', this.clientId);
+
+    return this.http
+      .post<any>(this.tokenUrl, body.toString(), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+      .pipe(
+        switchMap((response) => 
+          this.storeAccessAndRefreshToken(
+            response['access_token'],
+            response['refresh_token']
+        ).pipe(switchMap(() => of(response)))
+        )
+      );
+  }
+
+  storeAccessAndRefreshToken(accessToken: string, refreshToken: string) {
+    console.log('storing tokens function')
+    localStorage.setItem('spotify_access_token', accessToken);
+    return this.authService.updateSpotifyRefreshToken(refreshToken);
+  }
+
+  generateRandomString(length: number): string {
+    const possible =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const values = crypto.getRandomValues(new Uint8Array(length));
+    return values.reduce((acc, x) => acc + possible[x % possible.length], '');
+  }
+
+  async sha256(plaintext: string): Promise<ArrayBuffer> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(plaintext);
+    return window.crypto.subtle.digest('SHA-256', data);
+  }
+
+  base64encode(input: ArrayBuffer): string {
+    return btoa(String.fromCharCode(...new Uint8Array(input)))
+      .replace(/=/g, '')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_');
+  }
 
   async getAuthorizationCode() {
     const codeVerifier = this.generateRandomString(64);
@@ -40,46 +153,7 @@ export class SpotifyService {
     //console.log(code)
   }
 
-  getAccessToken(authCode: string) {
-    const codeVerifier = localStorage.getItem('code_verifier') as string;
-
-    const body = new URLSearchParams();
-    body.set('client_id', this.clientId);
-    body.set('grant_type', 'authorization_code')
-    body.set('code', authCode)
-    body.set('redirect_uri', this.redirectUri)
-    body.set('code_verifier', codeVerifier);
-
-    return this.http.post<any>(
-      this.tokenUrl,
-      body.toString(),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    );
+  getStoredAccessToken() {
+    return localStorage.getItem('spotify_access_token');
   }
-
-  generateRandomString(length: number): string {
-    const possible =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const values = crypto.getRandomValues(new Uint8Array(length));
-    return values.reduce((acc, x) => acc + possible[x % possible.length], '');
-  }
-
-  async sha256(plaintext: string): Promise<ArrayBuffer> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(plaintext);
-    return window.crypto.subtle.digest('SHA-256', data);
-  }
-
-  base64encode(input: ArrayBuffer): string {
-    return btoa(String.fromCharCode(...new Uint8Array(input)))
-      .replace(/=/g, '')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_');
-  }
-
-  codeVerifier = this.generateRandomString(64);
 }

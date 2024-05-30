@@ -37,9 +37,10 @@ export class SpotifyAuthComponent implements OnInit {
         if (authCode !== null){
           this.spotifyService.getAccessToken(authCode).subscribe({
             next: (response)=>{
-              console.log(response);
+              console.log('got access token using auth code');
               //store access token
-              localStorage.setItem("spotify_access_token", response['access_token']);
+              //localStorage.setItem("spotify_access_token", response['access_token']);
+              //localStorage.setItem('spotify_token_expired_at',(Date.now()/1000) + response['expires_in']);
               this.successfulAuth = true;
             },
             error: (e: HttpErrorResponse) =>{

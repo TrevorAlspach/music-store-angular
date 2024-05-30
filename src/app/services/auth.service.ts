@@ -4,6 +4,7 @@ import { User } from '../models/user.model';
 import { shareReplay } from 'rxjs';
 import { AppConfigService } from './app-config.service';
 import { environment } from '../../environments/environment.development';
+import { TokenResponse } from '../models/spotify-auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -45,10 +46,11 @@ export class AuthService {
   }
 
   getSpotifyRefreshToken() {
-    return this.http.get<any>(this.apiBaseUrl + 'api/user/spotifyRefreshToken');
+    return this.http.get<TokenResponse>(this.apiBaseUrl + 'api/user/spotifyRefreshToken');
   }
 
   updateSpotifyRefreshToken(token : string){
+    console.log(`updating token with ${token}`)
      return this.http.post<any>(
        this.apiBaseUrl + 'api/user/spotifyRefreshToken',
        {
