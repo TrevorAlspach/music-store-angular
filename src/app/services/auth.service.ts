@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { shareReplay } from 'rxjs';
-import { AppConfigService } from './app-config.service';
 import { environment } from '../../environments/environment.development';
 import { TokenResponse } from '../models/spotify-auth.model';
 
@@ -33,6 +32,7 @@ export class AuthService {
   }
 
   logout() {
+    localStorage.clear();
     return this.http.post<any>(this.apiBaseUrl + 'auth/logout', {});
   }
 
