@@ -2,7 +2,7 @@
     <mat-spinner *ngIf="this.isLoading"></mat-spinner>
     <div *ngIf="!this.isLoading && !this.notAuthorized">
     <mat-card-header>
-        <div mat-card-avatar > <img [src]="this.spotifyUser.images[0].url" alt="Profile Picture"></div>
+        <div mat-card-avatar > <!-- <img [src]="this.spotifyUser.images[0].url" alt="Profile Picture"> --></div>
         <mat-card-title>{{this.spotifyUser.display_name}}</mat-card-title>
         <mat-card-subtitle>{{this.spotifyUser.email}}</mat-card-subtitle>
     </mat-card-header>

@@ -1,11 +1,17 @@
-<button (click)="this.getPlaylistsForUser()">get all</button>
+<!-- <button (click)="this.getPlaylistsForUser()">get all</button>
 
-<button mat-button (click)="this.createPlaylist()">create test</button>
+<button mat-button (click)="this.createPlaylist()">create test</button> -->
 
-<mat-list >
+<!-- <mat-list >
     <mat-list-item *ngFor="let playlist of this.playlists">
         {{playlist.name}} {{"songs: "}} {{ playlist.songs.length}}
     </mat-list-item>
-</mat-list>
+</mat-list> -->
+
+<h1>Spotify Playlists</h1>
+
+<button mat-button (click)="this.getSpotifyPlaylists()">get playlists</button>
+
+<app-playlist-large *ngFor="let playlist of this.spotifyPlaylists" [playlist]="playlist"></app-playlist-large>
 
 

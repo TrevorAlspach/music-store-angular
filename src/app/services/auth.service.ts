@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { shareReplay } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import { TokenResponse } from '../models/spotify-auth.model';
+import { TokenResponse } from '../models/spotify-api.model';
 
 @Injectable({
   providedIn: 'root',

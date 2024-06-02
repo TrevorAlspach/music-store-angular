@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { SpotifyService } from '../../services/spotify.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SpotifyUser } from '../../models/spotify-auth.model';
+import { SpotifyUser } from '../../models/spotify-api.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';

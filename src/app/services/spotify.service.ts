@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { AuthService } from './auth.service';
 import { Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
-import { SpotifyUser, TokenResponse } from '../models/spotify-auth.model';
+import { SpotifyPlaylistsResponse, SpotifyUser, TokenResponse } from '../models/spotify-api.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +17,51 @@ export class SpotifyService {
   readonly tokenUrl = environment.spotifyTokenUrl;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
+
+  getPlaylists(): Observable<SpotifyPlaylistsResponse> {
+    return this.http
+      .get<SpotifyPlaylistsResponse>('https://api.spotify.com/v1/me/playlists', {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${this.getStoredAccessToken()}`,
+        }),
+        params: {
+          limit:10
+        }
+      })
+      .pipe(
+        catchError((error) => {
+          if (error.status === HttpStatusCode.Unauthorized) {
+            return this.authService.getSpotifyRefreshToken().pipe(
+              switchMap((tokenResponse) => {
+                const refreshToken = tokenResponse.token;
+                return this.refreshAccessToken(refreshToken);
+              }),
+              switchMap(() => {
+                console.log(
+                  'access token here is' + this.getStoredAccessToken()
+                );
+                return this.http.get<any>('https://api.spotify.com/v1/me/playlists', {
+                  headers: new HttpHeaders({
+                    Authorization: `Bearer ${this.getStoredAccessToken()}`,
+                  }),
+                });
+              }),
+              catchError((err) => {
+                if (
+                  err.status === HttpStatusCode.Unauthorized ||
+                  err.status === HttpStatusCode.BadRequest
+                ) {
+                  //this.getAuthorizationCode();
+                  console.log(err);
+                }
+                return throwError(err);
+              })
+            );
+          }
+          return throwError(error);
+        })
+      );
+  }
 
   getUserProfile(): Observable<SpotifyUser> {
     return this.http
