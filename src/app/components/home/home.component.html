@@ -1,4 +1,4 @@
- <mat-toolbar  color="primary" [class.mat-elevation-z20]="true" style="position: sticky !important; top: 0;">
+ <mat-toolbar  [class.mat-elevation-z20]="true" style="position: sticky !important; top: 0;">
     <button mat-icon-button (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
@@ -33,7 +33,7 @@
   </mat-sidenav>
 
   <div class="example-sidenav-content">
-    <router-outlet></router-outlet>
+    <router-outlet ></router-outlet>
   </div>
 
 </mat-sidenav-container>

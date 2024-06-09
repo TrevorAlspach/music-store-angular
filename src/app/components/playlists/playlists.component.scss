@@ -1,0 +1,10 @@
+:host {
+    width: 100%;
+}
+
+.grid-playlist-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,200px);
+    gap: 30px;
+    width: 100%
+}

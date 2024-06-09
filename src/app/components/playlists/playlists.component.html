@@ -12,6 +12,11 @@
 
 <button mat-button (click)="this.getSpotifyPlaylists()">get playlists</button>
 
-<app-playlist-large *ngFor="let playlist of this.spotifyPlaylists" [playlist]="playlist"></app-playlist-large>
+<div class="grid-playlist-container">
+    <ng-container *ngFor="let playlist of this.spotifyPlaylists">
+<playlist-large  [playlist]="playlist"></playlist-large>
+</ng-container>
+</div>
+
 
 

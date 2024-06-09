@@ -1,22 +1,34 @@
 @use '@angular/material' as mat;
+@use 'themes/m3-theme.scss' as m3;
+@use 'themes/playlist-large.theme' as playlist-large-theme;
+@use 'themes/login.theme' as login-theme;
+@use 'themes/side-nav.theme' as side-nav-theme;
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 // Define a custom theme
 @include mat.core();
 
-$custom-typography: mat.define-typography-config($font-family: 'Lato, sans-serif',);
+$custom-typography: mat.m2-define-typography-config($font-family: 'Lato, sans-serif',);
 
-$custom-primary: mat.define-palette(mat.$indigo-palette);
-$custom-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-$custom-warn: mat.define-palette(mat.$red-palette);
+/* $custom-primary: mat.m2-define-palette(mat.$m2-indigo-palette);
+$custom-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
+$custom-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-$custom-theme: mat.define-light-theme(
+$custom-theme: mat.m2-define-dark-theme(
     (color: (
         primary: $custom-primary,
         accent: $custom-accent,
         warn: $custom-warn,
         ),
         typography: $custom-typography
-));
+)); */
 
-@include mat.all-component-themes($custom-theme);
+$custom-theme: m3.$dark-theme;
+
+html, body{
+    @include mat.all-component-themes($custom-theme);
+    @include mat.color-variants-backwards-compatibility($custom-theme);
+    @include playlist-large-theme.theme($custom-theme);
+    @include login-theme.theme($custom-theme);
+    @include side-nav-theme.color($custom-theme)
+    }

@@ -1,0 +1,22 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin typography($theme) {
+    .playlist-info{
+        font: mat.get-theme-typography($theme, title-small, font);
+    }
+
+    .playlist-info {
+        font: mat.get-theme-typography($theme, title-small, font);
+    }
+}
+
+@mixin theme($theme) {
+   /*  @if mat.theme-has($theme, color) {
+        @include color($theme);
+    } */
+
+    @if mat.theme-has($theme, typography) {
+        @include typography($theme);
+    }
+}

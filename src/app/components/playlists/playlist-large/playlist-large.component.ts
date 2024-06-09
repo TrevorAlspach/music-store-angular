@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SpotifyImage, SpotifySimplePlaylist } from '../../../models/spotify-api.model';
 
 @Component({
-  selector: 'app-playlist-large',
+  selector: 'playlist-large',
   standalone: true,
   imports: [],
   templateUrl: './playlist-large.component.html',
