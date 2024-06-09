@@ -3,6 +3,8 @@ export type Playlist = {
     name:string;
     songs: Song[];
     source: SourceType
+    imageUrl: string;
+    href: string;  //to get more data from api
 }
 
 export enum SourceType {

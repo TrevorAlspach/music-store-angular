@@ -25,7 +25,7 @@ export class SpotifyService {
           Authorization: `Bearer ${this.getStoredAccessToken()}`,
         }),
         params: {
-          limit:10
+          limit:12
         }
       })
       .pipe(

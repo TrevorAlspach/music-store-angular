@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SpotifyImage, SpotifySimplePlaylist } from '../../../models/spotify-api.model';
+import { Playlist } from '../../../models/music.model';
 
 @Component({
   selector: 'playlist-large',
@@ -10,19 +11,20 @@ import { SpotifyImage, SpotifySimplePlaylist } from '../../../models/spotify-api
 })
 export class PlaylistLargeComponent implements OnInit{
 
-  @Input() playlist!: SpotifySimplePlaylist;
+  //@Input() playlist!: SpotifySimplePlaylist;
+  @Input() playlist!: Playlist;
 
-  imageUrl!: string;
+  //imageUrl!: string;
 
   constructor(){
   }
 
   ngOnInit(): void {
-    if (this.playlist.images && this.playlist.images.length > 0){
+  /*   if (this.playlist.images && this.playlist.images.length > 0){
       this.imageUrl = this.playlist.images[0].url;
     } else {
       
-    }
+    } */
           
   }
 
