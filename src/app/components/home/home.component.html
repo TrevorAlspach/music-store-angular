@@ -1,4 +1,4 @@
- <mat-toolbar  [class.mat-elevation-z20]="true" style="position: sticky !important; top: 0;">
+ <mat-toolbar  [class.mat-elevation-z20]="true" style="position: sticky !important; top: 0;" class="neutral-20">
     <button mat-icon-button (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
@@ -16,7 +16,7 @@
   </mat-toolbar>
 
   <mat-sidenav-container class="example-container" autosize>
-  <mat-sidenav #drawer class="example-sidenav" mode="side">
+  <mat-sidenav #drawer class="example-sidenav neutral-20" mode="side" [class.mat-elevation-z20]="true">
     <mat-nav-list  *ngFor="let route of routeLinks">
         <mat-list-item [routerLink]="route.link">
           <mat-icon

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SpotifyImage, SpotifySimplePlaylist } from '../../../models/spotify-api.model';
 import { Playlist } from '../../../models/music.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'playlist-large',
@@ -16,7 +17,7 @@ export class PlaylistLargeComponent implements OnInit{
 
   //imageUrl!: string;
 
-  constructor(){
+  constructor(private router: Router){
   }
 
   ngOnInit(): void {
@@ -26,6 +27,10 @@ export class PlaylistLargeComponent implements OnInit{
       
     } */
           
+  }
+
+  openPlaylistDetails(){
+    this.router.navigate(['/playlist-details', this.playlist.source, this.playlist.id])
   }
 
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { AuthService } from './auth.service';
 import { Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
-import { SpotifyPlaylistsResponse, SpotifyUser, TokenResponse } from '../models/spotify-api.model';
+import { SpotifyPlaylistResponse, SpotifyPlaylistsResponse, SpotifyUser, TokenResponse } from '../models/spotify-api.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +29,7 @@ export class SpotifyService {
         }
       })
       .pipe(
-        catchError((error) => {
+         catchError((error) => {
           if (error.status === HttpStatusCode.Unauthorized) {
             return this.authService.getSpotifyRefreshToken().pipe(
               switchMap((tokenResponse) => {
@@ -45,6 +45,54 @@ export class SpotifyService {
                     Authorization: `Bearer ${this.getStoredAccessToken()}`,
                   }),
                 });
+              }),
+              catchError((err) => {
+                if (
+                  err.status === HttpStatusCode.Unauthorized ||
+                  err.status === HttpStatusCode.BadRequest
+                ) {
+                  //this.getAuthorizationCode();
+                  console.log(err);
+                }
+                return throwError(err);
+              })
+            );
+          }
+          return throwError(error);
+        }) 
+      );
+  }
+
+  getPlaylistFromId(id:string): Observable<SpotifyPlaylistResponse>{
+    return this.http
+      .get<SpotifyPlaylistResponse>(
+        `https://api.spotify.com/v1/playlists/${id}`,
+        {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${this.getStoredAccessToken()}`,
+          }),
+        }
+      )
+      .pipe(
+        catchError((error) => {
+          if (error.status === HttpStatusCode.Unauthorized) {
+            return this.authService.getSpotifyRefreshToken().pipe(
+              switchMap((tokenResponse) => {
+                const refreshToken = tokenResponse.token;
+                return this.refreshAccessToken(refreshToken);
+              }),
+              switchMap(() => {
+                console.log(
+                  'access token here is' + this.getStoredAccessToken()
+                );
+                return this.http.get<any>(
+                  `https://api.spotify.com/v1/playlists/${id}`,
+                  {
+                    headers: new HttpHeaders({
+                      Authorization: `Bearer ${this.getStoredAccessToken()}`,
+                    }),
+                  }
+                );
               }),
               catchError((err) => {
                 if (
@@ -200,5 +248,40 @@ export class SpotifyService {
 
   getStoredAccessToken() {
     return localStorage.getItem('spotify_access_token');
+  }
+
+  private catchErrorOperator(err: any){
+    return catchError((error) => {
+      if (error.status === HttpStatusCode.Unauthorized) {
+        return this.authService.getSpotifyRefreshToken().pipe(
+          switchMap((tokenResponse) => {
+            const refreshToken = tokenResponse.token;
+            return this.refreshAccessToken(refreshToken);
+          }),
+          switchMap(() => {
+            console.log('access token here is' + this.getStoredAccessToken());
+            return this.http.get<any>(
+              'https://api.spotify.com/v1/me/playlists',
+              {
+                headers: new HttpHeaders({
+                  Authorization: `Bearer ${this.getStoredAccessToken()}`,
+                }),
+              }
+            );
+          }),
+          catchError((err) => {
+            if (
+              err.status === HttpStatusCode.Unauthorized ||
+              err.status === HttpStatusCode.BadRequest
+            ) {
+              //this.getAuthorizationCode();
+              console.log(err);
+            }
+            return throwError(err);
+          })
+        );
+      }
+      return throwError(error);
+    });
   }
 }

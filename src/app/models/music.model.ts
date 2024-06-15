@@ -1,10 +1,15 @@
-export type Playlist = {
+export interface Playlist{
     id?:string;
     name:string;
-    songs: Song[];
+    description?: string;
+    //songs: Song[];
     source: SourceType
     imageUrl: string;
     href: string;  //to get more data from api
+}
+
+export interface PlaylistDetails extends Playlist{
+    songs: Song[];
 }
 
 export enum SourceType {
@@ -14,7 +19,10 @@ export enum SourceType {
 
 export type Song = {
     name: string;
-    artistName: string;
+    artist: string;
+    album: string;
     genre: string;
-    //albumImage:
+    time?: string;
+    image_url?:string;
+    href: string;
 }

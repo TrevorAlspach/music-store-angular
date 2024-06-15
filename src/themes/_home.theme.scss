@@ -1,0 +1,13 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+ @mixin color($theme) {
+    .neutral-20{
+         background-color: mat.get-theme-color($theme, neutral, 20);
+     }
+
+/*      .toolbar-color{
+        background-color: mat.get-theme-color($theme, neutral, 20);
+     } */
+
+ }

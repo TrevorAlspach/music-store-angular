@@ -52,7 +52,6 @@ export class PlaylistsComponent implements OnInit{
           this.spotifyPlaylists.push({
             name: playlist.name,
             id: playlist.id,
-            songs: [],
             source: SourceType.SPOTIFY,
             imageUrl:  imageUrl,
             href: playlist.href

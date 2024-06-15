@@ -1,8 +1,0 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
-
- @mixin color($theme) {
-    .example-sidenav-content {
-         background-color: mat.get-theme-color($theme, neutral, 10);
-     }
- }

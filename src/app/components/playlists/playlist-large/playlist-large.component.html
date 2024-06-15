@@ -1,4 +1,4 @@
-<div class="playlist-container">
+<div class="playlist-container" (click)="this.openPlaylistDetails()">
     <img [src]="this.playlist.imageUrl" class="playlist-cover-image">
     <div class="playlist-info">
         <div style="padding-top: 6px;">{{this.playlist.name}}</div>

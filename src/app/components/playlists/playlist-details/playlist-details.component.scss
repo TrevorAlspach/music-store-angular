@@ -1,0 +1,15 @@
+.playlist-cover-image {
+    width: 250px;
+    border-radius: 5px;
+}
+
+.playlist-info {
+    display: flex;
+    gap: 50px;
+    padding-bottom: 5%;
+}
+
+.playlist-text {
+    display: flex;
+    flex-direction: column;
+}

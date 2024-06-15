@@ -1,0 +1,39 @@
+<mat-spinner *ngIf="this.isLoading"></mat-spinner>
+<div *ngIf="!this.isLoading">
+    
+  <div class="playlist-info">
+    <img [src]="this.playlist.imageUrl" class="playlist-cover-image" />
+    <div class="playlist-text">
+      <h1>{{ this.playlist.name }}</h1>
+      <p>{{ this.playlist.description }}</p>
+      <p>{{ this.playlist.songs.length }}{{ " songs" }}</p>
+    </div>
+  </div>
+
+  <table mat-table class="mat-elevation-z2" [dataSource]="this.playlist.songs">
+    <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let song"> {{song.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="artist">
+    <th mat-header-cell *matHeaderCellDef> Artist </th>
+    <td mat-cell *matCellDef="let song"> {{song.artist}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="album">
+    <th mat-header-cell *matHeaderCellDef> Album </th>
+    <td mat-cell *matCellDef="let song"> {{song.album}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+    <th mat-header-cell *matHeaderCellDef> Time </th>
+    <td mat-cell *matCellDef="let song"> {{song.time}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="songColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: songColumns;"></tr>
+  </table>
+</div>
+
+
