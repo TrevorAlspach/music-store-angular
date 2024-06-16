@@ -1,16 +1,25 @@
 <mat-spinner *ngIf="this.isLoading"></mat-spinner>
 <div *ngIf="!this.isLoading">
+
+  <div class="top-container">
+
+  <button mat-icon-button (click)="returnToPreviousPage()">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
     
+  <div>
   <div class="playlist-info">
     <img [src]="this.playlist.imageUrl" class="playlist-cover-image" />
     <div class="playlist-text">
       <h1>{{ this.playlist.name }}</h1>
       <p>{{ this.playlist.description }}</p>
-      <p>{{ this.playlist.songs.length }}{{ " songs" }}</p>
+      <p>{{ this.playlist.song_count }}{{ " songs" }}</p>
     </div>
   </div>
 
-  <table mat-table class="mat-elevation-z2" [dataSource]="this.playlist.songs">
+  
+
+  <table mat-table  [dataSource]="this.playlist.songs">
     
     <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Song </th>
@@ -38,6 +47,8 @@
     <tr mat-header-row *matHeaderRowDef="songColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: songColumns;"></tr>
   </table>
+  </div>
+  </div>
 </div>
 
 

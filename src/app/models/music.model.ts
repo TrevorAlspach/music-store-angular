@@ -1,5 +1,6 @@
 export interface Playlist{
     id?:string;
+    creator?:string;
     name:string;
     description?: string;
     //songs: Song[];
@@ -10,6 +11,7 @@ export interface Playlist{
 
 export interface PlaylistDetails extends Playlist{
     songs: Song[];
+    song_count:number;
 }
 
 export enum SourceType {

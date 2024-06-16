@@ -2,17 +2,26 @@
     width: 100%;
 }
 
-.grid-playlist-container{
+/* .grid-playlist-container{
     display: grid !important;
     grid-template-columns: repeat(auto-fit,250px);
     //gap: 20px;
     column-gap: 20px;
     width: 80%;
-    justify-content: left;
-}
+    justify-content: center;
+} */
 
-.scrollable-container {
+/* .scrollable-container {
    display: flex;
-   flex-wrap: wrap;
+   //flex-wrap: wrap;
    flex-direction: row;
+   gap:0px
+} */
+
+/* .arrow-button {
+    display: flex;
+   // justify-items: center;
+    align-items: center;
+    height: 250px;
 }
+ */

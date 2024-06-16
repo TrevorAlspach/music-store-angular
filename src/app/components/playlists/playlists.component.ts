@@ -9,78 +9,84 @@ import { SpotifyPlaylistsResponse, SpotifySimplePlaylist } from '../../models/sp
 import { PlaylistLargeComponent } from './playlist-large/playlist-large.component';
 import { map } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 @Component({
   selector: 'app-playlists',
   standalone: true,
-  imports: [CommonModule, MatListModule, MatButtonModule, PlaylistLargeComponent, MatIconModule],
+  imports: [
+    CommonModule,
+    MatListModule,
+    MatButtonModule,
+    PlaylistLargeComponent,
+    MatIconModule,
+    SlickCarouselModule,
+  ],
   templateUrl: './playlists.component.html',
-  styleUrl: './playlists.component.scss'
+  styleUrl: './playlists.component.scss',
 })
-export class PlaylistsComponent implements OnInit{
-  /* playlist: Playlist = {
-    songs: [],
-    name: "ber",
-
-  } */
+export class PlaylistsComponent implements OnInit {
+  slideConfig = { slidesToShow: 6, slidesToScroll: 6 };
 
   playlists: Playlist[] = [];
   spotifyPlaylists: Playlist[] = [];
-  spotifyPlaylistsPage: Playlist[] = []
 
-  musicStorePlaylists: Playlist[] = []
+  musicStorePlaylists: Playlist[] = [];
 
-  constructor(private playlistsService: PlaylistsService, private spotifyService: SpotifyService){
-
-  }
+  constructor(
+    private playlistsService: PlaylistsService,
+    private spotifyService: SpotifyService
+  ) {}
   ngOnInit(): void {
     this.getSpotifyPlaylists();
   }
 
-  getSpotifyPlaylists(){
-    this.spotifyService.getPlaylists().pipe(map(
-      response => response.items
-    )).subscribe({
-      next: (playlists: SpotifySimplePlaylist[])=>{
-        /* console.log(response)
+  getSpotifyPlaylists() {
+    this.spotifyService
+      .getPlaylistsOfLoggedInUser()
+      .pipe(map((response) => response.items))
+      .subscribe({
+        next: (playlists: SpotifySimplePlaylist[]) => {
+          /* console.log(response)
         this.spotifyPlaylists = response.items; */
-        for (let playlist of playlists){
-          let imageUrl:string;
-          if (playlist.images && playlist.images.length > 0){
-            imageUrl = playlist.images[0].url;
-          } else {
-            imageUrl = ''
+          for (let playlist of playlists) {
+            let imageUrl: string;
+            if (playlist.images && playlist.images.length > 0) {
+              imageUrl = playlist.images[0].url;
+            } else {
+              imageUrl = '';
+            }
+
+            this.spotifyPlaylists.push({
+              name: playlist.name,
+              id: playlist.id,
+              source: SourceType.SPOTIFY,
+              imageUrl: imageUrl,
+              href: playlist.href,
+            });
           }
-
-          this.spotifyPlaylists.push({
-            name: playlist.name,
-            id: playlist.id,
-            source: SourceType.SPOTIFY,
-            imageUrl:  imageUrl,
-            href: playlist.href
-          })
-        }
-
-        this.spotifyPlaylistsPage = this.spotifyPlaylists.slice(0, 6)
-      }
-    })
+        },
+      });
   }
 
-
-  getMusicStorePlaylists(){
+  getMusicStorePlaylists() {
     this.playlistsService.fetchAllPlaylistsForUser().subscribe({
-      next: (res)=>{
-        console.log(res)
+      next: (res) => {
+        console.log(res);
         this.playlists = res;
-      }
-    })
+      },
+    });
   }
 
-/*   createPlaylist(){
+  /*   createPlaylist(){
     this.playlistsService.createNewPlaylist(this.playlist).subscribe({
       next: (res) =>{
         console.log(res)
       }
     })
   } */
+
+  slickInit(e: any) {
+    console.log('slick initialized');
+  }
 }

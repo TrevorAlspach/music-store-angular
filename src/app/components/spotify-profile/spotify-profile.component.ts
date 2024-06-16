@@ -17,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class SpotifyProfileComponent implements OnInit{
 
   spotifyUser!: SpotifyUser;
+  profileImageUrl!: string;
   isLoading = true;
   notAuthorized = false;
 
@@ -26,7 +27,14 @@ export class SpotifyProfileComponent implements OnInit{
     this.spotifyService.getUserProfile().subscribe({
       next: (res: SpotifyUser)=>{
         this.spotifyUser = res;
-        console.log(res);
+        
+        //let imageUrl: string;
+        if (this.spotifyUser.images && this.spotifyUser.images.length > 0) {
+          this.profileImageUrl = this.spotifyUser.images[0].url;
+        } else {
+          this.profileImageUrl = '';
+        }
+
         this.isLoading = false;
       },
       error: (err: HttpErrorResponse)=>{

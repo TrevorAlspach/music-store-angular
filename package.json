@@ -20,10 +20,13 @@
     "@angular/platform-browser": "^18.0.2",
     "@angular/platform-browser-dynamic": "^18.0.2",
     "@angular/router": "^18.0.2",
+    "@auth0/angular-jwt": "5.2.0",
+    "jquery": "^3.7.1",
+    "ngx-slick-carousel": "^17.0.0",
     "rxjs": "~7.8.0",
+    "slick-carousel": "^1.8.1",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.3",
-    "@auth0/angular-jwt": "5.2.0"
+    "zone.js": "~0.14.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.0.2",

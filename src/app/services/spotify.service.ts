@@ -18,14 +18,14 @@ export class SpotifyService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getPlaylists(): Observable<SpotifyPlaylistsResponse> {
+  getPlaylistsOfLoggedInUser(): Observable<SpotifyPlaylistsResponse> {
     return this.http
       .get<SpotifyPlaylistsResponse>('https://api.spotify.com/v1/me/playlists', {
         headers: new HttpHeaders({
           Authorization: `Bearer ${this.getStoredAccessToken()}`,
         }),
         params: {
-          limit:12
+          limit:100
         }
       })
       .pipe(

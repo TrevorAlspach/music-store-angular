@@ -1,16 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Playlist, PlaylistDetails, Song, SourceType } from '../../../models/music.model';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SpotifyService } from '../../../services/spotify.service';
 import { SpotifyPlaylistResponse, SpotifySimplePlaylist, SpotifyTrackWrapper } from '../../../models/spotify-api.model';
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-playlist-details',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule, MatTableModule],
+  imports: [CommonModule, MatProgressSpinnerModule, MatTableModule, MatIconModule, MatButtonModule],
   templateUrl: './playlist-details.component.html',
   styleUrl: './playlist-details.component.scss'
 })
@@ -30,7 +32,7 @@ export class PlaylistDetailsComponent implements OnInit{
 
   isLoading: boolean = true;
 
-  constructor(private spotifyService: SpotifyService){
+  constructor(private spotifyService: SpotifyService, private location: Location){
 
   }
 
@@ -53,25 +55,34 @@ export class PlaylistDetailsComponent implements OnInit{
           name: playlist.name,
           description: playlist.description,
           id: playlist.id,
-          songs: playlist.tracks.items.map((spotifyTrack: SpotifyTrackWrapper)=>{
-            return <Song>{
-              name: spotifyTrack.track.name,
-              album: spotifyTrack.track.album.name,
-              artist: spotifyTrack.track.artists
-                .map((artist) => {
-                  return artist.name;
-                })
-                .join(', '),
-              time: this.millisToMinutesAndSeconds(spotifyTrack.track.duration_ms),
-              image_url: spotifyTrack.track.album.images[0].url
-            };
-          }),
+          songs: playlist.tracks.items.map(
+            (spotifyTrack: SpotifyTrackWrapper) => {
+              return <Song>{
+                name: spotifyTrack.track.name,
+                album: spotifyTrack.track.album.name,
+                artist: spotifyTrack.track.artists
+                  .map((artist) => {
+                    return artist.name;
+                  })
+                  .join(', '),
+                time: this.millisToMinutesAndSeconds(
+                  spotifyTrack.track.duration_ms
+                ),
+                image_url: spotifyTrack.track.album.images[0].url,
+              };
+            }
+          ),
           imageUrl: imageUrl,
+          song_count: playlist.tracks.total,
           source: SourceType.SPOTIFY,
-          href: playlist.href
-        }
+          href: playlist.href,
+        };
       }
     })
+  }
+
+  returnToPreviousPage(){
+    this.location.back();
   }
 
   millisToMinutesAndSeconds(millis: any) {
