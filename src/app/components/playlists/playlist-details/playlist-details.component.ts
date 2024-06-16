@@ -15,7 +15,7 @@ import { MatTableModule } from '@angular/material/table';
   styleUrl: './playlist-details.component.scss'
 })
 export class PlaylistDetailsComponent implements OnInit{
-  readonly songColumns = ['name', 'artist', 'album', 'time']
+  readonly songColumns = [ 'name', 'artist', 'album', 'time']
 
   @Input() 
   id!: string;
@@ -63,6 +63,7 @@ export class PlaylistDetailsComponent implements OnInit{
                 })
                 .join(', '),
               time: this.millisToMinutesAndSeconds(spotifyTrack.track.duration_ms),
+              image_url: spotifyTrack.track.album.images[0].url
             };
           }),
           imageUrl: imageUrl,

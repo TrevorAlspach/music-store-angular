@@ -13,3 +13,14 @@
     display: flex;
     flex-direction: column;
 }
+
+.table-album-cover {
+    width: 40px;
+    border-radius: 5px;
+}
+
+.song-column {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}

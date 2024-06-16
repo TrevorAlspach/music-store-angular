@@ -3,8 +3,16 @@
 }
 
 .grid-playlist-container{
-    display: grid;
-    grid-template-columns: repeat(auto-fit,200px);
-    gap: 30px;
-    width: 100%
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit,250px);
+    //gap: 20px;
+    column-gap: 20px;
+    width: 80%;
+    justify-content: left;
+}
+
+.scrollable-container {
+   display: flex;
+   flex-wrap: wrap;
+   flex-direction: row;
 }

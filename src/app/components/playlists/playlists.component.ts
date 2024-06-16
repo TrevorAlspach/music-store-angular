@@ -8,11 +8,12 @@ import { SpotifyService } from '../../services/spotify.service';
 import { SpotifyPlaylistsResponse, SpotifySimplePlaylist } from '../../models/spotify-api.model';
 import { PlaylistLargeComponent } from './playlist-large/playlist-large.component';
 import { map } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-playlists',
   standalone: true,
-  imports: [CommonModule, MatListModule, MatButtonModule, PlaylistLargeComponent],
+  imports: [CommonModule, MatListModule, MatButtonModule, PlaylistLargeComponent, MatIconModule],
   templateUrl: './playlists.component.html',
   styleUrl: './playlists.component.scss'
 })
@@ -25,6 +26,8 @@ export class PlaylistsComponent implements OnInit{
 
   playlists: Playlist[] = [];
   spotifyPlaylists: Playlist[] = [];
+  spotifyPlaylistsPage: Playlist[] = []
+
   musicStorePlaylists: Playlist[] = []
 
   constructor(private playlistsService: PlaylistsService, private spotifyService: SpotifyService){
@@ -57,6 +60,8 @@ export class PlaylistsComponent implements OnInit{
             href: playlist.href
           })
         }
+
+        this.spotifyPlaylistsPage = this.spotifyPlaylists.slice(0, 6)
       }
     })
   }

@@ -2,8 +2,12 @@
 
 <h3>Spotify Playlists</h3>
 
+<div class="scrollable-container">
+<button mat-icon-button> <mat-icon>more_vert</mat-icon></button>
 <div class="grid-playlist-container">
-<playlist-large *ngFor="let playlist of this.spotifyPlaylists" [playlist]="playlist"></playlist-large>
+<playlist-large *ngFor="let playlist of this.spotifyPlaylistsPage" [playlist]="playlist"></playlist-large>
+</div>
+<button mat-icon-button> <mat-icon>more_vert</mat-icon></button>
 </div>
 
 <div class="grid-playlist-container">
