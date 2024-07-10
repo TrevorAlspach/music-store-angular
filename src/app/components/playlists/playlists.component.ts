@@ -10,6 +10,7 @@ import { PlaylistLargeComponent } from './playlist-large/playlist-large.componen
 import { map } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-playlists',
@@ -21,6 +22,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     PlaylistLargeComponent,
     MatIconModule,
     SlickCarouselModule,
+    MatCardModule
   ],
   templateUrl: './playlists.component.html',
   styleUrl: './playlists.component.scss',
@@ -47,8 +49,6 @@ export class PlaylistsComponent implements OnInit {
       .pipe(map((response) => response.items))
       .subscribe({
         next: (playlists: SpotifySimplePlaylist[]) => {
-          /* console.log(response)
-        this.spotifyPlaylists = response.items; */
           for (let playlist of playlists) {
             let imageUrl: string;
             if (playlist.images && playlist.images.length > 0) {

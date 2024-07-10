@@ -3,7 +3,7 @@
 
  @mixin color($theme) {
     .login-background {
-        background-color: mat.get-theme-color($theme, secondary, 0);
+        //background-color: mat.get-theme-color($theme, secondary, 0);
     }
 
     .login-title, .link {

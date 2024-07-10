@@ -9,6 +9,7 @@ import { SyncPlaylistsComponent } from './components/sync-playlists/sync-playlis
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SpotifyAuthComponent } from './components/auth/spotify-auth/spotify-auth.component';
 import { PlaylistDetailsComponent } from './components/playlists/playlist-details/playlist-details.component';
+import { TransferPlaylistsComponent } from './components/transfer-playlists/transfer-playlists.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,6 +22,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'playlists', component: PlaylistsComponent },
       { path: 'sync', component: SyncPlaylistsComponent },
+      { path: 'transfer', component: TransferPlaylistsComponent},
       { path: 'spotify-auth', component: SpotifyAuthComponent },
       {path: 'playlist-details/:service/:id', component: PlaylistDetailsComponent}
     ],

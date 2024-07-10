@@ -3,7 +3,8 @@
 
  @mixin color($theme) {
     .neutral-20{
-         background-color: mat.get-theme-color($theme, neutral, 20);
+         background-color: mat.get-theme-color($theme, secondary, 95);
+         //color: mat.get-theme-color($theme, secondary, 100);
      }
 
 /*      .toolbar-color{

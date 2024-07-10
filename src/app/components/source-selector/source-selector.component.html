@@ -1,0 +1,30 @@
+<mat-card
+  id="source"
+  class="playlist-container"
+  style="background-color: gray; width: 500px"
+>
+  <mat-card-header
+    ><mat-card-title>{{ this.title }}</mat-card-title></mat-card-header
+  >
+  <mat-card-actions [align]="'end'" style="margin-top: -50px"
+    ><button mat-icon-button (click)="back()" *ngIf="this.step > 0">
+      <mat-icon>close</mat-icon>
+    </button></mat-card-actions
+  >
+
+  <mat-card-content>
+    <div class="single-button" *ngIf="this.step === 0">
+      <button mat-fab (click)="onInitialAddClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <div>
+      {{'Select '}}{{this.title}}</div>
+    </div>
+
+  <div class="service-selection" *ngIf="this.step === 1">
+      <button mat-button>Apple Music</button>
+      <button mat-button (click)="this.sourceSelected(SourceType.SPOTIFY)">Spotify</button>
+      <button mat-button>Music Store</button>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@use 'themes/m3-theme.scss' as m3;
+@use 'themes/light-m3-theme.scss' as m3;
 @use 'themes/playlist-large.theme' as playlist-large-theme;
 @use 'themes/login.theme' as login-theme;
 @use 'themes/home.theme' as home-theme;
@@ -23,7 +23,7 @@ $custom-theme: mat.m2-define-dark-theme(
         typography: $custom-typography
 )); */
 
-$custom-theme: m3.$dark-theme;
+$custom-theme: m3.$light-theme;
 
 html, body{
     @include mat.all-component-themes($custom-theme);
