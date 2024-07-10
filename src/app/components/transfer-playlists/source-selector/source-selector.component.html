@@ -1,0 +1,47 @@
+<mat-card
+  id="source"
+  class="playlist-container"
+  style="background-color: rgb(218, 209, 209); width: 600px; height: 100% !important;"
+>
+  <mat-card-header
+    ><mat-card-title>{{ this.transferSide }}</mat-card-title></mat-card-header
+  >
+  <mat-card-actions [align]="'end'" style="margin-top: -50px"
+    ><button mat-icon-button (click)="back()" *ngIf="this.step > 0">
+      <mat-icon>close</mat-icon>
+    </button></mat-card-actions
+  >
+
+  <mat-card-content style="height: 100%; display: flex; justify-content: center; align-items: center;">
+    <div class="single-button" *ngIf="this.step === 0">
+      <button mat-fab (click)="onInitialAddClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <div>
+      {{'Select '}}{{this.transferSide}}</div>
+    </div>
+
+  <div class="service-selection" *ngIf="this.step === 1">
+      <!-- <form [formGroup]="serviceSelectionGroup"> -->
+      <button  mat-button [disabled]="otherService===SourceType.APPLE_MUSIC" (click)="this.sourceSelected(SourceType.APPLE_MUSIC)">Apple Music</button>
+      <button  mat-button [disabled]="otherService===SourceType.SPOTIFY" (click)="this.sourceSelected(SourceType.SPOTIFY)">Spotify</button>
+      <button  mat-button [disabled]="otherService===SourceType.MUSIC_STORE" (click)="this.sourceSelected(SourceType.MUSIC_STORE)">Music Store</button>
+      <!-- </form> -->
+    </div>
+
+    <div *ngIf="this.step === 2">
+        <div *ngIf="this.selectedService === SourceType.SPOTIFY" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
+        <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo"> 
+        <h3>Spotify</h3>
+        </div>
+        <div *ngIf="this.selectedService === SourceType.APPLE_MUSIC" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
+        <!-- <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo">  -->
+        <h3>Apple Music</h3>
+        </div>
+        <div *ngIf="this.selectedService === SourceType.MUSIC_STORE" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
+        <!-- <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo">  -->
+        <h3>Music Store</h3>
+        </div>
+    </div>
+  </mat-card-content>
+</mat-card>

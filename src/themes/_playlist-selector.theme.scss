@@ -1,0 +1,15 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin color($theme) {
+
+        .mat-mdc-row .mat-mdc-cell {
+            cursor: pointer;
+            align-content: center !important;
+        }
+    
+        .mat-mdc-row:hover .mat-mdc-cell {
+            background-color: mat.get-theme-color($theme, secondary, 95);
+        }
+
+}

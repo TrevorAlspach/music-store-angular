@@ -16,7 +16,15 @@ export interface PlaylistDetails extends Playlist{
 
 export enum SourceType {
     SPOTIFY="spotify",
-    APPLE_MUSIC="apple_music"
+    APPLE_MUSIC="apple_music",
+    MUSIC_STORE="music_store",
+    NONE="none"
+}
+
+
+export enum TransferSide {
+  SOURCE = 'Source',
+  DESTINATION = 'Destination',
 }
 
 export enum ReleaseType {

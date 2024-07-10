@@ -1,6 +1,20 @@
 <h1>Transfer</h1>
 
 <div class="flex-container">
-  <app-source-selector [title]="'Source'"></app-source-selector>
-  <app-source-selector [title]="'Destination'"></app-source-selector>
+
+<div class="flex-container-source">
+  <app-source-selector [transferSide]="TransferSide.SOURCE"></app-source-selector>
+  <app-source-selector [transferSide]="TransferSide.DESTINATION"></app-source-selector>
 </div>
+
+<div class="flex-container-playlists" style="padding-top: 30px;">
+  
+  <div style="display: flex; flex-direction: column; justify-items: center;">
+    <h2 >Select Playlist</h2>
+  <app-playlist-selector [transferSide]="TransferSide.SOURCE"></app-playlist-selector>
+</div>
+<div style="display: flex; flex-direction: column; justify-items: center;">
+  <h2 >Select Songs to Transfer</h2>
+  <app-song-selector ></app-song-selector>
+  </div>
+ </div>

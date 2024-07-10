@@ -1,0 +1,48 @@
+<div>
+
+    <table mat-table [dataSource]="this.songsDataSource">
+<ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [aria-label]="checkboxLabel()">
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                    [aria-label]="checkboxLabel(row)">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+        <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Song </th>
+    <td mat-cell *matCellDef="let song"> 
+        <div class="song-column">
+        <img [src]="song.image_url" class="table-album-cover">
+        {{song.name}} </div></td>
+    </ng-container>
+
+    <ng-container matColumnDef="artist">
+    <th mat-header-cell *matHeaderCellDef> Artist </th>
+    <td mat-cell *matCellDef="let song"> {{song.artist}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="album">
+    <th mat-header-cell *matHeaderCellDef> Album </th>
+    <td mat-cell *matCellDef="let song"> {{song.album}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+    <th mat-header-cell *matHeaderCellDef> Time </th>
+    <td mat-cell *matCellDef="let song"> {{song.time}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="songColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: songColumns;"></tr>
+    </table>
+
+</div>

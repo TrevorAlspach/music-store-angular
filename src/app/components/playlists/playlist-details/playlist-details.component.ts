@@ -50,7 +50,6 @@ export class PlaylistDetailsComponent implements OnInit{
           imageUrl = '';
         }
 
-        console.log(playlist)
         this.playlist = <PlaylistDetails>{
           name: playlist.name,
           description: playlist.description,

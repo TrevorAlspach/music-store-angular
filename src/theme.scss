@@ -3,6 +3,7 @@
 @use 'themes/playlist-large.theme' as playlist-large-theme;
 @use 'themes/login.theme' as login-theme;
 @use 'themes/home.theme' as home-theme;
+@use 'themes/playlist-selector.theme' as playlist-selector-theme;
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 // Define a custom theme
@@ -30,5 +31,6 @@ html, body{
     @include mat.color-variants-backwards-compatibility($custom-theme);
     @include playlist-large-theme.theme($custom-theme);
     @include login-theme.theme($custom-theme);
-    @include home-theme.color($custom-theme)
+    @include home-theme.color($custom-theme);
+    @include playlist-selector-theme.color($custom-theme);
     }
