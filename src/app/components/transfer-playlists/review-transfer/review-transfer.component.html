@@ -1,0 +1,66 @@
+  <div style="display: flex; flex-direction: row;">
+  <div class="scrollable-table">
+
+    <mat-table [dataSource]="this.songsToTransferSource" >
+
+        <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef> Song </mat-header-cell>
+    <mat-cell *matCellDef="let song"> 
+        <div class="song-column">
+        <img [src]="song.image_url" class="table-album-cover">
+        {{song.name}} </div></mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="artist">
+    <mat-header-cell *matHeaderCellDef> Artist </mat-header-cell>
+    <mat-cell *matCellDef="let song"> {{song.artist}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="album">
+    <mat-header-cell *matHeaderCellDef> Album </mat-header-cell>
+    <mat-cell *matCellDef="let song"> {{song.album}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+    <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
+    <mat-cell *matCellDef="let song"> {{song.time}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="songColumns; sticky:true"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: songColumns;"></mat-row>
+    </mat-table>
+
+</div>
+  <div class="scrollable-table">
+
+    <mat-table [dataSource]="this.destinationSongsSource" >
+
+        <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef> Song </mat-header-cell>
+    <mat-cell *matCellDef="let song"> 
+        <div class="song-column">
+        <img [src]="song.image_url" class="table-album-cover">
+        {{song.name}} </div></mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="artist">
+    <mat-header-cell *matHeaderCellDef> Artist </mat-header-cell>
+    <mat-cell *matCellDef="let song"> {{song.artist}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="album">
+    <mat-header-cell *matHeaderCellDef> Album </mat-header-cell>
+    <mat-cell *matCellDef="let song"> {{song.album}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+    <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
+    <mat-cell *matCellDef="let song"> {{song.time}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="songColumns; sticky:true"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: songColumns;"></mat-row>
+    </mat-table>
+
+</div>
+  </div>

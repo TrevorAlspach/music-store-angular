@@ -1,4 +1,5 @@
 
+<div class="scrollable-table">
 <mat-table mat-table  [dataSource]="this.playlistsDataSource" >
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -16,3 +17,4 @@
     <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: tableColumns;" (click)="rowSelected(row)"></tr>
 </mat-table>
+</div>

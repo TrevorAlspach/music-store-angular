@@ -1,7 +1,9 @@
-<div>
 
-    <table mat-table [dataSource]="this.songsDataSource">
-<ng-container matColumnDef="select">
+<div class="table-wrapper">
+<div class="scrollable-table">
+
+    <mat-table [dataSource]="this.songsDataSource" >
+<!-- <ng-container matColumnDef="select">
     <th mat-header-cell *matHeaderCellDef>
       <mat-checkbox (change)="$event ? toggleAllRows() : null"
                     [checked]="selection.hasValue() && isAllSelected()"
@@ -16,33 +18,42 @@
                     [aria-label]="checkboxLabel(row)">
       </mat-checkbox>
     </td>
-  </ng-container>
+  </ng-container> -->
 
         <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef> Song </th>
-    <td mat-cell *matCellDef="let song"> 
+    <mat-header-cell *matHeaderCellDef> Song </mat-header-cell>
+    <mat-cell *matCellDef="let song"> 
         <div class="song-column">
         <img [src]="song.image_url" class="table-album-cover">
-        {{song.name}} </div></td>
+        {{song.name}} </div></mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="artist">
-    <th mat-header-cell *matHeaderCellDef> Artist </th>
-    <td mat-cell *matCellDef="let song"> {{song.artist}} </td>
+    <mat-header-cell *matHeaderCellDef> Artist </mat-header-cell>
+    <mat-cell *matCellDef="let song"> {{song.artist}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="album">
-    <th mat-header-cell *matHeaderCellDef> Album </th>
-    <td mat-cell *matCellDef="let song"> {{song.album}} </td>
+    <mat-header-cell *matHeaderCellDef> Album </mat-header-cell>
+    <mat-cell *matCellDef="let song"> {{song.album}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="time">
-    <th mat-header-cell *matHeaderCellDef> Time </th>
-    <td mat-cell *matCellDef="let song"> {{song.time}} </td>
+    <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
+    <mat-cell *matCellDef="let song"> {{song.time}} </mat-cell>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="songColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: songColumns;"></tr>
-    </table>
+    <mat-header-row *matHeaderRowDef="songColumns; sticky:true"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: songColumns;"></mat-row>
+    </mat-table>
 
+    <div *ngIf="isLoading" 
+   style="display: flex; justify-content: center; align-items: center; background: white;">
+  <mat-progress-spinner 
+    color="primary" 
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>
+
+</div>
 </div>

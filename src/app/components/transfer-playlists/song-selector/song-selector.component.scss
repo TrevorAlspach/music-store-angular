@@ -8,3 +8,19 @@
     align-items: center;
     gap: 20px;
 }
+
+.scrollable-table{
+    //height: 600px !important;
+    height:60vh;
+    //display: flex;
+    //height: 100%;
+    flex:1;
+    overflow:auto;
+    width: 100%;
+}
+
+/* .table-wrapper{
+    display: flex;
+        flex-direction: column;
+        height: 100%;
+} */

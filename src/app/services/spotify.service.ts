@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { AuthService } from './auth.service';
 import { Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
-import { SpotifyPlaylistResponse, SpotifyPlaylistsResponse, SpotifyUser, TokenResponse } from '../models/spotify-api.model';
+import { SpotifyPlaylistResponse, SpotifyPlaylistsResponse, SpotifyTracksObject, SpotifyUser, TokenResponse } from '../models/spotify-api.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,16 +20,19 @@ export class SpotifyService {
 
   getPlaylistsOfLoggedInUser(): Observable<SpotifyPlaylistsResponse> {
     return this.http
-      .get<SpotifyPlaylistsResponse>('https://api.spotify.com/v1/me/playlists', {
-        headers: new HttpHeaders({
-          Authorization: `Bearer ${this.getStoredAccessToken()}`,
-        }),
-        params: {
-          limit:100
+      .get<SpotifyPlaylistsResponse>(
+        'https://api.spotify.com/v1/me/playlists',
+        {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${this.getStoredAccessToken()}`,
+          }),
+          params: {
+            limit: 100,
+          },
         }
-      })
+      )
       .pipe(
-         catchError((error) => {
+        catchError((error) => {
           if (error.status === HttpStatusCode.Unauthorized) {
             return this.authService.getSpotifyRefreshToken().pipe(
               switchMap((tokenResponse) => {
@@ -40,11 +43,14 @@ export class SpotifyService {
                 console.log(
                   'access token here is' + this.getStoredAccessToken()
                 );
-                return this.http.get<any>('https://api.spotify.com/v1/me/playlists', {
-                  headers: new HttpHeaders({
-                    Authorization: `Bearer ${this.getStoredAccessToken()}`,
-                  }),
-                });
+                return this.http.get<any>(
+                  'https://api.spotify.com/v1/me/playlists',
+                  {
+                    headers: new HttpHeaders({
+                      Authorization: `Bearer ${this.getStoredAccessToken()}`,
+                    }),
+                  }
+                );
               }),
               catchError((err) => {
                 if (
@@ -59,14 +65,62 @@ export class SpotifyService {
             );
           }
           return throwError(error);
-        }) 
+        })
       );
   }
 
-  getPlaylistFromId(id:string): Observable<SpotifyPlaylistResponse>{
+  getPlaylistFromId(id: string): Observable<SpotifyPlaylistResponse> {
     return this.http
       .get<SpotifyPlaylistResponse>(
         `https://api.spotify.com/v1/playlists/${id}`,
+        {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${this.getStoredAccessToken()}`,
+          }),
+        }
+      )
+      .pipe(
+        catchError((error) => {
+          if (error.status === HttpStatusCode.Unauthorized) {
+            return this.authService.getSpotifyRefreshToken().pipe(
+              switchMap((tokenResponse) => {
+                const refreshToken = tokenResponse.token;
+                return this.refreshAccessToken(refreshToken);
+              }),
+              switchMap(() => {
+                console.log(
+                  'access token here is' + this.getStoredAccessToken()
+                );
+                return this.http.get<any>(
+                  `https://api.spotify.com/v1/playlists/${id}`,
+                  {
+                    headers: new HttpHeaders({
+                      Authorization: `Bearer ${this.getStoredAccessToken()}`,
+                    }),
+                  }
+                );
+              }),
+              catchError((err) => {
+                if (
+                  err.status === HttpStatusCode.Unauthorized ||
+                  err.status === HttpStatusCode.BadRequest
+                ) {
+                  //this.getAuthorizationCode();
+                  console.log(err);
+                }
+                return throwError(err);
+              })
+            );
+          }
+          return throwError(error);
+        })
+      );
+  }
+
+  getSongsOfPlaylist(id: string, pageSize: number = 50, offset: number = 0){
+    return this.http
+      .get<SpotifyTracksObject>(
+        `https://api.spotify.com/v1/playlists/${id}/tracks?limit=${pageSize}&offset=${offset}`,
         {
           headers: new HttpHeaders({
             Authorization: `Bearer ${this.getStoredAccessToken()}`,
@@ -126,18 +180,23 @@ export class SpotifyService {
                 const refreshToken = tokenResponse.token;
                 return this.refreshAccessToken(refreshToken);
               }),
-              switchMap(()=> {
-                console.log('access token here is' + this.getStoredAccessToken())
+              switchMap(() => {
+                console.log(
+                  'access token here is' + this.getStoredAccessToken()
+                );
                 return this.http.get<any>('https://api.spotify.com/v1/me', {
                   headers: new HttpHeaders({
                     Authorization: `Bearer ${this.getStoredAccessToken()}`,
                   }),
                 });
               }),
-              catchError(err =>{
-                if (err.status === HttpStatusCode.Unauthorized || err.status === HttpStatusCode.BadRequest){
+              catchError((err) => {
+                if (
+                  err.status === HttpStatusCode.Unauthorized ||
+                  err.status === HttpStatusCode.BadRequest
+                ) {
                   //this.getAuthorizationCode();
-                  console.log(err)
+                  console.log(err);
                 }
                 return throwError(err);
               })
@@ -148,7 +207,7 @@ export class SpotifyService {
       );
   }
 
-    getAccessToken(authCode: string) {
+  getAccessToken(authCode: string) {
     const codeVerifier = localStorage.getItem('code_verifier') as string;
 
     const body = new URLSearchParams();
@@ -172,7 +231,7 @@ export class SpotifyService {
           ).pipe(switchMap(() => of(response)))
         )
       );
-  } 
+  }
 
   refreshAccessToken(refreshToken: string) {
     const body = new URLSearchParams();
@@ -187,17 +246,17 @@ export class SpotifyService {
         },
       })
       .pipe(
-        switchMap((response) => 
+        switchMap((response) =>
           this.storeAccessAndRefreshToken(
             response['access_token'],
             response['refresh_token']
-        ).pipe(switchMap(() => of(response)))
+          ).pipe(switchMap(() => of(response)))
         )
       );
   }
 
   storeAccessAndRefreshToken(accessToken: string, refreshToken: string) {
-    console.log('storing tokens function')
+    console.log('storing tokens function');
     localStorage.setItem('spotify_access_token', accessToken);
     return this.authService.updateSpotifyRefreshToken(refreshToken);
   }
@@ -250,7 +309,7 @@ export class SpotifyService {
     return localStorage.getItem('spotify_access_token');
   }
 
-  private catchErrorOperator(err: any){
+  private catchErrorOperator(err: any) {
     return catchError((error) => {
       if (error.status === HttpStatusCode.Unauthorized) {
         return this.authService.getSpotifyRefreshToken().pipe(

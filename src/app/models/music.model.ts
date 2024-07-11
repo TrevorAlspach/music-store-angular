@@ -40,4 +40,6 @@ export type Song = {
     time?: string;
     image_url?:string;
     href: string;
+    releaseYear:number;
+    
 }

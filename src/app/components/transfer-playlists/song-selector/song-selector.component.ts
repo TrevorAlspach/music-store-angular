@@ -4,22 +4,26 @@ import { Playlist, PlaylistDetails, Song, SourceType } from '../../../models/mus
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TransferPlaylistsService } from '../transfer-playlists.service';
-import { switchMap } from 'rxjs';
+import { expand, reduce, Subscription, switchMap, tap } from 'rxjs';
 import { SpotifyService } from '../../../services/spotify.service';
-import { SpotifyPlaylistResponse, SpotifyTrackWrapper } from '../../../models/spotify-api.model';
+import { SpotifyPlaylistResponse, SpotifyTrack, SpotifyTrackWrapper, SpotifyTracksObject } from '../../../models/spotify-api.model';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-song-selector',
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule],
+  imports: [CommonModule,MatTableModule, MatCheckboxModule, MatProgressSpinnerModule],
   templateUrl: './song-selector.component.html',
   styleUrl: './song-selector.component.scss',
 })
 export class SongSelectorComponent implements OnInit {
-  readonly songColumns = ['select','name', 'artist', 'album', 'time'];
+  readonly songColumns = [/* 'select', */ 'name', 'artist', 'album', 'time'];
+  isLoading = false;
 
   songsDataSource: MatTableDataSource<Song> = new MatTableDataSource();
-  selection = new SelectionModel<Song>(true, []);
+  //selection = new SelectionModel<Song>(true, []);
+  private subscription!: Subscription;
 
   constructor(
     private transferPlaylistsService: TransferPlaylistsService,
@@ -27,45 +31,63 @@ export class SongSelectorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.transferPlaylistsService.selectedPlaylist$
+    this.subscription = this.transferPlaylistsService.selectedPlaylist$
+      .pipe(tap(() => {
+        this.songsDataSource.data = []
+        this.isLoading = true}))
       .pipe(
         switchMap((playlist) =>
-          this.spotifyService.getPlaylistFromId(playlist.id as string)
+          this.getAllSongsOfPlaylist(playlist.id as string)
         )
       )
       .subscribe({
-        next: (playlist: SpotifyPlaylistResponse) => {
-          //console.log(playlist);
-          //this.isLoading = false;
+        next:
+        (allSongs: SpotifyTrackWrapper[]) => {
+          const songs = allSongs.map((spotifyTrack: SpotifyTrackWrapper) => {
+            return <Song>{
+              name: spotifyTrack.track.name,
+              album: spotifyTrack.track.album.name,
+              artist: spotifyTrack.track.artists
+                .map((artist) => {
+                  return artist.name;
+                })
+                .join(', '),
+              time: this.millisToMinutesAndSeconds(
+                spotifyTrack.track.duration_ms
+              ),
+              image_url: spotifyTrack.track.album.images[0].url,
+              releaseYear: this.parseReleaseYearFromSpotifyDateString(spotifyTrack.track.album.release_date)
+            };
+          });
 
-          let imageUrl: string;
-          if (playlist.images && playlist.images.length > 0) {
-            imageUrl = playlist.images[0].url;
-          } else {
-            imageUrl = '';
-          }
-
-          const songs = playlist.tracks.items.map(
-              (spotifyTrack: SpotifyTrackWrapper) => {
-                return <Song>{
-                  name: spotifyTrack.track.name,
-                  album: spotifyTrack.track.album.name,
-                  artist: spotifyTrack.track.artists
-                    .map((artist) => {
-                      return artist.name;
-                    })
-                    .join(', '),
-                  time: this.millisToMinutesAndSeconds(
-                    spotifyTrack.track.duration_ms
-                  ),
-                  image_url: spotifyTrack.track.album.images[0].url,
-                };
-              }
-            ); 
-            
           this.songsDataSource.data = songs;
-          this.selection.select(...this.songsDataSource.data);
-          }});
+          this.transferPlaylistsService.selectedSongs$.next(songs);
+          console.log('All songs:', allSongs);
+          this.isLoading = false;
+        },
+        error:(error) => {
+          console.error('Error:', error);
+        }
+  });
+  }
+
+  getAllSongsOfPlaylist(playlistId: string) {
+    const initialOffset = 0;
+
+    return this.spotifyService
+      .getSongsOfPlaylist(playlistId, 50, initialOffset)
+      .pipe(
+        expand((response) =>
+          response.next
+            ? this.spotifyService.getSongsOfPlaylist(
+                playlistId,
+                50,
+                response.offset + response.limit
+              )
+            : []
+        ),
+        reduce((acc, response) => acc.concat(response.items), [])
+      );
   }
 
   millisToMinutesAndSeconds(millis: any) {
@@ -74,24 +96,7 @@ export class SongSelectorComponent implements OnInit {
     return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
   }
 
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
-    this.selection.select(...this.songsDataSource.data);
-  }
-
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.songsDataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  checkboxLabel(row?: Song): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
+  parseReleaseYearFromSpotifyDateString(releaseDate:string): number{
+    return Number.parseInt(releaseDate.slice(0,3));
   }
 }
