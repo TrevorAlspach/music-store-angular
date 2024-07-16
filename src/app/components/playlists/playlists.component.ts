@@ -30,7 +30,7 @@ import { MatCardModule } from '@angular/material/card';
 export class PlaylistsComponent implements OnInit {
   slideConfig = { slidesToShow: 6, slidesToScroll: 6 };
 
-  playlists: Playlist[] = [];
+  //playlists: Playlist[] = [];
   spotifyPlaylists: Playlist[] = [];
 
   musicStorePlaylists: Playlist[] = [];
@@ -41,6 +41,7 @@ export class PlaylistsComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.getSpotifyPlaylists();
+    this.getMusicStorePlaylists();
   }
 
   getSpotifyPlaylists() {
@@ -73,7 +74,7 @@ export class PlaylistsComponent implements OnInit {
     this.playlistsService.fetchAllPlaylistsForUser().subscribe({
       next: (res) => {
         console.log(res);
-        this.playlists = res;
+        this.musicStorePlaylists = res;
       },
     });
   }

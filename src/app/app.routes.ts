@@ -24,7 +24,7 @@ export const routes: Routes = [
       { path: 'sync', component: SyncPlaylistsComponent },
       { path: 'transfer', component: TransferPlaylistsComponent},
       { path: 'spotify-auth', component: SpotifyAuthComponent },
-      {path: 'playlist-details/:service/:id', component: PlaylistDetailsComponent}
+      {path: 'playlist-details/:source/:id', component: PlaylistDetailsComponent}
     ],
   },
   { path: '**', component: LoginComponent },

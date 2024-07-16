@@ -55,7 +55,7 @@ export class SongSelectorComponent implements OnInit {
               time: this.millisToMinutesAndSeconds(
                 spotifyTrack.track.duration_ms
               ),
-              image_url: spotifyTrack.track.album.images[0].url,
+              imageUrl: spotifyTrack.track.album.images[0].url,
               releaseYear: this.parseReleaseYearFromSpotifyDateString(spotifyTrack.track.album.release_date)
             };
           });

@@ -38,7 +38,7 @@ export type Song = {
     album: string;
     genre: string;
     time?: string;
-    image_url?:string;
+    imageUrl?:string;
     href: string;
     releaseYear:number;
     

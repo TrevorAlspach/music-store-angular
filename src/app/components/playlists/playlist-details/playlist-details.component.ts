@@ -38,6 +38,8 @@ export class PlaylistDetailsComponent implements OnInit{
 
   ngOnInit(){
 
+    if (this.source === SourceType.SPOTIFY){
+
     this.spotifyService.getPlaylistFromId(this.id).subscribe({
       next: (playlist: SpotifyPlaylistResponse)=>{
         console.log(playlist)
@@ -67,7 +69,7 @@ export class PlaylistDetailsComponent implements OnInit{
                 time: this.millisToMinutesAndSeconds(
                   spotifyTrack.track.duration_ms
                 ),
-                image_url: spotifyTrack.track.album.images[0].url,
+                imageUrl: spotifyTrack.track.album.images[0].url,
               };
             }
           ),
@@ -77,7 +79,12 @@ export class PlaylistDetailsComponent implements OnInit{
           href: playlist.href,
         };
       }
-    })
+    });
+  } 
+
+  if (this.source === SourceType.MUSIC_STORE){
+    console.log('music store')
+  }
   }
 
   returnToPreviousPage(){

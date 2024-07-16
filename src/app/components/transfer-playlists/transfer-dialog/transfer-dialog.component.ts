@@ -33,6 +33,6 @@ export class TransferDialogComponent implements OnInit{
   }
 
   ngOnInit(){
-    this.transferPlaylistsService.transferSongs(this.transferPlaylistsService.selectedSource$.value,this.transferPlaylistsService.selectedSongs$.value)
+    this.transferPlaylistsService.transferSongs(this.transferPlaylistsService.selectedDestination$.value,this.transferPlaylistsService.selectedSongs$.value)
   }
 }
