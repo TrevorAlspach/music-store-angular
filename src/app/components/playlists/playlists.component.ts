@@ -64,6 +64,7 @@ export class PlaylistsComponent implements OnInit {
               source: SourceType.SPOTIFY,
               imageUrl: imageUrl,
               href: playlist.href,
+              songCount: playlist.tracks.total
             });
           }
         },

@@ -9,7 +9,11 @@
         }
     
         .mat-mdc-row:hover .mat-mdc-cell {
-            background-color: mat.get-theme-color($theme, secondary, 95);
+            background-color: mat.get-theme-color($theme, secondary, 90);
+        }
+
+        .mat-mdc-table {
+            background-color: rgb(0,0,0,0);
         }
 
 }

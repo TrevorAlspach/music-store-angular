@@ -30,13 +30,13 @@ export class SongSelectorComponent implements OnInit {
     private spotifyService: SpotifyService
   ) {}
 
-  ngOnInit() {
-    this.subscription = this.transferPlaylistsService.selectedPlaylist$
+   ngOnInit() {
+     /*this.subscription = this.transferPlaylistsService.selectedPlaylist$
       .pipe(tap(() => {
         this.songsDataSource.data = []
         this.isLoading = true}))
       .pipe(
-        switchMap((playlist) =>
+        switchMap((playlist: Playlist | null) =>
           this.getAllSongsOfPlaylist(playlist.id as string)
         )
       )
@@ -68,8 +68,8 @@ export class SongSelectorComponent implements OnInit {
         error:(error) => {
           console.error('Error:', error);
         }
-  });
-  }
+  });*/
+   } 
 
   getAllSongsOfPlaylist(playlistId: string) {
     const initialOffset = 0;
@@ -86,7 +86,7 @@ export class SongSelectorComponent implements OnInit {
               )
             : []
         ),
-        reduce((acc, response) => acc.concat(response.items), [])
+        reduce((acc: SpotifyTrackWrapper[], response) => acc.concat(response.items), [])
       );
   }
 

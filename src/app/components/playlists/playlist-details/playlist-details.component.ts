@@ -8,11 +8,13 @@ import { SpotifyPlaylistResponse, SpotifySimplePlaylist, SpotifyTrackWrapper } f
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { PlaylistsService } from '../../../services/playlists.service';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-playlist-details',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule, MatTableModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatProgressSpinnerModule, MatTableModule, MatIconModule, MatButtonModule, MatCardModule],
   templateUrl: './playlist-details.component.html',
   styleUrl: './playlist-details.component.scss'
 })
@@ -32,7 +34,7 @@ export class PlaylistDetailsComponent implements OnInit{
 
   isLoading: boolean = true;
 
-  constructor(private spotifyService: SpotifyService, private location: Location){
+  constructor(private spotifyService: SpotifyService, private location: Location, private playlistsService: PlaylistsService){
 
   }
 
@@ -74,7 +76,7 @@ export class PlaylistDetailsComponent implements OnInit{
             }
           ),
           imageUrl: imageUrl,
-          song_count: playlist.tracks.total,
+          songCount: playlist.tracks.total,
           source: SourceType.SPOTIFY,
           href: playlist.href,
         };
@@ -83,7 +85,13 @@ export class PlaylistDetailsComponent implements OnInit{
   } 
 
   if (this.source === SourceType.MUSIC_STORE){
-    console.log('music store')
+    this.playlistsService.getPlaylist(this.id).subscribe({
+      next: (res: PlaylistDetails)=>{
+        console.log(res)
+        this.playlist = res;
+        this.isLoading = false;
+      }
+    })
   }
   }
 

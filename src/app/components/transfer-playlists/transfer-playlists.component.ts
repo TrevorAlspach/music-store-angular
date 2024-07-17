@@ -18,6 +18,8 @@ import { TransferPlaylistsService } from './transfer-playlists.service';
 })
 export class TransferPlaylistsComponent {
 
+
+
   constructor(private matDialog: MatDialog, private transferPlaylistsService: TransferPlaylistsService){
 
   }
@@ -31,7 +33,7 @@ export class TransferPlaylistsComponent {
     this.matDialog.open(TransferDialogComponent, {
       //minHeight: '80%',
       //minWidth: '90%',
-      minHeight: '300px',
+      minHeight: '400px',
       minWidth: '500px',
       data: {
         total: this.transferPlaylistsService.selectedSongs$.value.length

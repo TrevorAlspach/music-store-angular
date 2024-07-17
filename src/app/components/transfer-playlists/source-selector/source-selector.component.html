@@ -1,31 +1,41 @@
 <mat-card
   id="source"
-  class="playlist-container"
-  style="background-color: rgb(218, 209, 209); width: 600px; height: 100% !important;"
+  class="playlist-container neutral-20"
+  style=" width: 300px; height: 100% !important;"
 >
   <mat-card-header
     ><mat-card-title>{{ this.transferSide }}</mat-card-title></mat-card-header
   >
-  <mat-card-actions [align]="'end'" style="margin-top: -50px"
+  <mat-card-actions [align]="'end'" style="margin-top: -40px"
     ><button mat-icon-button (click)="back()" *ngIf="this.step > 0">
-      <mat-icon>close</mat-icon>
+      <mat-icon>arrow_back</mat-icon>
     </button></mat-card-actions
   >
 
   <mat-card-content style="height: 100%; display: flex; justify-content: center; align-items: center;">
     <div class="single-button" *ngIf="this.step === 0">
-      <button mat-fab (click)="onInitialAddClicked()">
+      <button mat-button (click)="onInitialAddClicked()" >
         <mat-icon>add</mat-icon>
-      </button>
-      <div>
+        <div>
       {{'Select '}}{{this.transferSide}}</div>
+      </button>
+      
     </div>
 
   <div class="service-selection" *ngIf="this.step === 1">
       <!-- <form [formGroup]="serviceSelectionGroup"> -->
-      <button  mat-button [disabled]="otherService===SourceType.APPLE_MUSIC" (click)="this.sourceSelected(SourceType.APPLE_MUSIC)">Apple Music</button>
-      <button  mat-button [disabled]="otherService===SourceType.SPOTIFY" (click)="this.sourceSelected(SourceType.SPOTIFY)">Spotify</button>
-      <button  mat-button [disabled]="otherService===SourceType.MUSIC_STORE" (click)="this.sourceSelected(SourceType.MUSIC_STORE)">Music Store</button>
+      <button  mat-button class="image-button" [disabled]="otherService===SourceType.APPLE_MUSIC" (click)="this.sourceSelected(SourceType.APPLE_MUSIC)">
+        <img src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="spotify-logo">
+        <div>Apple Music</div>
+      </button>
+      <button  mat-button class="image-button" [disabled]="otherService===SourceType.SPOTIFY" (click)="this.sourceSelected(SourceType.SPOTIFY)">
+        <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo">
+        <div>Spotify</div>
+      </button>
+      <button  mat-button class="image-button" [disabled]="otherService===SourceType.MUSIC_STORE" (click)="this.sourceSelected(SourceType.MUSIC_STORE)">
+        <img src="../../../assets/guitar_icon.jpg" class="spotify-logo">
+        <div>Music Store</div>
+      </button>
       <!-- </form> -->
     </div>
 
@@ -35,11 +45,11 @@
         <h3>Spotify</h3>
         </div>
         <div *ngIf="this.selectedService === SourceType.APPLE_MUSIC" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
-        <!-- <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo">  -->
+         <img src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="spotify-logo">
         <h3>Apple Music</h3>
         </div>
         <div *ngIf="this.selectedService === SourceType.MUSIC_STORE" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
-        <!-- <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo">  -->
+        <img src="../../../assets/guitar_icon.jpg" class="spotify-logo">
         <h3>Music Store</h3>
         </div>
     </div>

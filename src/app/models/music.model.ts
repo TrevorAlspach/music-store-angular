@@ -3,15 +3,15 @@ export interface Playlist{
     creator?:string;
     name:string;
     description?: string;
-    //songs: Song[];
-    source: SourceType
+    songCount: number;
+    source: SourceType;
     imageUrl: string;
     href: string;  //to get more data from api
 }
 
 export interface PlaylistDetails extends Playlist{
     songs: Song[];
-    song_count:number;
+    //song_count:number;
 }
 
 export enum SourceType {

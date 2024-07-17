@@ -9,6 +9,8 @@ import { SpotifySimplePlaylist } from '../../../models/spotify-api.model';
 import { Subscription, map } from 'rxjs';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { TransferPlaylistsService } from '../transfer-playlists.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-playlist-selector',
@@ -19,21 +21,27 @@ import { TransferPlaylistsService } from '../transfer-playlists.service';
     MatButtonModule,
     MatIconModule,
     MatTableModule,
+    MatCheckboxModule,
   ],
   templateUrl: './playlist-selector.component.html',
   styleUrl: './playlist-selector.component.scss',
 })
-export class PlaylistSelectorComponent implements OnInit, OnDestroy , AfterViewInit{
+export class PlaylistSelectorComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @Input() sourceType!: SourceType;
 
   @Input() transferSide!: TransferSide;
 
   //playlists: Playlist[] = [];
-  playlistsDataSource: MatTableDataSource<Playlist> = new MatTableDataSource<Playlist>();
+  playlistsDataSource: MatTableDataSource<Playlist> =
+    new MatTableDataSource<Playlist>();
+  selection = new SelectionModel<Playlist>(false, []);
 
   selectedSourceSubscription!: Subscription;
+  sourceSelected = false;
 
-  readonly tableColumns = ['name', 'source'];
+  readonly tableColumns = ['select','name', 'source', 'songCount'];
 
   @ViewChild(MatTable) table!: MatTable<Playlist>;
 
@@ -43,9 +51,7 @@ export class PlaylistSelectorComponent implements OnInit, OnDestroy , AfterViewI
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-      
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     //this.loadPlaylists(this.sourceType);
@@ -54,8 +60,10 @@ export class PlaylistSelectorComponent implements OnInit, OnDestroy , AfterViewI
         this.transferPlaylistsService.selectedSource$.subscribe({
           next: (sourceType: SourceType) => {
             if (sourceType === SourceType.NONE) {
+              this.sourceSelected = false;
               return;
             }
+            this.sourceSelected = true;
             this.loadPlaylists(sourceType);
           },
         });
@@ -66,8 +74,10 @@ export class PlaylistSelectorComponent implements OnInit, OnDestroy , AfterViewI
         this.transferPlaylistsService.selectedDestination$.subscribe({
           next: (sourceType: SourceType) => {
             if (sourceType === SourceType.NONE) {
+              
               return;
             }
+            
             this.loadPlaylists(sourceType);
           },
         });
@@ -75,7 +85,7 @@ export class PlaylistSelectorComponent implements OnInit, OnDestroy , AfterViewI
   }
 
   ngOnDestroy(): void {
-     // this.s
+    // this.s
   }
 
   loadPlaylists(sourceType: SourceType) {
@@ -86,7 +96,7 @@ export class PlaylistSelectorComponent implements OnInit, OnDestroy , AfterViewI
         .pipe(map((response) => response.items))
         .subscribe({
           next: (playlists: SpotifySimplePlaylist[]) => {
-            const mappedPlaylists = []
+            const mappedPlaylists = [];
 
             for (let playlist of playlists) {
               let imageUrl: string;
@@ -102,6 +112,7 @@ export class PlaylistSelectorComponent implements OnInit, OnDestroy , AfterViewI
                 source: SourceType.SPOTIFY,
                 imageUrl: imageUrl,
                 href: playlist.href,
+                songCount: playlist.tracks.total
               });
             }
             this.playlistsDataSource.data = mappedPlaylists;
@@ -111,8 +122,9 @@ export class PlaylistSelectorComponent implements OnInit, OnDestroy , AfterViewI
     }
   }
 
-  rowSelected(row: Playlist){
-    console.log(row)
+  rowSelected(row: Playlist) {
+    //console.log(row);
+    this.selection.toggle(row);
     this.transferPlaylistsService.selectedPlaylist$.next(row);
   }
 

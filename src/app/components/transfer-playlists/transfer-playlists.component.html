@@ -12,12 +12,12 @@
 <div class="flex-container-playlists" style="padding-top: 30px;">
   
   <div style="display: flex; flex-direction: column; justify-items: center; height: 100%;">
-    <h2 >Select Playlist</h2>
+
   <app-playlist-selector [transferSide]="TransferSide.SOURCE"></app-playlist-selector>
 </div>
-<div style="display: flex; flex-direction: column; justify-items: center; height: 100%;">
+<!-- <div style="display: flex; flex-direction: column; justify-items: center; height: 100%;">
   <h2 >Preview</h2>
   <app-song-selector ></app-song-selector>
-  </div>
+  </div> -->
   <button mat-raised-button (click)="openTransferDialog()">Begin Transfer</button>
  </div>

@@ -13,13 +13,14 @@
     <div class="playlist-text">
       <h1>{{ this.playlist.name }}</h1>
       <p>{{ this.playlist.description }}</p>
-      <p>{{ this.playlist.song_count }}{{ " songs" }}</p>
+      <p>{{ this.playlist.songCount }}{{ " songs" }}</p>
       <button mat-button><mat-icon>add</mat-icon>Save to Music Store</button>
     </div>
   </div>
 
   
-
+<mat-card class="neutral-20">
+  <div style="padding: 20px;">
   <table mat-table  [dataSource]="this.playlist.songs">
     
     <ng-container matColumnDef="name">
@@ -49,7 +50,7 @@
   <tr mat-row *matRowDef="let row; columns: songColumns;"></tr>
   </table>
   </div>
-  </div>
+  </mat-card>
 </div>
 
 

@@ -117,7 +117,7 @@ export class SpotifyService {
       );
   }
 
-  getSongsOfPlaylist(id: string, pageSize: number = 50, offset: number = 0){
+  getSongsOfPlaylist(id: string, pageSize: number = 50, offset: number = 0): Observable<SpotifyTracksObject>{
     return this.http
       .get<SpotifyTracksObject>(
         `https://api.spotify.com/v1/playlists/${id}/tracks?limit=${pageSize}&offset=${offset}`,

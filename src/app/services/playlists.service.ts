@@ -14,6 +14,10 @@ export class PlaylistsService {
     return this.http.get<any>(this.apiBaseUrl + 'api/playlist/allPlaylists');
   }
 
+  getPlaylist(id:string){
+    return this.http.get<PlaylistDetails>(this.apiBaseUrl + `api/playlist/${id}`);
+  }
+
   createNewPlaylist( playlist: Playlist) {
     return this.http.post<Playlist>(this.apiBaseUrl + 'api/playlist/createPlaylist', playlist)
   }
