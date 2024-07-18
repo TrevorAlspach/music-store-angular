@@ -88,12 +88,24 @@ export interface SpotifyTracksObject {
   items: SpotifyTrackWrapper[]
 }
 
+export interface SpotifyTrackSearchObject {
+  href: string;
+  limit: number;
+  next: string;
+  offset: number;
+  previous: string;
+  total: number;
+  items: SpotifyTrack[];
+}
+
 export interface SpotifyTrackWrapper {
   added_at: string;
   added_by: SpotifyUser;
   is_local: boolean;
   track: SpotifyTrack & SpotifyEpisode;
 }
+
+
 
 export type SpotifyTrack = {
   album: SpotifyAlbum;
@@ -177,4 +189,8 @@ export interface SpotifyArtist extends SpotifyArtistSimple{
 export type SpotifyTracksMetadata = {
   href:string;
   total:number;
+}
+
+export type TracksSearchResponse = {
+  tracks: SpotifyTrackSearchObject
 }

@@ -11,6 +11,8 @@ import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/
 import { TransferPlaylistsService } from '../transfer-playlists.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
+import { PlaylistsService } from '../../../services/playlists.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-playlist-selector',
@@ -22,6 +24,7 @@ import { SelectionModel } from '@angular/cdk/collections';
     MatIconModule,
     MatTableModule,
     MatCheckboxModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './playlist-selector.component.html',
   styleUrl: './playlist-selector.component.scss',
@@ -40,6 +43,7 @@ export class PlaylistSelectorComponent
 
   selectedSourceSubscription!: Subscription;
   sourceSelected = false;
+  isLoading = false;
 
   readonly tableColumns = ['select','name', 'source', 'songCount'];
 
@@ -48,7 +52,8 @@ export class PlaylistSelectorComponent
   constructor(
     private spotifyService: SpotifyService,
     private transferPlaylistsService: TransferPlaylistsService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private playlistsService: PlaylistsService
   ) {}
 
   ngOnInit(): void {}
@@ -89,8 +94,8 @@ export class PlaylistSelectorComponent
   }
 
   loadPlaylists(sourceType: SourceType) {
+    this.isLoading = true;
     if (sourceType === SourceType.SPOTIFY) {
-      console.log('spotify');
       this.spotifyService
         .getPlaylistsOfLoggedInUser()
         .pipe(map((response) => response.items))
@@ -117,8 +122,17 @@ export class PlaylistSelectorComponent
             }
             this.playlistsDataSource.data = mappedPlaylists;
             this.changeDetectorRef.detectChanges();
+            this.isLoading = false;
           },
         });
+    }
+    if (sourceType === SourceType.MUSIC_STORE){
+      this.playlistsService.fetchAllPlaylistsForUser().subscribe({
+        next: (playlists: Playlist[])=>{
+          this.playlistsDataSource.data = playlists;
+          this.isLoading = false;
+        }
+      })
     }
   }
 

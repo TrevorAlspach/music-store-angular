@@ -21,6 +21,12 @@
    /*  width: 12vw;
     min-width: 150px;
     max-width: 250px; */
-    //width: 250px;
+    //width: 150px;
+    cursor: pointer;
     border-radius: 5px;
+   // border: 1px grey solid;
 } 
+
+.hovered{
+    filter: brightness(90%);
+}

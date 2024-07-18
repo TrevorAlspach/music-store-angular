@@ -30,7 +30,7 @@ export class TransferPlaylistsService {
 
   currentProgress$: Subject<number> = new Subject();
 
-  transferSongs(destinationDetails: Playlist) {
+  transferSongsToMusicStore(destinationDetails: Playlist) {
     /*  for (let song of songs){
      song.imageUrl = 'https://www.shareicon.net/data/128x128/2015/10/19/658317_music_512x512.png';
     } */

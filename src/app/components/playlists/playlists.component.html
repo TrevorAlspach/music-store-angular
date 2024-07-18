@@ -1,44 +1,69 @@
-<h1>Playlists</h1>
+<h1 style="font-weight: 500">Playlists</h1>
 <mat-card class="neutral-20">
-  <div style="padding: 20px;">
-<h3>Spotify</h3>
-<div style="padding-left: 20px;">
-
-  <ngx-slick-carousel class="carousel" style="width: 95%; "
-    #slickModal="slick-carousel" 
-    [config]="slideConfig"
-    (init)="slickInit($event)" 
-  >
-  @for (playlist of this.spotifyPlaylists; track playlist.imageUrl){
-    <div ngxSlickItem class="slide" style="padding: 15px;">
-    <playlist-large
-      [playlist]="playlist"
-    ></playlist-large>
+  <div style="padding: 20px">
+    <div class="flex-row">
+      <h2 style="font-weight: 500;" class="heading-no-margin">Spotify</h2>
+      <button mat-icon-button (click)="openCreatePlaylistDialog(SourceType.SPOTIFY)" [matTooltip]="'Create Spotify Playlist'">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
-  }
-</ngx-slick-carousel>
-</div>
-
-<h3>Music Store</h3>
-<div style="padding-left: 20px;">
-
-  <ngx-slick-carousel *ngIf="this.musicStorePlaylists.length>0" class="carousel" style="width: 95%; "
-    #slickModal="slick-carousel" 
-    [config]="slideConfig"
-    (init)="slickInit($event)" 
-  >
-  @for (playlist of this.musicStorePlaylists; track playlist.imageUrl){
-    <div ngxSlickItem class="slide" style="padding: 15px;">
-    <playlist-large
-      [playlist]="playlist"
-    ></playlist-large>
+    <div style="padding-left: 20px">
+      <div style="display: flex; align-items: center">
+        <button
+          mat-icon-button
+          style="margin-bottom: 15px"
+          (click)="spotifyCarouselBack()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <ngx-slick-carousel
+          class="carousel"
+          style="width: 95%"
+          #slickModalSpotify="slick-carousel"
+          [config]="slideConfig"
+          (init)="slickInit($event)"
+        >
+          @for (playlist of this.spotifyPlaylists; track playlist.imageUrl){
+          <div ngxSlickItem class="slide" style="padding: 15px">
+            <playlist-large [playlist]="playlist"></playlist-large>
+          </div>
+          }
+        </ngx-slick-carousel>
+        <button
+          mat-icon-button
+          style="margin-bottom: 15px"
+          (click)="spotifyCarouselNext()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
     </div>
-  }
-</ngx-slick-carousel>
 
-<div *ngIf="this.musicStorePlaylists.length === 0">
+    <div class="flex-row">
+      <h2 style="font-weight: 500" class="heading-no-margin">Music Store</h2>
+      <button mat-icon-button (click)="openCreatePlaylistDialog(SourceType.MUSIC_STORE)" [matTooltip]="'Create Music Store Playlist'">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div style="padding-left: 20px">
+      <ngx-slick-carousel
+        *ngIf="this.musicStorePlaylists.length > 0"
+        class="carousel"
+        style="width: 95%"
+        #slickModal="slick-carousel"
+        [config]="slideConfig"
+        (init)="slickInit($event)"
+      >
+        @for (playlist of this.musicStorePlaylists; track playlist.imageUrl){
+        <div ngxSlickItem class="slide" style="padding: 15px">
+          <playlist-large [playlist]="playlist"></playlist-large>
+        </div>
+        }
+      </ngx-slick-carousel>
+
+      <!-- <div *ngIf="this.musicStorePlaylists.length === 0">
   <button mat-raised-button> Create Playlist</button>
-</div>
-</div>
-</div>
+</div> -->
+    </div>
+  </div>
 </mat-card>

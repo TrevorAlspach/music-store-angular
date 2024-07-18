@@ -46,17 +46,27 @@ export class AuthService {
   }
 
   getSpotifyRefreshToken() {
-    return this.http.get<TokenResponse>(this.apiBaseUrl + 'api/user/spotifyRefreshToken');
+    return this.http.get<TokenResponse>(
+      this.apiBaseUrl + 'api/user/spotifyRefreshToken'
+    );
   }
 
-  updateSpotifyRefreshToken(token : string){
-    console.log(`updating token with ${token}`)
-     return this.http.post<any>(
-       this.apiBaseUrl + 'api/user/spotifyRefreshToken',
-       {
-        token: token
-       }
-     );
+  updateSpotifyRefreshToken(token: string) {
+    return this.http.post<any>(
+      this.apiBaseUrl + 'api/user/spotifyRefreshToken',
+      {
+        token: token,
+      }
+    );
+  }
+
+  removeSpotifyRefreshToken() {
+    return this.http.post<any>(
+      this.apiBaseUrl + 'api/user/spotifyRefreshToken',
+      {
+        token: null,
+      }
+    );
   }
 }
           

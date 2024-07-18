@@ -1,0 +1,11 @@
+// src/styles/custom-border-radius.scss
+
+@use '@angular/material' as mat;
+
+$custom-border-radius: 3px; // Set your custom border radius here
+
+@mixin custom-border-radius {
+    .custom-border-radius{
+        border-radius: 3px;
+    }
+}

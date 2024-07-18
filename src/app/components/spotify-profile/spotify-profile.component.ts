@@ -6,11 +6,13 @@ import { SpotifyUser } from '../../models/spotify-api.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'spotify-profile',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatButtonModule, MatIconModule, MatMenuModule],
   templateUrl: './spotify-profile.component.html',
   styleUrl: './spotify-profile.component.scss'
 })
@@ -47,6 +49,10 @@ export class SpotifyProfileComponent implements OnInit{
 
   connectSpotifyAccount(){
     this.spotifyService.getAuthorizationCode();
+  }
+
+  disconnectSpotifyAccount(){
+    this.spotifyService.disconnectAccount();
   }
 
 }

@@ -11,7 +11,7 @@ export class PlaylistsService {
   constructor(private http: HttpClient) {}
 
   fetchAllPlaylistsForUser() {
-    return this.http.get<any>(this.apiBaseUrl + 'api/playlist/allPlaylists');
+    return this.http.get<Playlist[]>(this.apiBaseUrl + 'api/playlist/allPlaylists');
   }
 
   getPlaylist(id:string){

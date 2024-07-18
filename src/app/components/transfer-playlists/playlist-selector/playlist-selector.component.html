@@ -3,7 +3,9 @@
   <div style="padding: 20px;">
         <h2 >Select Playlist</h2>
 <div class="scrollable-table">
-<mat-table mat-table  [dataSource]="this.playlistsDataSource" >
+  <mat-spinner *ngIf="this.isLoading"></mat-spinner>
+<mat-table mat-table  [dataSource]="this.playlistsDataSource" *ngIf="!this.isLoading">
+  
   <ng-container matColumnDef="select">
     <!-- <th mat-header-cell *matHeaderCellDef>
       <mat-checkbox (change)="$event ? masterToggle() : null"

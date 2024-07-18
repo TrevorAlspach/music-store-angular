@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 import { BehaviorSubject, expand, map, Observable, reduce, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { SpotifyService } from '../../../services/spotify.service';
 import { SpotifyTrack, SpotifyTrackWrapper } from '../../../models/spotify-api.model';
+import { PlaylistsService } from '../../../services/playlists.service';
 
 
 @Component({
@@ -51,77 +52,126 @@ export class TransferDialogComponent implements OnInit {
     description: [''],
   });
 
-  playlistToTransfer$ = new Subject<Playlist>();
+  playlistToTransferToSpotify$ = new Subject<Playlist>();
+  playlistToTransferToMusicStore$ = new Subject<Playlist>();
 
-  transferPlaylistSubscription: Subscription = this.playlistToTransfer$
-    .pipe(
-      switchMap((playlist) =>
-        this.getAllSongsOfSpotifyPlaylist(playlist.id as string)
+  MusicStoreTransferPlaylistSubscription: Subscription =
+    this.playlistToTransferToMusicStore$
+      .pipe(
+        switchMap((playlist) =>
+          this.getAllSongsOfSpotifyPlaylist(playlist.id as string)
+        )
       )
-    )
-    .pipe(
-      map((allSongs: SpotifyTrackWrapper[]) => {
-        console.log('in here');
-        return allSongs.map((song: SpotifyTrackWrapper) => {
-          return <Song>{
-            name: song.track.name,
-            album: song.track.album.name,
-            artist: song.track.artists
-              .map((artist) => {
-                return artist.name;
-              })
-              .join(', '),
-            time: this.millisToMinutesAndSeconds(song.track.duration_ms),
-            imageUrl: song.track.album.images[0].url,
-            releaseYear: this.parseReleaseYearFromSpotifyDateString(
-              song.track.album.release_date
-            ),
+      .pipe(
+        map((allSongs: SpotifyTrackWrapper[]) => {
+          console.log('in here');
+          return allSongs.map((song: SpotifyTrackWrapper) => {
+            return <Song>{
+              name: song.track.name,
+              album: song.track.album.name,
+              artist: song.track.artists
+                .map((artist) => {
+                  return artist.name;
+                })
+                .join(', '),
+              time: this.millisToMinutesAndSeconds(song.track.duration_ms),
+              imageUrl: song.track.album.images[0].url,
+              releaseYear: this.parseReleaseYearFromSpotifyDateString(
+                song.track.album.release_date
+              ),
+            };
+          });
+        })
+      )
+      .pipe(
+        tap((songs) => {
+          this.total = songs.length;
+        })
+      )
+      .pipe(
+        switchMap((allSongs) => {
+          const newPlaylist = <PlaylistDetails>{
+            songs: allSongs,
+            songCount: allSongs.length,
+            source: this.transferPlaylistsService.selectedDestination$.value,
+            imageUrl:
+              'https://www.shareicon.net/data/128x128/2015/10/19/658317_music_512x512.png',
+            name: this.createDestinationPlaylistFormGroup.get('name')?.value,
+            description:
+              this.createDestinationPlaylistFormGroup.get('description')?.value,
           };
-        });
-      })
-    )
-    .pipe(
-      tap((songs) => {
-        this.total = songs.length;
-      })
-    )
-    .pipe(
-      switchMap((allSongs) => {
-        const newPlaylist = <PlaylistDetails>{
-          songs: allSongs,
-          songCount: this.transferPlaylistsService.selectedSongs$.value.length,
-          source: this.transferPlaylistsService.selectedDestination$.value,
-          imageUrl:
-            'https://www.shareicon.net/data/128x128/2015/10/19/658317_music_512x512.png',
-          name: this.createDestinationPlaylistFormGroup.get('name')?.value,
-          description:
+          return this.transferPlaylistsService.transferSongsToMusicStore(newPlaylist);
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+      });
+
+  spotifyTransferPlaylistSubscription: Subscription =
+    this.playlistToTransferToSpotify$
+      .pipe(
+        switchMap((playlist) =>
+          this.playlistsService.getPlaylist(playlist.id as string)
+        )
+      )
+      .pipe(
+        map((playlist: PlaylistDetails) => {
+          return playlist.songs;
+        })
+      )
+      .pipe(
+        tap((songs) => {
+          this.total = songs.length;
+        })
+      )
+      .pipe(
+        switchMap((allSongs) => {
+          return this.spotifyService.createPlaylist(
+            this.createDestinationPlaylistFormGroup.get('name')?.value,
             this.createDestinationPlaylistFormGroup.get('description')?.value,
-        };
-        return this.transferPlaylistsService.transferSongs(newPlaylist);
-      })
-    ).subscribe({
-      next: (res)=>{
-        console.log(res)
-      }
-    });
+            allSongs
+          );
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+      });
 
   constructor(
     public dialogRef: MatDialogRef<TransferDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private transferPlaylistsService: TransferPlaylistsService,
     private fb: FormBuilder,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private playlistsService: PlaylistsService
   ) {
     this.total = data.total;
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   initiateTransfer() {
-    this.transferInitiated = true;
-    this.playlistToTransfer$.next(this.transferPlaylistsService.selectedPlaylist$.value as Playlist);
+    const destination = this.transferPlaylistsService.selectedDestination$.value;
+
+    if (destination === SourceType.MUSIC_STORE){
+      this.transferInitiated = true;
+      this.playlistToTransferToMusicStore$.next(
+        this.transferPlaylistsService.selectedPlaylist$.value as Playlist
+      );
+    } 
+
+    else if (destination === SourceType.SPOTIFY){
+      this.transferInitiated = true;
+      this.playlistToTransferToSpotify$.next(
+        this.transferPlaylistsService.selectedPlaylist$.value as Playlist
+      );
+    }
+
+    
   }
 
   getAllSongsOfSpotifyPlaylist(

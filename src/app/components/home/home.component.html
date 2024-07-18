@@ -13,17 +13,17 @@
 
   <mat-sidenav-container class="example-container" autosize>
   <mat-sidenav #drawer class="example-sidenav neutral-20" mode="side" [class.mat-elevation-z20]="true" [opened]="true">
-    <div style="justify-content: center; align-items:center; display: flex; height: 100px;">
+    <div style="justify-content: center; align-items:center; display: flex; height: 100px; font-weight: 500;">
     <h1 >Music Store</h1>
   </div>
     <mat-nav-list  *ngFor="let route of routeLinks">
-        <mat-list-item [routerLink]="route.link">
+        <mat-list-item [routerLink]="route.link" style="border-radius: 3px;">
           <mat-icon
             matListItemIcon
           >
             {{ route.icon }}</mat-icon
           >
-          <div matListItemTitle>{{ route.name }}</div>
+          <div matListItemTitle style="font-weight: 500;">{{ route.name }}</div>
           
           </mat-list-item>
         

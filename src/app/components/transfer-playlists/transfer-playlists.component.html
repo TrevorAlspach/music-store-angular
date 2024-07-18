@@ -1,12 +1,12 @@
-<h1>Transfer</h1>
+<h1>Transfer Playlist</h1>
 
 <div class="flex-container">
 
 <div class="flex-container-source">
   <app-source-selector [transferSide]="TransferSide.SOURCE"></app-source-selector>
   <app-source-selector [transferSide]="TransferSide.DESTINATION"></app-source-selector>
-  <div>
-    </div>
+  <!-- <div>
+    </div> -->
 </div>
 
 <div class="flex-container-playlists" style="padding-top: 30px;">
@@ -19,5 +19,5 @@
   <h2 >Preview</h2>
   <app-song-selector ></app-song-selector>
   </div> -->
-  <button mat-raised-button (click)="openTransferDialog()">Begin Transfer</button>
+  <button mat-raised-button color="primary" class="custom-border-radius" *ngIf="this.transferReady" (click)="openTransferDialog()">Begin Transfer</button>
  </div>

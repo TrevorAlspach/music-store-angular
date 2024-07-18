@@ -1,5 +1,14 @@
-<div class="playlist-container" (click)="this.openPlaylistDetails()">
-    <img [src]="this.playlist.imageUrl" class="playlist-cover-image">
+<div class="playlist-container"  (mouseenter)="hovered = true;"  (mouseleave)="mouseLeave()">
+    
+    <img [src]="this.playlist.imageUrl" class="playlist-cover-image" [ngClass]="{'hovered': this.hovered}" (click)="this.openPlaylistDetails()">
+    <div style="margin-top: -50px;" *ngIf="hovered">
+    <!-- <button mat-icon-button><mat-icon style="color: white;">subdirectory_arrow_right</mat-icon></button> -->
+    <button mat-icon-button [matMenuTriggerFor]="playlistMenu" #menuTrigger="matMenuTrigger" (click)="openMenu()"><mat-icon style="color: white;">more_horiz</mat-icon></button>
+    <mat-menu #playlistMenu >
+        <button mat-menu-item> <mat-icon>delete</mat-icon> Delete</button>
+        <button mat-menu-item> <mat-icon>trending_flat</mat-icon> Transfer</button>
+    </mat-menu>
+    </div>
     <div class="playlist-info">
         <div style="padding-top: 6px;">{{this.playlist.name}}</div>
         <div>{{this.playlist.creator}}</div>
@@ -7,3 +16,5 @@
     </div>
     
 </div>
+
+
