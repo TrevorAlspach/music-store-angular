@@ -42,6 +42,10 @@ export class PlaylistLargeComponent implements OnInit {
     } else {
       
     } */
+
+    if (!this.playlist.imageUrl || this.playlist.imageUrl === ''){
+      this.playlist.imageUrl = 'assets/defaultAlbum.jpg'
+    }
   }
 
   openPlaylistDetails() {

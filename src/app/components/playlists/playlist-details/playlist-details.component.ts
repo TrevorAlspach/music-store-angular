@@ -51,7 +51,7 @@ export class PlaylistDetailsComponent implements OnInit{
         if (playlist.images && playlist.images.length > 0) {
           imageUrl = playlist.images[0].url;
         } else {
-          imageUrl = '';
+          imageUrl = 'assets/defaultAlbum.jpg';
         }
 
         this.playlist = <PlaylistDetails>{
@@ -90,6 +90,10 @@ export class PlaylistDetailsComponent implements OnInit{
         console.log(res)
         this.playlist = res;
         this.isLoading = false;
+
+        if (!this.playlist.imageUrl || this.playlist.imageUrl === ''){
+          this.playlist.imageUrl = 'assets/defaultAlbum.jpg'
+        }
       }
     })
   }

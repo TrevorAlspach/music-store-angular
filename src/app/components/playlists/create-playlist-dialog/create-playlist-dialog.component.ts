@@ -78,7 +78,7 @@ export class CreatePlaylistDialogComponent implements OnInit{
           songCount: 0,
           source: SourceType.MUSIC_STORE,
           imageUrl:
-            'https://www.shareicon.net/data/128x128/2015/10/19/658317_music_512x512.png',
+            '',
           href: '',
         })
         .subscribe({
