@@ -1,6 +1,8 @@
 <div class="flex-container">
   <form class="center-form" [formGroup]="this.signupForm" (ngSubmit)="register()">
-    <div class="justify-content-center"><h2>Sign Up</h2></div>
+    <h1>Syncify</h1>
+      <p>Keep Playlists In Sync. All in One Place</p>
+    <div class="justify-content-center"><h2 class="login-title">Sign Up</h2></div>
 
     <mat-form-field appearance="outline">
       <input matInput placeholder="Email" [formControlName]="'email'" />
@@ -12,7 +14,9 @@
       <input matInput placeholder="Password" [formControlName]="'password'"/>
     </mat-form-field>
     <div class="justify-content-center">
-    <button mat-raised-button color="primary" style="width: 50%;" type="submit">Sign Up</button>
+    <button mat-raised-button color="primary" style="width: 50%;" type="submit">Sign Up</button>  
     </div>
+
+    <div style="padding-top: 10px;">Already have an Account? <a [routerLink]="['..', 'login']" class=" link">Login</a></div>
   </form>
 </div>

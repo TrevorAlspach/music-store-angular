@@ -70,13 +70,13 @@ export class CreatePlaylistDialogComponent implements OnInit{
         }
       })
 
-    } else if (this.newPlaylistDestination === SourceType.MUSIC_STORE){
+    } else if (this.newPlaylistDestination === SourceType.SYNCIFY){
       this.playlistsService
         .createNewPlaylist(<Playlist>{
           name: this.createPlaylistFormGroup.get('name')?.value,
           description: this.createPlaylistFormGroup.get('description')?.value,
           songCount: 0,
-          source: SourceType.MUSIC_STORE,
+          source: SourceType.SYNCIFY,
           imageUrl:
             '',
           href: '',

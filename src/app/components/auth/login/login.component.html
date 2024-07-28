@@ -1,5 +1,9 @@
+
 <div class="flex-container login-background">
+
   <form class="center-form" [formGroup]="this.loginForm" (ngSubmit)="login()">
+      <h1>Syncify</h1>
+      <p>Keep Playlists In Sync. All in One Place</p>
     <div class="justify-content-center login-title"><h2>Login</h2></div>
 
     <mat-form-field appearance="outline">
@@ -9,9 +13,10 @@
       <input type="password" matInput placeholder="Password" [formControlName]="'password'"/>
     </mat-form-field>
     <div class="justify-content-center">
-    <button mat-raised-button style="width: 50%;" type="submit">Login</button>
+    <button mat-raised-button color="primary" style="width: 50%;" type="submit">Login</button>
     
     </div>
-    <a [routerLink]="['..', 'signup']" class="justify-content-center link" style="padding-top: 10px;">Signup</a>
+    <div style="padding-top: 10px;" class="justify-content-center ">No Account? <a [routerLink]="['..', 'signup']" class=" link" >Signup</a></div>
+    
   </form>
 </div>

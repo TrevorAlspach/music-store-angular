@@ -17,7 +17,7 @@ export interface PlaylistDetails extends Playlist{
 export enum SourceType {
     SPOTIFY="spotify",
     APPLE_MUSIC="apple_music",
-    MUSIC_STORE="music_store",
+    SYNCIFY="syncify",
     NONE="none"
 }
 

@@ -38,7 +38,8 @@ export class HomeComponent {
     { link: 'dashboard', name: 'Home', icon: 'home' },
     { link: 'playlists', name: 'My Playlists', icon: 'library_music' },
     { link: 'sync', name: 'Sync', icon: 'sync_alt' },
-    { link: 'transfer', name: 'Transfer', icon: 'trending_flat'}
+    { link: 'transfer', name: 'Transfer', icon: 'trending_flat'},
+    { link: 'account', name: 'Account', icon: 'settings'}
   ];
   public isExpanded = false;
 

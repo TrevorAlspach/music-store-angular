@@ -11,10 +11,11 @@
     flex-direction: column;
     width: 20%;
     justify-content: center;
+    min-width: 300px;
     // align-content: center;
 }
 
 .justify-content-center {
     display: flex;
-    justify-content: center;
+    justify-content: left;
 }

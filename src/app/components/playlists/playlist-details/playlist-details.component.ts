@@ -84,7 +84,7 @@ export class PlaylistDetailsComponent implements OnInit{
     });
   } 
 
-  if (this.source === SourceType.MUSIC_STORE){
+  if (this.source === SourceType.SYNCIFY){
     this.playlistsService.getPlaylist(this.id).subscribe({
       next: (res: PlaylistDetails)=>{
         console.log(res)

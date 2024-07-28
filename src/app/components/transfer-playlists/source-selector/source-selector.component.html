@@ -32,9 +32,9 @@
         <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo">
         <div>Spotify</div>
       </button>
-      <button  mat-button class="image-button" [disabled]="otherService===SourceType.MUSIC_STORE" (click)="this.sourceSelected(SourceType.MUSIC_STORE)">
+      <button  mat-button class="image-button" [disabled]="otherService===SourceType.SYNCIFY" (click)="this.sourceSelected(SourceType.SYNCIFY)">
         <img src="../../../assets/guitar_icon.jpg" class="spotify-logo">
-        <div>Music Store</div>
+        <div>Syncify</div>
       </button>
       <!-- </form> -->
     </div>
@@ -48,9 +48,9 @@
          <img src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="spotify-logo">
         <h3>Apple Music</h3>
         </div>
-        <div *ngIf="this.selectedService === SourceType.MUSIC_STORE" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
+        <div *ngIf="this.selectedService === SourceType.SYNCIFY" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
         <img src="../../../assets/guitar_icon.jpg" class="spotify-logo">
-        <h3>Music Store</h3>
+        <h3>Syncify</h3>
         </div>
     </div>
   </mat-card-content>

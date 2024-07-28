@@ -105,7 +105,7 @@ export class PlaylistsComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (closeValue)=>{
         if (closeValue === true){
-          if (sourceType === SourceType.MUSIC_STORE){
+          if (sourceType === SourceType.SYNCIFY){
             this.getMusicStorePlaylists()
           }
 

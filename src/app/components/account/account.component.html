@@ -1,0 +1,14 @@
+<h1 >Account</h1>
+<mat-card class="neutral-20">
+<mat-action-list *ngFor="let route of routeLinks">
+    <mat-list-item [routerLink]="route.link" style="border-radius: 3px;">
+          <mat-icon
+            matListItemIcon
+          >
+            {{ route.icon }}</mat-icon
+          >
+          <div matListItemTitle style="font-weight: 500;">{{ route.name }}</div>
+          
+          </mat-list-item>
+</mat-action-list>
+</mat-card>

@@ -1,5 +1,5 @@
 <h1 style="font-weight: 500">Playlists</h1>
-<mat-card class="neutral-20">
+<mat-card class="neutral-20" >
   <div style="padding: 20px">
     <div class="flex-row">
       <h2 style="font-weight: 500;" class="heading-no-margin">Spotify</h2>
@@ -7,7 +7,7 @@
         <mat-icon>add</mat-icon>
       </button>
     </div>
-    <div style="padding-left: 20px">
+    <div style="padding-left: 0px">
       <div style="display: flex; align-items: center">
         <button
           mat-icon-button
@@ -18,7 +18,7 @@
         </button>
         <ngx-slick-carousel
           class="carousel"
-          style="width: 95%"
+          style="width: 85%"
           #slickModalSpotify="slick-carousel"
           [config]="slideConfig"
           (init)="slickInit($event)"
@@ -40,8 +40,8 @@
     </div>
 
     <div class="flex-row">
-      <h2 style="font-weight: 500" class="heading-no-margin">Music Store</h2>
-      <button mat-icon-button (click)="openCreatePlaylistDialog(SourceType.MUSIC_STORE)" [matTooltip]="'Create Music Store Playlist'">
+      <h2 style="font-weight: 500" class="heading-no-margin">Syncify</h2>
+      <button mat-icon-button (click)="openCreatePlaylistDialog(SourceType.SYNCIFY)" [matTooltip]="'Create Music Store Playlist'">
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -49,7 +49,7 @@
       <ngx-slick-carousel
         *ngIf="this.musicStorePlaylists.length > 0"
         class="carousel"
-        style="width: 95%"
+        style="width: 85%"
         #slickModal="slick-carousel"
         [config]="slideConfig"
         (init)="slickInit($event)"

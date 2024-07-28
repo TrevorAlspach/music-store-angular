@@ -126,7 +126,7 @@ export class PlaylistSelectorComponent
           },
         });
     }
-    if (sourceType === SourceType.MUSIC_STORE){
+    if (sourceType === SourceType.SYNCIFY){
       this.playlistsService.fetchAllPlaylistsForUser().subscribe({
         next: (playlists: Playlist[])=>{
           this.playlistsDataSource.data = playlists;

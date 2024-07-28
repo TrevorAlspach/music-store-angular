@@ -95,7 +95,7 @@ export class TransferDialogComponent implements OnInit {
             songCount: allSongs.length,
             source: this.transferPlaylistsService.selectedDestination$.value,
             imageUrl:
-              'https://www.shareicon.net/data/128x128/2015/10/19/658317_music_512x512.png',
+              '',
             name: this.createDestinationPlaylistFormGroup.get('name')?.value,
             description:
               this.createDestinationPlaylistFormGroup.get('description')?.value,
@@ -157,7 +157,7 @@ export class TransferDialogComponent implements OnInit {
   initiateTransfer() {
     const destination = this.transferPlaylistsService.selectedDestination$.value;
 
-    if (destination === SourceType.MUSIC_STORE){
+    if (destination === SourceType.SYNCIFY){
       this.transferInitiated = true;
       this.playlistToTransferToMusicStore$.next(
         this.transferPlaylistsService.selectedPlaylist$.value as Playlist

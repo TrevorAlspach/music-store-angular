@@ -10,6 +10,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SpotifyAuthComponent } from './components/auth/spotify-auth/spotify-auth.component';
 import { PlaylistDetailsComponent } from './components/playlists/playlist-details/playlist-details.component';
 import { TransferPlaylistsComponent } from './components/transfer-playlists/transfer-playlists.component';
+import { AccountComponent } from './components/account/account.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,6 +21,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'account', component: AccountComponent},
       { path: 'playlists', component: PlaylistsComponent },
       { path: 'sync', component: SyncPlaylistsComponent },
       { path: 'transfer', component: TransferPlaylistsComponent},
