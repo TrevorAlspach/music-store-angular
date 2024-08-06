@@ -37,36 +37,4 @@ export class DashboardComponent {
       }
     })
   }
-
-
-  hitUserApi(){
-    /* this.dicogsService.searchTracks('yesterday', 'the beatles', "Help!",2009).subscribe({
-      next: (res)=>{
-        console.log(res)
-      }
-    }) */
-
-      let list = [];
-      list.push(
-        this.dicogsService.searchTracks(
-          'yesterday',
-          'the beatles',
-          'Help!',
-         // 2009
-        ),
-        this.dicogsService.searchTracks(
-          'THANK GOD',
-          'Travis Scott',
-          'Utopia',
-         // 2023
-        )
-      );
-
-      this.dicogsService.rateLimitRequests(list).subscribe({
-        next: (res)=>{
-          console.log(res)
-        }
-      })
-
-  }
 }

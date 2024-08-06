@@ -12,26 +12,22 @@
 }
 
 .example-container {
-    //width: 500px;
-    //width: 20%;
-    height: 100%;
+    height: calc(100vh - 64px);
     width: 100%;
-    //border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .example-sidenav-content {
     display: flex;
-    //flex: 1;
-    //overflow: hidden;
-    //height: fit-content;
     padding: 3%;
     width: 90%;
     height: 85%;
-    //align-items: center;
-    //justify-content: center;
+
 }
 
 .example-sidenav {
     //padding: 50px;
     width: 13%;
+    border-radius: 0;
+    border-right: 1px solid;
+    border-color: gainsboro;
 }

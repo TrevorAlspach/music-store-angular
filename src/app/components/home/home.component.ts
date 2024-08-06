@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
@@ -42,6 +42,9 @@ export class HomeComponent {
     { link: 'account', name: 'Account', icon: 'settings'}
   ];
   public isExpanded = false;
+
+  collapsed = signal(false);
+  sideNavWidth = computed(()=> this.collapsed() ? '60px' : '250px');
 
   constructor(
     private authService: AuthService,
