@@ -22,6 +22,10 @@ export class PlaylistsService {
     return this.http.post<Playlist>(this.apiBaseUrl + 'api/playlist/createPlaylist', playlist)
   }
 
+  deletePlaylist(id: string){
+    return this.http.delete<Playlist>(this.apiBaseUrl + `api/playlist/deletePlaylist/${id}`);
+  }
+
   createNewPlaylistWithSongs( playlist: PlaylistDetails){
     return this.http.post<Playlist>(
       this.apiBaseUrl + 'api/playlist/createPlaylistWithSongs',

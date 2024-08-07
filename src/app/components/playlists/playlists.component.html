@@ -1,4 +1,4 @@
-<h1 style="font-weight: 500">Playlists</h1>
+<!-- <h1 style="font-weight: 500">Playlists</h1> -->
 <!-- <mat-card class="neutral-20" > -->
   <div style="padding: 20px">
     <div class="flex-row">
@@ -7,8 +7,8 @@
         <mat-icon color="primary">add</mat-icon>
       </button>
     </div>
-    <div style="padding-left: 0px">
-      <div style="display: flex; align-items: center">
+    <div>
+      <div style="display: flex; align-items: center" *ngIf="!spotifyPlaylistsLoading">
         <button
           mat-icon-button
           style="margin-bottom: 15px"
@@ -37,6 +37,9 @@
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
+      <div *ngIf="spotifyPlaylistsLoading">
+      <mat-spinner></mat-spinner>
+    </div>
     </div>
 
     <div class="flex-row">
@@ -45,25 +48,25 @@
         <mat-icon color="primary">add</mat-icon>
       </button>
     </div>
-    <div style="padding-left: 20px">
+    <div style="padding-left: 20px" *ngIf="!syncifyPlaylistsLoading">
       <ngx-slick-carousel
-        *ngIf="this.musicStorePlaylists.length > 0"
+        *ngIf="this.syncifyPlaylists.length > 0"
         class="carousel"
         style="width: 85%"
         #slickModal="slick-carousel"
         [config]="slideConfig"
         (init)="slickInit($event)"
       >
-        @for (playlist of this.musicStorePlaylists; track playlist.imageUrl){
+        @for (playlist of this.syncifyPlaylists; track playlist.imageUrl){
         <div ngxSlickItem class="slide" style="padding: 15px">
           <playlist-large [playlist]="playlist"></playlist-large>
         </div>
         }
       </ngx-slick-carousel>
 
-      <!-- <div *ngIf="this.musicStorePlaylists.length === 0">
-  <button mat-raised-button> Create Playlist</button>
-</div> -->
+    </div>
+    <div *ngIf="syncifyPlaylistsLoading">
+      <mat-spinner></mat-spinner>
     </div>
   </div>
 <!-- </mat-card> -->

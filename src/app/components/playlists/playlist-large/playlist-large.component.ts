@@ -1,11 +1,14 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { SpotifyImage, SpotifySimplePlaylist } from '../../../models/spotify-api.model';
-import { Playlist } from '../../../models/music.model';
+import { Playlist, SourceType } from '../../../models/music.model';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { SpotifyService } from '../../../services/spotify.service';
+import { PlaylistsService } from '../../../services/playlists.service';
+import { PlaylistEventService } from '../playlist-event.service';
 
 @Component({
   selector: 'playlist-large',
@@ -21,7 +24,7 @@ export class PlaylistLargeComponent implements OnInit {
 
   //imageUrl!: string;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private spotifyService: SpotifyService, private playlistsService: PlaylistsService, private playlistEventService: PlaylistEventService) {}
 
   @ViewChild(MatMenuTrigger) menuTrigger!: MatMenuTrigger;
 
@@ -37,11 +40,6 @@ export class PlaylistLargeComponent implements OnInit {
 
 
   ngOnInit(): void {
-    /*   if (this.playlist.images && this.playlist.images.length > 0){
-      this.imageUrl = this.playlist.images[0].url;
-    } else {
-      
-    } */
 
     if (!this.playlist.imageUrl || this.playlist.imageUrl === ''){
       this.playlist.imageUrl = 'assets/defaultAlbum.jpg'
@@ -54,5 +52,22 @@ export class PlaylistLargeComponent implements OnInit {
       this.playlist.source,
       this.playlist.id,
     ]);
+  }
+
+  viewPlaylistInSpotify(){
+    window.open(this.playlist.href);
+  }
+
+  deletePlaylist(){
+    //delete only allowed for syncify playlists
+    this.playlistsService.deletePlaylist(this.playlist.id).subscribe({
+      next: (playlist: Playlist)=>{
+        this.playlistEventService.playlistEvent$.next({message: "Playlist Deleted", source: SourceType.SYNCIFY});
+      }
+    })
+  }
+
+  get SourceType(){
+    return SourceType;
   }
 }

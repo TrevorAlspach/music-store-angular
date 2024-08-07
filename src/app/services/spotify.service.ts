@@ -156,9 +156,6 @@ export class SpotifyService {
   }
 
   createPlaylist(name: string, description: string, songs: Song[]) {
-    console.log(name)
-    console.log(description);
-    console.log(songs);
     return this.http
       .post<SpotifyPlaylistResponse>(
         `https://api.spotify.com/v1/users/${this.authenticatedUser.id}/playlists`,
