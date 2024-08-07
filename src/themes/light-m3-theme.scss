@@ -136,13 +136,17 @@ $_rest: (
 $_primary: map.merge(map.get($_palettes, primary), $_rest);
 $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
+
 $light-theme: mat.define-theme((
   color: (
     theme-type: light,
     primary: $_primary,
     tertiary: $_tertiary,
   ),
-  typography: (
-    
-  )
+    typography: (brand-family: Roboto,
+      plain-family: Roboto,
+      bold-weight: 200,
+      medium-weight: 100,
+      regular-weight: 50,
+    )
 ));

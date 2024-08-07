@@ -12,24 +12,30 @@ import { MatMenuModule } from '@angular/material/menu';
 @Component({
   selector: 'spotify-profile',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+  ],
   templateUrl: './spotify-profile.component.html',
-  styleUrl: './spotify-profile.component.scss'
+  styleUrl: './spotify-profile.component.scss',
 })
-export class SpotifyProfileComponent implements OnInit{
-
+export class SpotifyProfileComponent implements OnInit {
   spotifyUser!: SpotifyUser;
   profileImageUrl!: string;
   isLoading = true;
   notAuthorized = false;
 
-  constructor(private spotifyService: SpotifyService){}
+  constructor(private spotifyService: SpotifyService) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.spotifyService.getUserProfile().subscribe({
-      next: (res: SpotifyUser)=>{
+      next: (res: SpotifyUser) => {
         this.spotifyUser = res;
-        
+
         //let imageUrl: string;
         if (this.spotifyUser.images && this.spotifyUser.images.length > 0) {
           this.profileImageUrl = this.spotifyUser.images[0].url;
@@ -39,20 +45,23 @@ export class SpotifyProfileComponent implements OnInit{
 
         this.isLoading = false;
       },
-      error: (err: HttpErrorResponse)=>{
+      error: (err: HttpErrorResponse) => {
         console.log(err);
         this.isLoading = false;
         this.notAuthorized = true;
-      }
-    })
+      },
+    });
   }
 
-  connectSpotifyAccount(){
+  connectSpotifyAccount() {
     this.spotifyService.getAuthorizationCode();
   }
 
-  disconnectSpotifyAccount(){
+  disconnectSpotifyAccount() {
     this.spotifyService.disconnectAccount();
   }
 
+  navigateToSpotifyAccount(){
+    window.open(this.spotifyUser.external_urls.spotify);
+  }
 }

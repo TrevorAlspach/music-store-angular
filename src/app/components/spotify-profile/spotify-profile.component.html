@@ -15,7 +15,7 @@
   <mat-card-actions>
     <button mat-icon-button [matMenuTriggerFor]="spotifyDetailsMenu"><mat-icon>more_horiz</mat-icon></button>
     <mat-menu #spotifyDetailsMenu >
-        <button mat-menu-item> <mat-icon>trending_flat</mat-icon> Go To Spotify</button>
+        <button mat-menu-item (click)="navigateToSpotifyAccount()"> <mat-icon>trending_flat</mat-icon> Go To Spotify</button>
         <button mat-menu-item (click)="disconnectSpotifyAccount()"> <mat-icon>close</mat-icon> Disconnect Account</button>
     </mat-menu>
   </mat-card-actions>
