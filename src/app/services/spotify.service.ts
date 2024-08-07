@@ -54,6 +54,10 @@ export class SpotifyService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
+  getAuthenticatedUser(){
+    return this.authenticatedUser;
+  }
+
   getPlaylistsOfLoggedInUser(): Observable<SpotifyPlaylistsResponse> {
     return this.http
       .get<SpotifyPlaylistsResponse>(

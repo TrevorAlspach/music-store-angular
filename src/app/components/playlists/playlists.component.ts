@@ -99,6 +99,9 @@ export class PlaylistsComponent implements OnInit {
           }
           this.spotifyPlaylistsLoading = false;
         },
+        error: ()=>{
+          this.spotifyPlaylistsLoading = false;
+        }
       });
   }
 

@@ -59,6 +59,7 @@ export class SpotifyProfileComponent implements OnInit {
 
   disconnectSpotifyAccount() {
     this.spotifyService.disconnectAccount();
+    this.spotifyUser = this.spotifyService.getAuthenticatedUser();
   }
 
   navigateToSpotifyAccount(){

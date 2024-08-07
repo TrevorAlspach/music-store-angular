@@ -10,103 +10,135 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PlaylistsService } from '../../../services/playlists.service';
 import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { PlaylistEventService } from '../playlist-event.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-playlist-details',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule, MatTableModule, MatIconModule, MatButtonModule, MatCardModule],
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    MatMenuModule,
+    MatTooltipModule
+  ],
   templateUrl: './playlist-details.component.html',
-  styleUrl: './playlist-details.component.scss'
+  styleUrl: './playlist-details.component.scss',
 })
-export class PlaylistDetailsComponent implements OnInit{
-  readonly songColumns = [ 'name', 'artist', 'album', 'time']
+export class PlaylistDetailsComponent implements OnInit {
+  readonly songColumns = ['name', 'artist', 'album', 'time'];
 
-  @Input() 
+  @Input()
   id!: string;
 
   @Input()
-  source!:SourceType;
+  source!: SourceType;
 
-/*   name!:string;
+  /*   name!:string;
   description!:string; */
 
   playlist!: PlaylistDetails;
 
   isLoading: boolean = true;
 
-  constructor(private spotifyService: SpotifyService, private location: Location, private playlistsService: PlaylistsService){
+  constructor(
+    private spotifyService: SpotifyService,
+    private location: Location,
+    private playlistsService: PlaylistsService,
+    private playlistEventService: PlaylistEventService
+  ) {}
 
+  ngOnInit() {
+    if (this.source === SourceType.SPOTIFY) {
+      this.spotifyService.getPlaylistFromId(this.id).subscribe({
+        next: (playlist: SpotifyPlaylistResponse) => {
+          console.log(playlist);
+          this.isLoading = false;
+
+          let imageUrl: string;
+          if (playlist.images && playlist.images.length > 0) {
+            imageUrl = playlist.images[0].url;
+          } else {
+            imageUrl = 'assets/defaultAlbum.jpg';
+          }
+
+          this.playlist = <PlaylistDetails>{
+            name: playlist.name,
+            description: playlist.description,
+            id: playlist.id,
+            songs: playlist.tracks.items.map(
+              (spotifyTrack: SpotifyTrackWrapper) => {
+                return <Song>{
+                  name: spotifyTrack.track.name,
+                  album: spotifyTrack.track.album.name,
+                  artist: spotifyTrack.track.artists
+                    .map((artist) => {
+                      return artist.name;
+                    })
+                    .join(', '),
+                  time: this.millisToMinutesAndSeconds(
+                    spotifyTrack.track.duration_ms
+                  ),
+                  imageUrl: spotifyTrack.track.album.images[0].url,
+                };
+              }
+            ),
+            imageUrl: imageUrl,
+            songCount: playlist.tracks.total,
+            source: SourceType.SPOTIFY,
+            href: playlist.external_urls.spotify,
+          };
+        },
+      });
+    }
+
+    if (this.source === SourceType.SYNCIFY) {
+      this.playlistsService.getPlaylist(this.id).subscribe({
+        next: (res: PlaylistDetails) => {
+          console.log(res);
+          this.playlist = res;
+          this.isLoading = false;
+
+          if (!this.playlist.imageUrl || this.playlist.imageUrl === '') {
+            this.playlist.imageUrl = 'assets/defaultAlbum.jpg';
+          }
+        },
+      });
+    }
   }
 
-  ngOnInit(){
+  viewPlaylistInSpotify() {
+    window.open(this.playlist.href);
+  }
 
-    if (this.source === SourceType.SPOTIFY){
-
-    this.spotifyService.getPlaylistFromId(this.id).subscribe({
-      next: (playlist: SpotifyPlaylistResponse)=>{
-        console.log(playlist)
-        this.isLoading = false;
-
-        let imageUrl: string;
-        if (playlist.images && playlist.images.length > 0) {
-          imageUrl = playlist.images[0].url;
-        } else {
-          imageUrl = 'assets/defaultAlbum.jpg';
-        }
-
-        this.playlist = <PlaylistDetails>{
-          name: playlist.name,
-          description: playlist.description,
-          id: playlist.id,
-          songs: playlist.tracks.items.map(
-            (spotifyTrack: SpotifyTrackWrapper) => {
-              return <Song>{
-                name: spotifyTrack.track.name,
-                album: spotifyTrack.track.album.name,
-                artist: spotifyTrack.track.artists
-                  .map((artist) => {
-                    return artist.name;
-                  })
-                  .join(', '),
-                time: this.millisToMinutesAndSeconds(
-                  spotifyTrack.track.duration_ms
-                ),
-                imageUrl: spotifyTrack.track.album.images[0].url,
-              };
-            }
-          ),
-          imageUrl: imageUrl,
-          songCount: playlist.tracks.total,
-          source: SourceType.SPOTIFY,
-          href: playlist.href,
-        };
-      }
+  deletePlaylist() {
+    //delete only allowed for syncify playlists
+    this.playlistsService.deletePlaylist(this.playlist.id).subscribe({
+      next: (playlist: Playlist) => {
+        this.playlistEventService.playlistEvent$.next({
+          message: 'Playlist Deleted',
+          source: SourceType.SYNCIFY,
+        });
+      },
     });
-  } 
-
-  if (this.source === SourceType.SYNCIFY){
-    this.playlistsService.getPlaylist(this.id).subscribe({
-      next: (res: PlaylistDetails)=>{
-        console.log(res)
-        this.playlist = res;
-        this.isLoading = false;
-
-        if (!this.playlist.imageUrl || this.playlist.imageUrl === ''){
-          this.playlist.imageUrl = 'assets/defaultAlbum.jpg'
-        }
-      }
-    })
-  }
   }
 
-  returnToPreviousPage(){
+  returnToPreviousPage() {
     this.location.back();
   }
 
   millisToMinutesAndSeconds(millis: any) {
-  var minutes = Math.floor(millis / 60000);
-  var seconds: any = ((millis % 60000) / 1000).toFixed(0);
-  return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-}
+    var minutes = Math.floor(millis / 60000);
+    var seconds: any = ((millis % 60000) / 1000).toFixed(0);
+    return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+  }
 
+  get SourceType() {
+    return SourceType;
+  }
 }
