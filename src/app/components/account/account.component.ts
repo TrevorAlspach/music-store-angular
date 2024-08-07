@@ -9,7 +9,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-account',
@@ -33,10 +34,25 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './account.component.scss',
 })
 export class AccountComponent {
+  constructor(private authService: AuthService, private router: Router) {}
+
   public routeLinks = [
-    { link: 'disconnect-external-sources', name: 'Disconnect external sources', icon: 'home' },
+    {
+      link: 'disconnect-external-sources',
+      name: 'Disconnect external sources',
+      icon: 'home',
+    },
     { link: 'terms', name: 'Terms Of Service', icon: 'sync_alt' },
     { link: 'tbd', name: 'TBD', icon: 'trending_flat' },
     { link: 'delete-account', name: 'Delete Account', icon: 'settings' },
   ];
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: (res) => {
+        console.log(res);
+        this.router.navigate(['/login']);
+      },
+    });
+  }
 }

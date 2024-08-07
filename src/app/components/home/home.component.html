@@ -6,15 +6,18 @@
       Syncify
     </span>
     <span class="example-spacer"></span>
-    <!-- <nav class="right-button-padding">
-    <button mat-button class="toolbar-button" [matMenuTriggerFor]="menu">Account</button>
-    </nav> -->
+    <nav class="right-button-padding">
+    <!-- <button mat-button class="toolbar-button" [matMenuTriggerFor]="menu">Account</button> -->
+     <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>account_circle</mat-icon>
+     </button>
+    </nav>
   </mat-toolbar>
 
   <mat-sidenav-container class="example-container mat-elevation-z10" autosize >
   <mat-sidenav #drawer class="example-sidenav neutral-20" mode="side" [opened]="true" [style.width]="sideNavWidth()">
     <mat-nav-list  *ngFor="let route of routeLinks" >
-        <mat-list-item [routerLink]="route.link" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive" style="border-radius: 3px;">
+        <mat-list-item [routerLink]="route.link" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive" style="border-radius: 0px;" >
           <mat-icon
             matListItemIcon
           >
@@ -25,11 +28,11 @@
           </mat-list-item>
         
     </mat-nav-list>
-    <button mat-button  [matMenuTriggerFor]="menu">Account</button>
+    
 
   </mat-sidenav>
 
-  <div class="example-sidenav-content neutral-98">
+  <div class="example-sidenav-content fade-into-grey">
     <router-outlet ></router-outlet>
   </div>
 

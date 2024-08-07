@@ -3,8 +3,7 @@
 
  @mixin color($theme) {
     .neutral-20{
-         background-color: mat.get-theme-color($theme, neutral, 95);
-         //color: mat.get-theme-color($theme, secondary, 100);
+         background-color: mat.get-theme-color($theme, neutral, 96);
      }
 
      .neutral-98{
@@ -14,6 +13,14 @@
      .primary-light{
         background-color: mat.get-theme-color($theme, primary, 90);
      }
+
+     $neutral-96: mat.get-theme-color($theme, neutral, 96);
+     $neutral-90: mat.get-theme-color($theme, neutral, 90);
+     $primary-90:mat.get-theme-color($theme, primary, 90);
+
+   .fade-into-grey {
+      background-image: linear-gradient(180deg, $neutral-96, $primary-90)
+   }
 
 /*      .toolbar-color{
         background-color: mat.get-theme-color($theme, neutral, 20);

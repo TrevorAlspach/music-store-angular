@@ -12,16 +12,17 @@
 }
 
 .example-container {
-    height: calc(100vh - 64px);
+    //height: calc(100vh - 64px);
+    //height: 100%;
     width: 100%;
 }
 
 .example-sidenav-content {
     display: flex;
     padding: 3%;
-    width: 90%;
-    height: 85%;
-
+    height: calc(100vh - 64px);
+    //height: calc(100% - 64px);
+    //height: calc(100vh - 64px);
 }
 
 .example-sidenav {
