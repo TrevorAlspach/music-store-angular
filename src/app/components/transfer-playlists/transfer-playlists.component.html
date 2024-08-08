@@ -1,23 +1,104 @@
-<h1>Transfer Playlist</h1>
+<!-- <h1>Transfer Playlist</h1> -->
 
-<div class="flex-container">
+<mat-stepper
+  labelPosition="bottom"
+  #stepper
+  style="background-color: transparent"
+  [linear]="true"
+>
+  <mat-step>
+    <ng-template matStepLabel>Select Source and Destination</ng-template>
+    <div>
+      <div class="flex-container-source">
+        <app-source-selector
+          [transferSide]="TransferSide.SOURCE"
+          style="min-height: 300px"
+        ></app-source-selector>
+        <button
+          mat-raised-button
+          color="primary"
+          style="align-self: center"
+          matStepperNext
+          [disabled]="!sourceAndDestinationReady"
+        >
+          Begin
+        </button>
+        <app-source-selector
+          [transferSide]="TransferSide.DESTINATION"
+          style="min-height: 300px"
+        ></app-source-selector>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Select Playlist to Transfer</ng-template>
+    <button mat-icon-button matStepperPrevious>
+      <mat-icon>arrow_backward</mat-icon>
+    </button>
+    <div style="justify-content: center; display: flex; padding-top: 50px">
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <app-playlist-selector
+          [transferSide]="TransferSide.SOURCE"
+        ></app-playlist-selector>
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!this.transferReady"
+          matStepperNext
+        >
+          Confirm Selection
+        </button>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel
+      >Configure Destination Playlist Details</ng-template
+    >
+    <button mat-icon-button matStepperPrevious>
+      <mat-icon>arrow_backward</mat-icon>
+    </button>
+    <div>
+      <form
+        [formGroup]="this.createDestinationPlaylistFormGroup"
+        (ngSubmit)="initiateTransfer()"
+      >
+        <h2>Configure Destination</h2>
+        <div>
+          <div class="transfer-dialog-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="description">
+              <mat-label>Description</mat-label>
+              <input matInput formControlName="description" />
+            </mat-form-field>
+          </div>
+        </div>
+        <button
+          mat-button
+          type="submit"
+          [disabled]="this.createDestinationPlaylistFormGroup.invalid === true"
+          matStepperNext
+        >
+          Begin Transfer
+        </button>
+        <button mat-button mat-dialog-close>Cancel</button>
+      </form>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel
+      >Transfer</ng-template
+    >
+    <div *ngIf="!this.transferComplete">
+    <h2>Transfer In Progress</h2>
+    <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
+  </div>
+    <div *ngIf="this.transferComplete">
+      <h2>Transfer Complete</h2>
+    </div>
 
-<div class="flex-container-source">
-  <app-source-selector [transferSide]="TransferSide.SOURCE"></app-source-selector>
-  <app-source-selector [transferSide]="TransferSide.DESTINATION"></app-source-selector>
-  <!-- <div>
-    </div> -->
-</div>
-
-<div class="flex-container-playlists" style="padding-top: 30px;">
-  
-  <div style="display: flex; flex-direction: column; justify-items: center; height: 100%;">
-
-  <app-playlist-selector [transferSide]="TransferSide.SOURCE"></app-playlist-selector>
-</div>
-<!-- <div style="display: flex; flex-direction: column; justify-items: center; height: 100%;">
-  <h2 >Preview</h2>
-  <app-song-selector ></app-song-selector>
-  </div> -->
-  <button mat-raised-button color="primary" class="custom-border-radius" *ngIf="this.transferReady" (click)="openTransferDialog()">Begin Transfer</button>
- </div>
+  </mat-step>
+</mat-stepper>
