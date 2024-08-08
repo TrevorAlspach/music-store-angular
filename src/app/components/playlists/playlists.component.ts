@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreatePlaylistDialogComponent } from './create-playlist-dialog/create-playlist-dialog.component';
 import { PlaylistEvent, PlaylistEventService } from './playlist-event.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { DashboardService } from '../dashboard/dashboard.service';
 
 @Component({
   selector: 'app-playlists',
@@ -51,7 +52,8 @@ export class PlaylistsComponent implements OnInit {
     private spotifyService: SpotifyService,
     private matDialog: MatDialog,
     private playlistEventService: PlaylistEventService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dashboardService: DashboardService
   ) {}
   ngOnInit(): void {
     this.getSpotifyPlaylists();
@@ -68,6 +70,12 @@ export class PlaylistsComponent implements OnInit {
         if (playlistEvent.source === SourceType.SYNCIFY){
           this.getSyncifyPlaylists();
         }
+      }
+    });
+
+    this.dashboardService.dashboardRefreshSubject$.subscribe({
+      next: (val)=>{
+        this.refreshPlaylists();
       }
     })
   }
@@ -101,6 +109,7 @@ export class PlaylistsComponent implements OnInit {
         },
         error: ()=>{
           this.spotifyPlaylistsLoading = false;
+          this.spotifyPlaylists = [];
         }
       });
   }
