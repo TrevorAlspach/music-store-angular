@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 
 export const authGuard: CanActivateFn = async (route, state) => {
-  const authService = inject(AuthService);
+  /* const authService = inject(AuthService);
   const router = inject(Router);
 
   let authenticated;
@@ -22,5 +22,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
     // Redirect to login page if not authenticated
     router.navigate(['/login']);
     return false; 
-  }
+  } */
+ return true;
 };

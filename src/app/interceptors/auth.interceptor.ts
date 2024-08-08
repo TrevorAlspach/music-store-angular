@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders, HttpInterceptorFn } from '@angular/common/http';
 import { HttpEvent, HttpRequest, HttpHandlerFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
@@ -13,8 +13,16 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
   // Pass on the cloned request instead of the original request
   if (req.url.startsWith(apiBaseUrl)){
     // Clone the request to add the new withCredentials property
-    const clonedRequest = req.clone({
+    /* const clonedRequest = req.clone({
       withCredentials: true,
+    }); */
+
+    const token = localStorage.getItem('auth0-token');
+
+    const clonedRequest = req.clone({
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      }),
     });
 
     return next(clonedRequest).pipe(

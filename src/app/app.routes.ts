@@ -11,10 +11,13 @@ import { SpotifyAuthComponent } from './components/auth/spotify-auth/spotify-aut
 import { PlaylistDetailsComponent } from './components/playlists/playlist-details/playlist-details.component';
 import { TransferPlaylistsComponent } from './components/transfer-playlists/transfer-playlists.component';
 import { AccountComponent } from './components/account/account.component';
+import { LoginAuth0Component } from './components/auth/login-auth0/login-auth0.component';
+import { authGuardFn } from '@auth0/auth0-angular';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'auth', component: LoginAuth0Component},
   {
     path: '',
     component: HomeComponent,

@@ -1,17 +1,17 @@
 
 <div class="flex-container login-background">
 
-  <form class="center-form" [formGroup]="this.loginForm" (ngSubmit)="login()">
+  <form class="center-form" [formGroup]="this.loginForm" (ngSubmit)="loginAuth0()">
       <h1>Syncify</h1>
       <p>Keep Playlists In Sync. All in One Place</p>
     <div class="justify-content-center login-title"><h2>Login</h2></div>
 
-    <mat-form-field appearance="outline">
+    <!-- <mat-form-field appearance="outline">
       <input matInput placeholder="Email" [formControlName]="'email'" />
     </mat-form-field>
     <mat-form-field appearance="outline">
       <input type="password" matInput placeholder="Password" [formControlName]="'password'"/>
-    </mat-form-field>
+    </mat-form-field> -->
     <div class="justify-content-center">
     <button mat-raised-button color="primary" style="width: 50%;" type="submit">Login</button>
     
