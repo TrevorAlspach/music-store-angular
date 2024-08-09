@@ -5,7 +5,6 @@ import { AuthService } from '../../services/auth.service';
 import { SpotifyProfileComponent } from '../spotify-profile/spotify-profile.component';
 import { PlaylistsComponent } from '../playlists/playlists.component';
 import { HttpClient } from '@angular/common/http';
-import { DiscogsService } from '../../services/discogs.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +14,7 @@ import { DiscogsService } from '../../services/discogs.service';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-  constructor(private spotifyService: SpotifyService, private authService: AuthService, private http: HttpClient, private dicogsService: DiscogsService){}
+  constructor(private spotifyService: SpotifyService, private authService: AuthService, private http: HttpClient){}
 
   /* getSpotifyProfile(){
     //this.spotifyService.getAuthorizationCode()

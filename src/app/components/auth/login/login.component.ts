@@ -56,6 +56,8 @@ export class LoginComponent {
   } */
 
   loginAuth0() {
-    this.authService.loginWithRedirect();
+    this.authService.loginWithRedirect({
+      appState: { target: 'dashboard'}
+    });
   }
 }

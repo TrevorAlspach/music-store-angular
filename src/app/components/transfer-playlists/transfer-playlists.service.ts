@@ -6,7 +6,6 @@ import {
   Song,
   SourceType,
 } from '../../models/music.model';
-import { DiscogsService } from '../../services/discogs.service';
 import { PlaylistsService } from '../../services/playlists.service';
 
 @Injectable({
@@ -14,7 +13,6 @@ import { PlaylistsService } from '../../services/playlists.service';
 })
 export class TransferPlaylistsService {
   constructor(
-    private discogsService: DiscogsService,
     private playlistsService: PlaylistsService
   ) {}
 

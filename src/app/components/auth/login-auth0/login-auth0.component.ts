@@ -16,25 +16,6 @@ export class LoginAuth0Component {
   ) {}
 
   ngOnInit(){
-    this.route.queryParamMap.subscribe({
-      next: (queryParams) => {
-        const authCode = queryParams.get('code');
-        if (authCode !== null) {
-          console.log(authCode)
-          //localStorage.setItem('auth0-token', authCode);
-    /*       this.auth.getAccessTokenSilently().subscribe({
-            next: (token)=>{
-              localStorage.setItem('auth0-token', token);
-            }
-          })
-
-          this.router.navigate(['dashboard']); */
-        } else {
-          //handle error
-        }
-
-        console.log(authCode);
-      },
-    });
+    this.router.navigate(["dashboard"])
   }
 }

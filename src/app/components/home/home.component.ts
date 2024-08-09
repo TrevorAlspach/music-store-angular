@@ -11,6 +11,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 
 
 @Component({
@@ -49,7 +50,8 @@ export class HomeComponent {
   constructor(
     private authService: AuthService,
     private songService: SongService,
-    private router: Router
+    private router: Router,
+    private auth0Service: Auth0Service
   ) {}
 
   hitapi() {
@@ -61,11 +63,6 @@ export class HomeComponent {
   }
 
   logout() {
-    this.authService.logout().subscribe({
-      next: (res) => {
-        console.log(res);
-        this.router.navigate(['/login']);
-      },
-    });
+    this.auth0Service.logout();
   }
 }

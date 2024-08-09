@@ -17,20 +17,24 @@ import { authGuardFn } from '@auth0/auth0-angular';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'auth', component: LoginAuth0Component},
+
   {
-    path: '',
+    path: 'home',
     component: HomeComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuardFn],
     children: [
+      { path: 'auth', component: LoginAuth0Component },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'account', component: AccountComponent},
+      { path: 'account', component: AccountComponent },
       { path: 'playlists', component: PlaylistsComponent },
       { path: 'sync', component: SyncPlaylistsComponent },
-      { path: 'transfer', component: TransferPlaylistsComponent},
+      { path: 'transfer', component: TransferPlaylistsComponent },
       { path: 'spotify-auth', component: SpotifyAuthComponent },
-      {path: 'playlist-details/:source/:id', component: PlaylistDetailsComponent}
+      {
+        path: 'playlist-details/:source/:id',
+        component: PlaylistDetailsComponent,
+      },
     ],
   },
-  { path: '**', component: LoginComponent },
+  { path: '**', redirectTo: 'home/dashboard' },
 ];

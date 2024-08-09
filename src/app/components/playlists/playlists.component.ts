@@ -115,14 +115,14 @@ export class PlaylistsComponent implements OnInit {
   }
 
   getSyncifyPlaylists() {
-    this.syncifyPlaylistsLoading = true;
+    /* this.syncifyPlaylistsLoading = true;
     this.playlistsService.fetchAllPlaylistsForUser().subscribe({
       next: (res) => {
         this.syncifyPlaylistsLoading = false;
         console.log(res);
         this.syncifyPlaylists = res;
       },
-    });
+    }); */
   }
 
   spotifyCarouselBack() {
