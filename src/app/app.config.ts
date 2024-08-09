@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
         audience: 'http://localhost:8080/',
 
         // Request this scope at user authentication time
-        scope: 'admin',
+        scope: 'admin email',
       },
       //useRefreshTokens: true,
 
@@ -36,7 +36,7 @@ export const appConfig: ApplicationConfig = {
                 audience: 'http://localhost:8080/',
 
                 // The attached token should have these scopes
-                scope: 'admin',
+                scope: 'admin email',
               },
             },
           },

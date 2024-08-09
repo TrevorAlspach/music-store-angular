@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from '../../services/auth.service';
@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
   constructor(private spotifyService: SpotifyService, private authService: AuthService, private http: HttpClient){}
 
   /* getSpotifyProfile(){
@@ -24,6 +24,10 @@ export class DashboardComponent {
       }
     })
   } */
+
+  ngOnInit(): void {
+      
+  }
 
   clearTokens(){
     localStorage.removeItem('spotify_access_token');

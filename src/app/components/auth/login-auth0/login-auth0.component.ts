@@ -14,8 +14,4 @@ export class LoginAuth0Component {
     private route: ActivatedRoute,
     private router: Router
   ) {}
-
-  ngOnInit(){
-    this.router.navigate(["dashboard"])
-  }
 }

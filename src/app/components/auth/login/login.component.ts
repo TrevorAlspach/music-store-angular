@@ -56,8 +56,15 @@ export class LoginComponent {
   } */
 
   loginAuth0() {
+    this.authService.handleRedirectCallback().subscribe({
+      next: (res) => {
+        const target = res.appState?.target;
+        this.router.navigate([target]);
+      },
+    });
+
     this.authService.loginWithRedirect({
-      appState: { target: 'dashboard'}
+      appState: { target: '/home/account'}
     });
   }
 }

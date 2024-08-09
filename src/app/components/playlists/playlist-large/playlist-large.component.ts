@@ -48,7 +48,8 @@ export class PlaylistLargeComponent implements OnInit {
 
   openPlaylistDetails() {
     this.router.navigate([
-      '/playlist-details',
+      'home',
+      'playlist-details',
       this.playlist.source,
       this.playlist.id,
     ]);
