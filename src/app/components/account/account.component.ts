@@ -10,6 +10,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -34,7 +35,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './account.component.scss',
 })
 export class AccountComponent {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private auth0Service: Auth0Service) {}
 
   public routeLinks = [
     {
@@ -48,11 +49,6 @@ export class AccountComponent {
   ];
 
   logout() {
-    this.authService.logout().subscribe({
-      next: (res) => {
-        console.log(res);
-        this.router.navigate(['/login']);
-      },
-    });
+    this.auth0Service.logout();
   }
 }

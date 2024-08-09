@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from '../../services/auth.service';
 import { SpotifyProfileComponent } from '../spotify-profile/spotify-profile.component';
 import { PlaylistsComponent } from '../playlists/playlists.component';
 import { HttpClient } from '@angular/common/http';
-import { DiscogsService } from '../../services/discogs.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,8 +13,8 @@ import { DiscogsService } from '../../services/discogs.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
-  constructor(private spotifyService: SpotifyService, private authService: AuthService, private http: HttpClient, private dicogsService: DiscogsService){}
+export class DashboardComponent implements OnInit{
+  constructor(private spotifyService: SpotifyService, private authService: AuthService, private http: HttpClient){}
 
   /* getSpotifyProfile(){
     //this.spotifyService.getAuthorizationCode()
@@ -25,6 +24,10 @@ export class DashboardComponent {
       }
     })
   } */
+
+  ngOnInit(): void {
+      
+  }
 
   clearTokens(){
     localStorage.removeItem('spotify_access_token');
