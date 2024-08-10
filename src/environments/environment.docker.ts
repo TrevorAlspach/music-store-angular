@@ -1,6 +1,6 @@
 export const environment = {
   apiBaseUrl: 'http://localhost:8080/',
-  spotifyRedirectUrl: `${window.location.origin}/home/spotify-auth`,
+  spotifyRedirectUrl: 'http://localhost:4200/home/spotify-auth',
   spotifyClientId: '1567f5a6e70d4ff1a1d5e6a406b2c331',
   spotifyTokenUrl: 'https://accounts.spotify.com/api/token',
   spotifyAuthUrl: 'https://accounts.spotify.com/authorize',

@@ -6,22 +6,22 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
+import { environment } from '../environments/environment.development';
 
 export const appConfig: ApplicationConfig = {
-  /* providers: [provideRouter(routes, withComponentInputBinding()), provideAnimationsAsync(), provideHttpClient(withInterceptors([authInterceptor]))] */
   providers: [
     provideAuth0({
-      domain: 'dev-5icodle12xbi8dtf.us.auth0.com',
-      clientId: 'hKjneu0AYL1q087Bxlxg1AEX6tUR5KEI',
+      domain: environment.auth0.domain,
+      clientId: environment.auth0.clientId,
 
       authorizationParams: {
-        redirect_uri: `${window.location.origin}/auth`,
+        redirect_uri: environment.auth0.redirect_uri,
 
         // Request this audience at user authentication time
-        audience: 'http://localhost:8080/',
+        audience: environment.auth0.audience,
 
         // Request this scope at user authentication time
-        scope: 'admin email',
+        scope: environment.auth0.scope,
       },
       //useRefreshTokens: true,
 
@@ -29,14 +29,14 @@ export const appConfig: ApplicationConfig = {
         allowedList: [
           {
             // Match any request that starts 'https://dev-5icodle12xbi8dtf.us.auth0.com/api/v2/' (note the asterisk)
-            uri: 'http://localhost:8080/*',
+            uri: environment.auth0.interceptor.uri,
             tokenOptions: {
               authorizationParams: {
                 // The attached token should target this audience
-                audience: 'http://localhost:8080/',
+                audience: environment.auth0.audience,
 
                 // The attached token should have these scopes
-                scope: 'admin email',
+                scope: environment.auth0.scope,
               },
             },
           },
