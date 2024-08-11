@@ -12,7 +12,8 @@
     </div>
     <div class="playlist-info">
         <div style="padding-top: 6px;">{{this.playlist.name}}</div>
-        <div>{{this.playlist.creator}}</div>
+        <!-- <div>{{this.playlist.creator}}</div> -->
+        <img *ngIf="this.playlist.source === SourceType.SPOTIFY" style="padding-top: 6px;" src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo" [matTooltip]="'Spotify Playlist'"> 
         <!-- <div>Spotify</div> -->
     </div>
     

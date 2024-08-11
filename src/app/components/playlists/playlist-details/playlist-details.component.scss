@@ -8,6 +8,7 @@
     flex-direction: row;
     justify-content: center;
     max-height: inherit;
+    gap:10px;
 }
 
 .playlist-cover-image {
@@ -47,4 +48,9 @@
     height: 45vh !important;
     overflow: auto;
     // width: 50%;
+}
+
+.spotify-logo {
+    width: auto;
+    height: 30px;
 }

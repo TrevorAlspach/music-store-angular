@@ -1,5 +1,5 @@
 <mat-spinner *ngIf="this.isLoading"></mat-spinner>
-<div *ngIf="!this.isLoading" style="max-height: inherit; display: flex; flex-direction: row; gap:10px">
+<div *ngIf="!this.isLoading"  style="width: 100%;"><!--style="max-height: inherit; display: flex; flex-direction: row; gap:10px;-->
 
   <button mat-icon-button (click)="returnToPreviousPage()" *ngIf="!readonly">
     <mat-icon>chevron_left</mat-icon>
@@ -15,7 +15,10 @@
   <div class="playlist-info">
     <img [src]="this.playlist.imageUrl" class="playlist-cover-image" />
     <div class="playlist-text">
+      <div class="flex-container-row" style="width:100%">
       <h1>{{ this.playlist.name }}</h1>
+      <img *ngIf="this.playlist.source === SourceType.SPOTIFY" src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo" [matTooltip]="'Spotify Playlist'"> 
+      </div>
       <p>{{ this.playlist.description }}</p>
       <p>{{ this.playlist.songCount }}{{ " songs" }}</p>
 
@@ -35,7 +38,7 @@
 <div class="flex-container-row">
 <mat-card class="neutral-20" style="width: 100%;">
   <div style="padding-left: 20px; padding-right: 20px;" class="scrollable-table">
-  <table mat-table  [dataSource]="this.playlist.songs" style="min-width: 60%;">
+  <table mat-table  [dataSource]="this.playlist.songs" style="width: 100% !important">
     
     <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef > Song </th>

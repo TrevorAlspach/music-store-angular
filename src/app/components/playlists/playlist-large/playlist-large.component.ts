@@ -9,11 +9,12 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { SpotifyService } from '../../../services/spotify.service';
 import { PlaylistsService } from '../../../services/playlists.service';
 import { PlaylistEventService } from '../playlist-event.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'playlist-large',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
   templateUrl: './playlist-large.component.html',
   styleUrl: './playlist-large.component.scss',
 })
