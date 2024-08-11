@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { PlaylistSelectorComponent } from './playlist-selector/playlist-selector.component';
 import { SourceSelectorComponent } from './source-selector/source-selector.component';
@@ -19,6 +19,7 @@ import { PlaylistsService } from '../../services/playlists.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PlaylistDetailsComponent } from "../playlists/playlist-details/playlist-details.component";
 
 @Component({
   selector: 'app-transfer-playlists',
@@ -33,14 +34,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatStepperModule,
     MatIconModule,
     MatFormFieldModule,
-    ReactiveFormsModule, 
-    MatInputModule, 
-    MatProgressBarModule
-  ],
+    ReactiveFormsModule,
+    MatInputModule,
+    MatProgressBarModule,
+    PlaylistDetailsComponent
+],
   templateUrl: './transfer-playlists.component.html',
   styleUrl: './transfer-playlists.component.scss',
 })
-export class TransferPlaylistsComponent implements OnInit {
+export class TransferPlaylistsComponent implements OnInit, OnDestroy {
   sourceAndDestinationReady = false;
   transferReady = false;
   transferComplete = false;
@@ -48,6 +50,7 @@ export class TransferPlaylistsComponent implements OnInit {
   i: number = 0;
 
   combinedSubject$!: Observable<SourceType | Playlist | null>;
+  selectedPlaylist!: Playlist;
 
   createDestinationPlaylistFormGroup: FormGroup = this.fb.group({
     name: [
@@ -60,6 +63,8 @@ export class TransferPlaylistsComponent implements OnInit {
   playlistToTransferToSpotify$ = new Subject<Playlist>();
   playlistToTransferToMusicStore$ = new Subject<Playlist>();
 
+  combinedSubjectSubscription!: Subscription;
+  selectedPlaylistSubscription!: Subscription;
   MusicStoreTransferPlaylistSubscription: Subscription =
     this.playlistToTransferToMusicStore$
       .pipe(
@@ -163,7 +168,7 @@ export class TransferPlaylistsComponent implements OnInit {
       this.transferPlaylistsService.selectedPlaylist$
     );
 
-    this.combinedSubject$.subscribe({
+    this.combinedSubjectSubscription = this.combinedSubject$.subscribe({
       next: (subjectChanged) => {
         if (
           this.transferPlaylistsService.selectedSource$.value !==
@@ -189,6 +194,25 @@ export class TransferPlaylistsComponent implements OnInit {
         }
       },
     });
+
+    this.selectedPlaylistSubscription = this.transferPlaylistsService.selectedPlaylist$.subscribe({
+      next: (selectedPlaylist)=>{
+        if (selectedPlaylist !== null){
+          this.selectedPlaylist = selectedPlaylist;
+        }
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+      this.MusicStoreTransferPlaylistSubscription.unsubscribe();
+      this.spotifyTransferPlaylistSubscription.unsubscribe();
+      this.combinedSubjectSubscription.unsubscribe();
+      this.selectedPlaylistSubscription.unsubscribe();
+
+      this.transferPlaylistsService.selectedSource$.next(SourceType.NONE);
+      this.transferPlaylistsService.selectedDestination$.next(SourceType.NONE);
+      this.transferPlaylistsService.selectedPlaylist$.next(null);
   }
 
   initiateTransfer() {

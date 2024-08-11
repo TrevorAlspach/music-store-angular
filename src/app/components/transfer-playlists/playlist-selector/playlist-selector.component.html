@@ -25,7 +25,7 @@
     <th mat-header-cell *matHeaderCellDef> Name </th>
     <td mat-cell *matCellDef="let playlist"> 
         <div class="name-column">
-        <img [src]="playlist.image_url" class="table-album-cover">
+        <img [src]="playlist.imageUrl" class="table-album-cover">
         {{playlist.name}} </div></td>
     </ng-container>
 
@@ -39,7 +39,7 @@
     <td mat-cell *matCellDef="let playlist"> {{playlist.songCount}} </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="tableColumns; sticky: true" class="neutral-20"></tr>
   <tr mat-row *matRowDef="let row; columns: tableColumns;" (click)="rowSelected(row)"></tr>
 </mat-table>
 </div>

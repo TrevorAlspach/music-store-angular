@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Playlist, PlaylistDetails, Song, SourceType } from '../../../models/music.model';
 import { CommonModule, Location } from '@angular/common';
@@ -30,7 +30,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   templateUrl: './playlist-details.component.html',
   styleUrl: './playlist-details.component.scss',
 })
-export class PlaylistDetailsComponent implements OnInit {
+export class PlaylistDetailsComponent implements OnInit, OnChanges {
   readonly songColumns = ['name', 'artist', 'album', 'time'];
 
   @Input()
@@ -38,6 +38,9 @@ export class PlaylistDetailsComponent implements OnInit {
 
   @Input()
   source!: SourceType;
+
+  @Input()
+  readonly: boolean = false;
 
   /*   name!:string;
   description!:string; */
@@ -54,62 +57,73 @@ export class PlaylistDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.source === SourceType.SPOTIFY) {
-      this.spotifyService.getPlaylistFromId(this.id).subscribe({
-        next: (playlist: SpotifyPlaylistResponse) => {
-          console.log(playlist);
-          this.isLoading = false;
+    this.loadPlaylistDetails();
+  }
 
-          let imageUrl: string;
-          if (playlist.images && playlist.images.length > 0) {
-            imageUrl = playlist.images[0].url;
-          } else {
-            imageUrl = 'assets/defaultAlbum.jpg';
+  ngOnChanges(changes: SimpleChanges): void {
+      if (changes['id'].previousValue){
+        this.loadPlaylistDetails();
+      }
+  }
+
+  loadPlaylistDetails(){
+    this.isLoading = true;
+if (this.source === SourceType.SPOTIFY) {
+  this.spotifyService.getPlaylistFromId(this.id).subscribe({
+    next: (playlist: SpotifyPlaylistResponse) => {
+      console.log(playlist);
+      this.isLoading = false;
+
+      let imageUrl: string;
+      if (playlist.images && playlist.images.length > 0) {
+        imageUrl = playlist.images[0].url;
+      } else {
+        imageUrl = 'assets/defaultAlbum.jpg';
+      }
+
+      this.playlist = <PlaylistDetails>{
+        name: playlist.name,
+        description: playlist.description,
+        id: playlist.id,
+        songs: playlist.tracks.items.map(
+          (spotifyTrack: SpotifyTrackWrapper) => {
+            return <Song>{
+              name: spotifyTrack.track.name,
+              album: spotifyTrack.track.album.name,
+              artist: spotifyTrack.track.artists
+                .map((artist) => {
+                  return artist.name;
+                })
+                .join(', '),
+              time: this.millisToMinutesAndSeconds(
+                spotifyTrack.track.duration_ms
+              ),
+              imageUrl: spotifyTrack.track.album.images[0].url,
+            };
           }
+        ),
+        imageUrl: imageUrl,
+        songCount: playlist.tracks.total,
+        source: SourceType.SPOTIFY,
+        href: playlist.external_urls.spotify,
+      };
+    },
+  });
+}
 
-          this.playlist = <PlaylistDetails>{
-            name: playlist.name,
-            description: playlist.description,
-            id: playlist.id,
-            songs: playlist.tracks.items.map(
-              (spotifyTrack: SpotifyTrackWrapper) => {
-                return <Song>{
-                  name: spotifyTrack.track.name,
-                  album: spotifyTrack.track.album.name,
-                  artist: spotifyTrack.track.artists
-                    .map((artist) => {
-                      return artist.name;
-                    })
-                    .join(', '),
-                  time: this.millisToMinutesAndSeconds(
-                    spotifyTrack.track.duration_ms
-                  ),
-                  imageUrl: spotifyTrack.track.album.images[0].url,
-                };
-              }
-            ),
-            imageUrl: imageUrl,
-            songCount: playlist.tracks.total,
-            source: SourceType.SPOTIFY,
-            href: playlist.external_urls.spotify,
-          };
-        },
-      });
-    }
+if (this.source === SourceType.SYNCIFY) {
+  this.playlistsService.getPlaylist(this.id).subscribe({
+    next: (res: PlaylistDetails) => {
+      console.log(res);
+      this.playlist = res;
+      this.isLoading = false;
 
-    if (this.source === SourceType.SYNCIFY) {
-      this.playlistsService.getPlaylist(this.id).subscribe({
-        next: (res: PlaylistDetails) => {
-          console.log(res);
-          this.playlist = res;
-          this.isLoading = false;
-
-          if (!this.playlist.imageUrl || this.playlist.imageUrl === '') {
-            this.playlist.imageUrl = 'assets/defaultAlbum.jpg';
-          }
-        },
-      });
-    }
+      if (!this.playlist.imageUrl || this.playlist.imageUrl === '') {
+        this.playlist.imageUrl = 'assets/defaultAlbum.jpg';
+      }
+    },
+  });
+}
   }
 
   viewPlaylistInSpotify() {

@@ -14,7 +14,7 @@
     </nav>
   </mat-toolbar>
 
-  <mat-sidenav-container class="example-container mat-elevation-z10" autosize >
+  <mat-sidenav-container class="example-container mat-elevation-z10" autosize>
   <mat-sidenav #drawer class="example-sidenav neutral-20" mode="side" [opened]="true" [style.width]="sideNavWidth()">
     <mat-nav-list  *ngFor="let route of routeLinks" >
         <mat-list-item [routerLink]="route.link" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive" style="border-radius: 0px;" >

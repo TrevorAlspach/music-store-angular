@@ -1,13 +1,17 @@
 <mat-spinner *ngIf="this.isLoading"></mat-spinner>
-<div *ngIf="!this.isLoading">
+<div *ngIf="!this.isLoading" style="max-height: inherit; display: flex; flex-direction: row; gap:10px">
 
-  <div class="top-container">
-
-  <button mat-icon-button (click)="returnToPreviousPage()">
+  <button mat-icon-button (click)="returnToPreviousPage()" *ngIf="!readonly">
     <mat-icon>chevron_left</mat-icon>
   </button>
-    
   <div>
+  <div class="top-container">
+
+  <!-- <button mat-icon-button (click)="returnToPreviousPage()">
+    <mat-icon>chevron_left</mat-icon>
+  </button> -->
+    
+
   <div class="playlist-info">
     <img [src]="this.playlist.imageUrl" class="playlist-cover-image" />
     <div class="playlist-text">
@@ -15,7 +19,7 @@
       <p>{{ this.playlist.description }}</p>
       <p>{{ this.playlist.songCount }}{{ " songs" }}</p>
 
-      <button mat-icon-button [matMenuTriggerFor]="playlistMenu" #menuTrigger="matMenuTrigger" [matTooltip]="'More Options'"><mat-icon>more_horiz</mat-icon></button>
+      <button mat-icon-button *ngIf="!readonly" [matMenuTriggerFor]="playlistMenu" #menuTrigger="matMenuTrigger" [matTooltip]="'More Options'"><mat-icon>more_horiz</mat-icon></button>
     <mat-menu #playlistMenu>
       <button mat-menu-item><mat-icon>edit</mat-icon>Edit Playlist Details</button>
         <button *ngIf="this.playlist.source === SourceType.SPOTIFY" mat-menu-item (click)="viewPlaylistInSpotify()"> <mat-icon>open_in_new</mat-icon> View In Spotify</button>
@@ -25,17 +29,19 @@
     </mat-menu>
     </div>
   </div>
+  </div>
 
-  
-<mat-card class="neutral-20">
-  <div style="padding: 20px;">
-  <table mat-table  [dataSource]="this.playlist.songs">
+
+<div class="flex-container-row">
+<mat-card class="neutral-20" style="width: 100%;">
+  <div style="padding-left: 20px; padding-right: 20px;" class="scrollable-table">
+  <table mat-table  [dataSource]="this.playlist.songs" style="min-width: 60%;">
     
     <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef> Song </th>
+    <th mat-header-cell *matHeaderCellDef > Song </th>
     <td mat-cell *matCellDef="let song"> 
         <div class="song-column">
-        <img [src]="song.image_url" class="table-album-cover">
+        <img [src]="song.imageUrl" class="table-album-cover">
         {{song.name}} </div></td>
     </ng-container>
 
@@ -54,11 +60,14 @@
     <td mat-cell *matCellDef="let song"> {{song.time}} </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="songColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="songColumns; sticky: true" class="neutral-20"></tr>
   <tr mat-row *matRowDef="let row; columns: songColumns;"></tr>
   </table>
   </div>
   </mat-card>
+  </div>
 </div>
+</div>
+<!-- </div> -->
 
 

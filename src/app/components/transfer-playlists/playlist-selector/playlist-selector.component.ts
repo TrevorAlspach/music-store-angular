@@ -104,11 +104,12 @@ export class PlaylistSelectorComponent
             const mappedPlaylists = [];
 
             for (let playlist of playlists) {
+              console.log(playlist)
               let imageUrl: string;
               if (playlist.images && playlist.images.length > 0) {
                 imageUrl = playlist.images[0].url;
               } else {
-                imageUrl = '';
+                imageUrl = 'assets/defaultAlbum.jpg';
               }
 
               mappedPlaylists.push({
@@ -120,6 +121,7 @@ export class PlaylistSelectorComponent
                 songCount: playlist.tracks.total
               });
             }
+            console.log(mappedPlaylists)
             this.playlistsDataSource.data = mappedPlaylists;
             this.changeDetectorRef.detectChanges();
             this.isLoading = false;
@@ -138,8 +140,15 @@ export class PlaylistSelectorComponent
 
   rowSelected(row: Playlist) {
     //console.log(row);
-    this.selection.toggle(row);
-    this.transferPlaylistsService.selectedPlaylist$.next(row);
+
+    if (this.selection.isSelected(row)){
+      this.selection.deselect(row);
+      this.transferPlaylistsService.selectedPlaylist$.next(null);
+    } else {
+      this.transferPlaylistsService.selectedPlaylist$.next(row);
+      this.selection.select(row)
+    }
+    
   }
 
   get SourceType() {

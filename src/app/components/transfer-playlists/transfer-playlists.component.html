@@ -35,7 +35,7 @@
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
     </button>
-    <div style="justify-content: center; display: flex; padding-top: 50px">
+    <div class="step2-container">
       <div style="display: flex; flex-direction: column; gap: 10px">
         <app-playlist-selector
           [transferSide]="TransferSide.SOURCE"
@@ -49,6 +49,7 @@
           Confirm Selection
         </button>
       </div>
+      <app-playlist-details *ngIf="this.selectedPlaylist" [id]="this.selectedPlaylist.id" [source]="selectedPlaylist.source" [readonly]="true"></app-playlist-details>
     </div>
   </mat-step>
   <mat-step>
