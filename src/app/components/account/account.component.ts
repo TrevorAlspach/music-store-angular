@@ -49,6 +49,6 @@ export class AccountComponent {
   ];
 
   logout() {
-    this.auth0Service.logout();
+    this.authService.logout();
   }
 }

@@ -63,6 +63,6 @@ export class HomeComponent {
   }
 
   logout() {
-    this.auth0Service.logout();
+    this.authService.logout();
   }
 }

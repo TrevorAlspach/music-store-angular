@@ -4,6 +4,7 @@ import { User } from '../models/user.model';
 import { shareReplay } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { TokenResponse } from '../models/spotify-api.model';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,9 @@ export class AuthService {
   apiBaseUrl = environment.apiBaseUrl;
 
   constructor(
-    private http: HttpClient //private appConfigService: AppConfigService
+    private http: HttpClient,
+    private auth0Service: Auth0Service
+    //private appConfigService: AppConfigService
   ) {
     //this.apiBaseUrl = this.appConfigService.apiBaseUrl;
   }
@@ -33,7 +36,7 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
-    return this.http.post<any>(this.apiBaseUrl + 'auth/logout', {});
+    return this.auth0Service.logout();
   }
 
   signupUser(email: string, password: string, username: string) {
