@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { InactivityService } from './services/inactivity.service';
 
 
 @Component({
@@ -19,4 +20,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 })
 export class AppComponent {
   title = 'music-store-angular';
+
+  constructor(private inactivityService: InactivityService){}
 }

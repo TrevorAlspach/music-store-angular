@@ -26,7 +26,11 @@ export class DashboardComponent implements OnInit{
   } */
 
   ngOnInit(): void {
-      
+      this.authService.getOrCreateUser().subscribe({
+        next: ()=>{
+          console.log('got user info from token');
+        }
+      })
   }
 
   clearTokens(){

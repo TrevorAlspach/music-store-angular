@@ -31,15 +31,59 @@ import { DashboardService } from '../dashboard/dashboard.service';
     SlickCarouselModule,
     MatCardModule,
     MatTooltipModule,
-    MatSnackBarModule, 
-    MatProgressSpinnerModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './playlists.component.html',
   styleUrl: './playlists.component.scss',
 })
 export class PlaylistsComponent implements OnInit {
   @ViewChild('slickModalSpotify') slickModal!: SlickCarouselComponent;
-  slideConfig = { slidesToShow: 6, slidesToScroll: 6, arrows: false };
+  slideConfig = {
+    slidesToShow: 5,
+    slidesToScroll: 5,
+    //rows:2,
+    arrows: false,
+    responsive: [
+      {
+        breakpoint: 812,
+        settings: {
+          
+          slidesToShow: 2,
+          infinite: true,
+        },
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          
+          slidesToShow: 3,
+          infinite: true,
+        },
+      },
+      {
+        breakpoint: 1408,
+        settings: {
+          slidesToShow: 4,
+          infinite: true,
+        },
+      },
+      {
+        breakpoint: 1920,
+        settings: {
+          slidesToShow: 5,
+          infinite: true,
+        },
+      },
+      {
+        breakpoint: 2560,
+        settings: {
+          slidesToShow: 6,
+          infinite: true,
+        },
+      },
+    ],
+  };
 
   spotifyPlaylists: Playlist[] = [];
   syncifyPlaylists: Playlist[] = [];
@@ -60,24 +104,24 @@ export class PlaylistsComponent implements OnInit {
     this.getSyncifyPlaylists();
 
     this.playlistEventService.playlistEvent$.subscribe({
-      next: (playlistEvent:PlaylistEvent)=>{
+      next: (playlistEvent: PlaylistEvent) => {
         this.snackBar.open(playlistEvent.message, 'Close', {
-          duration: 5000
+          duration: 5000,
         });
-        if (playlistEvent.source === SourceType.SPOTIFY){
+        if (playlistEvent.source === SourceType.SPOTIFY) {
           this.getSpotifyPlaylists();
-        } 
-        if (playlistEvent.source === SourceType.SYNCIFY){
+        }
+        if (playlistEvent.source === SourceType.SYNCIFY) {
           this.getSyncifyPlaylists();
         }
-      }
+      },
     });
 
     this.dashboardService.dashboardRefreshSubject$.subscribe({
-      next: (val)=>{
+      next: (val) => {
         this.refreshPlaylists();
-      }
-    })
+      },
+    });
   }
 
   getSpotifyPlaylists() {
@@ -95,7 +139,6 @@ export class PlaylistsComponent implements OnInit {
               imageUrl = '';
             }
 
-
             this.spotifyPlaylists.push({
               name: playlist.name,
               id: playlist.id,
@@ -107,10 +150,10 @@ export class PlaylistsComponent implements OnInit {
           }
           this.spotifyPlaylistsLoading = false;
         },
-        error: ()=>{
+        error: () => {
           this.spotifyPlaylistsLoading = false;
           this.spotifyPlaylists = [];
-        }
+        },
       });
   }
 
@@ -141,29 +184,29 @@ export class PlaylistsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe({
-      next: (closeValue)=>{
-        if (closeValue === true){
-          if (sourceType === SourceType.SYNCIFY){
+      next: (closeValue) => {
+        if (closeValue === true) {
+          if (sourceType === SourceType.SYNCIFY) {
             this.getSyncifyPlaylists();
             this.playlistEventService.playlistEvent$.next({
-              message: "Syncify Playlist Created Successfully",
-              source: SourceType.SYNCIFY
+              message: 'Syncify Playlist Created Successfully',
+              source: SourceType.SYNCIFY,
             });
           }
 
-          if (sourceType === SourceType.SPOTIFY){
+          if (sourceType === SourceType.SPOTIFY) {
             this.getSpotifyPlaylists();
             this.playlistEventService.playlistEvent$.next({
               message: 'Spotify Playlist Created Successfully',
-              source: SourceType.SPOTIFY
+              source: SourceType.SPOTIFY,
             });
           }
         }
-      }
-    })
+      },
+    });
   }
 
-  refreshPlaylists(){
+  refreshPlaylists() {
     this.getSyncifyPlaylists();
     this.getSpotifyPlaylists();
   }

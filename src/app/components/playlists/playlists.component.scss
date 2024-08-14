@@ -1,5 +1,6 @@
 :host {
     width: 100%;
+    height: 100%;
 }
 
 .flex-row{
@@ -13,6 +14,12 @@
 
 .heading-no-margin{
     margin-bottom: 0;
+}
+
+.toggle-grid-list-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
 }
 
 /* .grid-playlist-container{

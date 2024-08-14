@@ -9,6 +9,7 @@
   <mat-step>
     <ng-template matStepLabel>Select Source and Destination</ng-template>
     <div>
+      <h1 class="title-center">Select Source and Destination</h1>
       <div class="flex-container-source">
         <app-source-selector
           [transferSide]="TransferSide.SOURCE"
@@ -35,6 +36,7 @@
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
     </button>
+    <h1 class="title-center">Select Playlist to Transfer</h1>
     <div class="step2-container">
       <div style="display: flex; flex-direction: column; gap: 10px">
         <app-playlist-selector
@@ -58,13 +60,15 @@
     >
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
+      
     </button>
+    <h1 class="title-center">Configure Destination</h1>
     <div>
       <form
         [formGroup]="this.createDestinationPlaylistFormGroup"
         (ngSubmit)="initiateTransfer()"
       >
-        <h2>Configure Destination</h2>
+        
         <div>
           <div class="transfer-dialog-form">
             <mat-form-field appearance="outline">
@@ -77,9 +81,19 @@
             </mat-form-field>
           </div>
         </div>
-        <button
+<!--         <button
           mat-button
           type="submit"
+          [disabled]="this.createDestinationPlaylistFormGroup.invalid === true"
+          matStepperNext
+        >
+          Begin Transfer
+        </button> -->
+         <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          matStepperNext
           [disabled]="this.createDestinationPlaylistFormGroup.invalid === true"
           matStepperNext
         >

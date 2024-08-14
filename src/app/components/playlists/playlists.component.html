@@ -1,6 +1,14 @@
 <!-- <h1 style="font-weight: 500">Playlists</h1> -->
 <!-- <mat-card class="neutral-20" > -->
   <div style="padding: 20px">
+    <div class="toggle-grid-list-container">
+      <button mat-icon-button (click)="true" [matTooltip]="'Create Spotify Playlist'">
+        <mat-icon color="primary">list</mat-icon>
+      </button>
+      <button mat-icon-button (click)="true" [matTooltip]="'Create Spotify Playlist'">
+        <mat-icon color="primary">grid_view</mat-icon>
+      </button>
+    </div>
     <div class="flex-row">
       <h2 style="font-weight: 500;" class="heading-no-margin">Spotify</h2>
       <button mat-icon-button (click)="openCreatePlaylistDialog(SourceType.SPOTIFY)" [matTooltip]="'Create Spotify Playlist'">
@@ -18,7 +26,7 @@
         </button>
         <ngx-slick-carousel
           class="carousel"
-          style="width: 85%"
+          style="width: 95%"
           #slickModalSpotify="slick-carousel"
           [config]="slideConfig"
           (init)="slickInit($event)"
@@ -52,7 +60,7 @@
       <ngx-slick-carousel
         *ngIf="this.syncifyPlaylists.length > 0"
         class="carousel"
-        style="width: 85%"
+        style="width: 95%"
         #slickModal="slick-carousel"
         [config]="slideConfig"
         (init)="slickInit($event)"
