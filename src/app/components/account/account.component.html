@@ -4,16 +4,16 @@
     <mat-action-list *ngFor="let route of routeLinks">
       <mat-list-item [routerLink]="route.link" style="border-radius: 3px">
         <mat-icon matListItemIcon> {{ route.icon }}</mat-icon>
-        <div matListItemTitle style="font-weight: 500">{{ route.name }}</div>
+        <div matListItemTitle>{{ route.name }}</div>
       </mat-list-item>
     </mat-action-list>
   </mat-card>
 
   <mat-card class="neutral-20">
     <mat-action-list>
-      <button mat-list-item (click)="logout()" style="border-radius: 3px">
-        <mat-icon matListItemIcon> logout</mat-icon>
-        <div matListItemTitle style="font-weight: 500">Logout</div>
+      <button mat-list-item (click)="logout()" >
+        <mat-icon matListItemIcon class="error"> logout</mat-icon>
+        <div matListItemTitle class="error">Logout</div>
       </button>
     </mat-action-list>
   </mat-card>

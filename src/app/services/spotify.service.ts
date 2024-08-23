@@ -42,7 +42,7 @@ export class SpotifyService {
   readonly redirectUri = environment.spotifyRedirectUrl;
 
   readonly scope =
-    'user-read-private user-read-email playlist-modify-private playlist-modify-public';
+    'user-read-private user-read-email playlist-modify-private playlist-modify-public streaming';
   readonly authUrl = new URL(environment.spotifyAuthUrl);
   readonly tokenUrl = environment.spotifyTokenUrl;
 

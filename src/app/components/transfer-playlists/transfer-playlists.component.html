@@ -62,15 +62,44 @@
       <mat-icon>arrow_backward</mat-icon>
       
     </button>
-    <h1 class="title-center">Configure Destination</h1>
-    <div>
+    
+    <div style="justify-content: center; display: flex;">
       <form
         [formGroup]="this.createDestinationPlaylistFormGroup"
         (ngSubmit)="initiateTransfer()"
       >
         
-        <div>
+        <div class="transfer-summary-col">
+          <div class="transfer-summary" *ngIf="this.selectedPlaylist">
+             <div class="playlist-info">
+    <img [src]="this.selectedPlaylist.imageUrl" class="playlist-cover-image" />
+    <div class="playlist-text">
+      <div class="flex-container-row" style="width:100%">
+      <h1>{{ this.selectedPlaylist.name }}</h1>
+      <img *ngIf="this.selectedPlaylist.source === SourceType.SPOTIFY" src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="logo-source" [matTooltip]="'Spotify Playlist'">
+      <img *ngIf="this.selectedPlaylist.source === SourceType.APPLE_MUSIC" src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="logo-source" [matTooltip]="'Apple Music Playlist'"> 
+      <img *ngIf="this.selectedPlaylist.source === SourceType.SYNCIFY" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'Syncify Playlist'">  
+      </div>
+      <p>{{ this.selectedPlaylist.description }}</p>
+      <p>{{ this.selectedPlaylist.songCount }}{{ " songs" }}</p>
+
+    </div>
+  </div>
+            <mat-icon>arrow_forward</mat-icon>
+            @if(this.selectedDestination === SourceType.SPOTIFY){
+              <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="logo-destination"> 
+            }
+            @if(this.selectedDestination === SourceType.APPLE_MUSIC){
+              <img src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="logo-destination">
+            }
+            @if(this.selectedDestination === SourceType.SYNCIFY){
+              <img src="../../../assets/guitar_icon.jpg" class="logo-destination">
+            }
+            
+          </div>
+
           <div class="transfer-dialog-form">
+            <h1 class="title-center">Configure Destination</h1>
             <mat-form-field appearance="outline">
               <mat-label>Name</mat-label>
               <input matInput formControlName="name" />
@@ -79,17 +108,7 @@
               <mat-label>Description</mat-label>
               <input matInput formControlName="description" />
             </mat-form-field>
-          </div>
-        </div>
-<!--         <button
-          mat-button
-          type="submit"
-          [disabled]="this.createDestinationPlaylistFormGroup.invalid === true"
-          matStepperNext
-        >
-          Begin Transfer
-        </button> -->
-         <button
+            <button
           mat-raised-button
           type="submit"
           color="primary"
@@ -99,7 +118,10 @@
         >
           Begin Transfer
         </button>
-        <button mat-button mat-dialog-close>Cancel</button>
+        <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+          </div>
+        </div>
+         
       </form>
     </div>
   </mat-step>

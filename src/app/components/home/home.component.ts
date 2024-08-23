@@ -38,14 +38,15 @@ export class HomeComponent {
   public routeLinks = [
     { link: 'dashboard', name: 'Home', icon: 'home' },
     { link: 'playlists', name: 'My Playlists', icon: 'library_music' },
+    { link: 'compare', name: 'Compare Playlists', icon: 'compare_arrows' },
     { link: 'sync', name: 'Sync', icon: 'sync_alt' },
-    { link: 'transfer', name: 'Transfer', icon: 'trending_flat'},
-    { link: 'account', name: 'Account', icon: 'settings'}
+    { link: 'transfer', name: 'Transfer', icon: 'trending_flat' },
+    { link: 'account', name: 'Account', icon: 'settings' },
   ];
   public isExpanded = false;
 
   collapsed = signal(false);
-  sideNavWidth = computed(()=> this.collapsed() ? '60px' : '250px');
+  sideNavWidth = computed(() => (this.collapsed() ? '60px' : '250px'));
 
   constructor(
     private authService: AuthService,

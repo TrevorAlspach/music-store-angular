@@ -21,6 +21,7 @@ html, body{
     @include home-theme.color($custom-theme);
     @include playlist-selector-theme.color($custom-theme);
     //@include button-theme.custom-border-radius();
+    @include button-theme.color($custom-theme);
     }
 
 button, mat-card, .mat-mdc-button-persistent-ripple, .mat-mdc-focus-indicator {

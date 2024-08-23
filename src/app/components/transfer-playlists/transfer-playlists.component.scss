@@ -34,8 +34,9 @@
 .transfer-dialog-form {
     display: flex;
     flex-direction: column;
-    padding-top: 10px;
-    width: 50%;
+    min-width: 500px;
+    //padding-top: 10px;
+    //width: 80%;
 }
 
 .description {
@@ -53,4 +54,46 @@
     padding-top: 10px;
     justify-content: center;
     display: flex;
+}
+
+.transfer-summary{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.transfer-summary-col {
+    display: flex;
+    flex-direction: col;
+    gap: 50px;
+}
+
+.playlist-info {
+    display: flex;
+    gap: 50px;
+    padding-bottom: 2%;
+}
+
+.playlist-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.playlist-cover-image {
+    width: 250px;
+    height: 250px;
+    border-radius: 5px;
+}
+
+.logo-destination {
+    width: auto;
+    height: 70px;
+}
+
+.logo-source {
+    width: auto;
+    height: 30px;
 }

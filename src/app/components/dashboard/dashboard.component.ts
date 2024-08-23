@@ -2,14 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from '../../services/auth.service';
-import { SpotifyProfileComponent } from '../spotify-profile/spotify-profile.component';
+import { SpotifyProfileComponent } from '../spotify-components/spotify-profile/spotify-profile.component';
 import { PlaylistsComponent } from '../playlists/playlists.component';
 import { HttpClient } from '@angular/common/http';
+import { AppleMusicProfileComponent } from "../apple-music-profile/apple-music-profile.component";
+import { SpotifyWebPlayerComponent } from "../spotify-components/spotify-web-player/spotify-web-player.component";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatButtonModule, SpotifyProfileComponent, PlaylistsComponent],
+  imports: [MatButtonModule, SpotifyProfileComponent, PlaylistsComponent, AppleMusicProfileComponent, SpotifyWebPlayerComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

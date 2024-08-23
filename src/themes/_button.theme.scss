@@ -9,3 +9,10 @@ $custom-border-radius: 3px; // Set your custom border radius here
         border-radius: 3px;
     }
 }
+
+@mixin color($theme) {
+    .error {
+        color: mat.get-theme-color($theme, error, 50) !important;
+        fill: mat.get-theme-color($theme, error, 50) !important;
+    }
+}

@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PlaylistDetailsComponent } from "../playlists/playlist-details/playlist-details.component";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-transfer-playlists',
@@ -37,7 +38,8 @@ import { PlaylistDetailsComponent } from "../playlists/playlist-details/playlist
     ReactiveFormsModule,
     MatInputModule,
     MatProgressBarModule,
-    PlaylistDetailsComponent
+    PlaylistDetailsComponent,
+    MatTooltipModule
 ],
   templateUrl: './transfer-playlists.component.html',
   styleUrl: './transfer-playlists.component.scss',
@@ -51,6 +53,7 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
 
   combinedSubject$!: Observable<SourceType | Playlist | null>;
   selectedPlaylist!: Playlist;
+  selectedDestination!: SourceType;
 
   createDestinationPlaylistFormGroup: FormGroup = this.fb.group({
     name: [
@@ -65,6 +68,7 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
 
   combinedSubjectSubscription!: Subscription;
   selectedPlaylistSubscription!: Subscription;
+  selectedDestinationSubscription!: Subscription;
   MusicStoreTransferPlaylistSubscription: Subscription =
     this.playlistToTransferToMusicStore$
       .pipe(
@@ -201,6 +205,12 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
           this.selectedPlaylist = selectedPlaylist;
         }
       }
+    });
+
+    this.selectedDestinationSubscription = this.transferPlaylistsService.selectedDestination$.subscribe((selectedDestination)=>{
+      if (selectedDestination){
+        this.selectedDestination = selectedDestination;
+      }
     })
   }
 
@@ -269,6 +279,10 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
 
   get TransferSide() {
     return TransferSide;
+  }
+
+  get SourceType() {
+    return SourceType;
   }
 
 /*   openTransferDialog() {

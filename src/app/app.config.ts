@@ -7,6 +7,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 import { environment } from '../environments/environment.development';
+import { ScriptService } from './scripts/script.service';
+import { WindowRefService } from './services/window-ref.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -46,5 +48,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authHttpInterceptorFn])),
+    ScriptService,
+    WindowRefService
   ],
 };
