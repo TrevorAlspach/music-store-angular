@@ -21,13 +21,15 @@ export class SpotifyWebPlayerComponent implements OnInit {
   private window: CustomWindow;
   private player!: Spotify.Player;
 
-  private spotifySdkPlayerReady$ = new Subject();
+  //private spotifySdkPlayerReady$ = new Subject();
+  deviceId!:string;
 
   constructor(private scriptService: ScriptService, private windowRef: WindowRefService, private spotifySdkService: SpotifySdkService) {
     //Manually load the spotify web player sdk script. They need a npm package for this :/
     this.loadSpotifyWebPlayerScript();
 
     this.window = windowRef.nativeWindow;
+
 
     this.window.onSpotifyWebPlaybackSDKReady = () => {
           //const token = this.getSpotifyAccessToken();
@@ -43,6 +45,7 @@ export class SpotifyWebPlayerComponent implements OnInit {
 
               this.player.addListener('ready', ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
+                this.deviceId = device_id;
               });
 
               // Not Ready
@@ -76,6 +79,12 @@ export class SpotifyWebPlayerComponent implements OnInit {
   }
 
   togglePlay(){
+    this.spotifySdkService.transferPlayback(this.deviceId).subscribe({
+      next: (res)=>{
+        console.log(res)
+      }
+    })
+
     this.player.togglePlay();
     //this.player.
   }

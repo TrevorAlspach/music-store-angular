@@ -54,6 +54,11 @@ export class SpotifySdkService implements OnInit {
   ngOnInit(): void {
   }
 
+  /**Wrap every used method from the sdk's promise with observable */
+  public transferPlayback(deviceId: string){
+    return defer(()=>this.sdk.player.transferPlayback([deviceId], true))
+  }
+
   public authenticate() {
     this.spotifyService.getAuthorizationCode();
   }
