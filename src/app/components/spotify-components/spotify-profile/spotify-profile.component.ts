@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { DashboardService } from '../../dashboard/dashboard.service';
+import { SpotifySdkService } from '../../../services/spotify-sdk.service';
 
 @Component({
   selector: 'spotify-profile',
@@ -30,7 +31,7 @@ export class SpotifyProfileComponent implements OnInit {
   isLoading = true;
   notAuthorized = false;
 
-  constructor(private spotifyService: SpotifyService, private changeDetectorRef: ChangeDetectorRef, private dashboardService: DashboardService) {}
+  constructor(private spotifyService: SpotifyService, private changeDetectorRef: ChangeDetectorRef, private dashboardService: DashboardService, private spotifySdkService: SpotifySdkService) {}
 
   ngOnInit() {
     this.spotifyService.getUserProfile().subscribe({
@@ -55,7 +56,8 @@ export class SpotifyProfileComponent implements OnInit {
   }
 
   connectSpotifyAccount() {
-    this.spotifyService.getAuthorizationCode();
+    //this.spotifyService.getAuthorizationCode();
+    this.spotifySdkService.authenticate();
   }
 
   disconnectSpotifyAccount() {

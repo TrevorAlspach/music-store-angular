@@ -5,6 +5,7 @@ import { of, switchMap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { SpotifySdkService } from '../../../services/spotify-sdk.service';
 
 @Component({
   selector: 'app-spotify-auth',
@@ -19,6 +20,7 @@ export class SpotifyAuthComponent implements OnInit {
 
   constructor(
     private spotifyService: SpotifyService,
+    private spotifySdkService: SpotifySdkService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -29,21 +31,18 @@ export class SpotifyAuthComponent implements OnInit {
       next: (queryParams)=>{
         const authCode = queryParams.get("code");
         if (authCode !== null){
-          this.spotifyService.getAccessToken(authCode).subscribe({
-            next: (response)=>{
-              console.log('got access token using auth code');
-              //this.successfulAuth = true;
-              this.router.navigate(['dashboard'])
+          this.spotifySdkService.handleAuthCode(authCode).subscribe({
+            next: (response) => {
+              this.spotifySdkService.createSdkFromAccessToken(response);
+              this.router.navigate(['dashboard']);
             },
-            error: (e: HttpErrorResponse) =>{
+            error: (e: HttpErrorResponse) => {
               //handle error
-            }
-          })
+            },
+          });
         } else {
           //handle error
         }
-        
-        console.log(authCode)
       }
     })
   }

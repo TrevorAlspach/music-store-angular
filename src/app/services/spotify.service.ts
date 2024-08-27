@@ -33,6 +33,7 @@ import {
   TracksSearchResponse,
 } from '../models/spotify-api.model';
 import { Song } from '../models/music.model';
+import { AccessToken } from '@spotify/web-api-ts-sdk';
 
 @Injectable({
   providedIn: 'root',
@@ -61,7 +62,7 @@ export class SpotifyService {
             return this.refreshAccessToken(refreshToken);
           }),
           switchMap(() => {
-            console.log('access token here is' + this.getStoredAccessToken());
+            // console.log('access token here is' + this.getStoredAccessToken());
             return this.http.get<any>(
               'https://api.spotify.com/v1/me/playlists',
               {
@@ -78,6 +79,7 @@ export class SpotifyService {
             ) {
               //this.getAuthorizationCode();
               console.log(err);
+              this.authenticatedUser = this.emptyUser;
             }
             return throwError(err);
           })
@@ -301,7 +303,7 @@ export class SpotifyService {
       .pipe(
         switchMap((response) =>
           this.storeAccessAndRefreshToken(
-            response['access_token'],
+            JSON.stringify(response),
             response['refresh_token']
           ).pipe(switchMap(() => of(response)))
         )
@@ -331,17 +333,19 @@ export class SpotifyService {
         },
       })
       .pipe(
-        switchMap((response) =>
+        switchMap((response:AccessToken) =>
           this.storeAccessAndRefreshToken(
-            response['access_token'],
+            JSON.stringify(response),
             response['refresh_token']
+          ).pipe(
+            switchMap(()=> this.getUserProfile())
           ).pipe(switchMap(() => of(response)))
         )
       );
   }
 
   storeAccessAndRefreshToken(accessToken: string, refreshToken: string) {
-    console.log('storing tokens function');
+   //console.log('storing tokens function');
     localStorage.setItem('spotify_access_token', accessToken);
     return this.authService.updateSpotifyRefreshToken(refreshToken);
   }
@@ -391,6 +395,26 @@ export class SpotifyService {
   }
 
   getStoredAccessToken() {
-    return localStorage.getItem('spotify_access_token');
+    let stringifiedToken = localStorage.getItem('spotify_access_token') as string;
+    if (!stringifiedToken){
+      stringifiedToken = '{}';
+    }
+
+    const token = JSON.parse(stringifiedToken);
+
+    return token.access_token;
+  }
+
+  getFullAccessToken(){
+    const stringifiedToken = localStorage.getItem(
+      'spotify_access_token'
+    ) as string;
+
+    if (stringifiedToken){
+      return JSON.parse(stringifiedToken);
+    } else {
+      return null;
+    }
+    
   }
 }

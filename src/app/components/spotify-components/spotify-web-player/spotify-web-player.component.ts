@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { SpotifySdkService } from '../../../services/spotify-sdk.service';
 import { AccessToken } from '@spotify/web-api-ts-sdk';
+import { SpotifyService } from '../../../services/spotify.service';
 ///  <reference types="@types/spotify-web-playback-sdk"/>
 
 @Component({
@@ -22,58 +23,56 @@ export class SpotifyWebPlayerComponent implements OnInit {
 
   private spotifySdkPlayerReady$ = new Subject();
 
-  constructor(private scriptService: ScriptService, private windowRef: WindowRefService) {
+  constructor(private scriptService: ScriptService, private windowRef: WindowRefService, private spotifySdkService: SpotifySdkService) {
     //Manually load the spotify web player sdk script. They need a npm package for this :/
     this.loadSpotifyWebPlayerScript();
 
     this.window = windowRef.nativeWindow;
 
     this.window.onSpotifyWebPlaybackSDKReady = () => {
-          const token = this.getSpotifyAccessToken();
-          console.log('TOKEN!!!')
-          this.player = new Spotify.Player({
-            name: 'Web Playback SDK Quick Start Player',
-            getOAuthToken: (cb) => {
-              cb(token);
-            },
-            volume: 0.5,
-          });
+          //const token = this.getSpotifyAccessToken();
+          this.getSpotifyAccessToken().subscribe((token)=>{
+            if (token){
+              this.player = new Spotify.Player({
+                name: 'Web Playback SDK Quick Start Player',
+                getOAuthToken: (cb) => {
+                  cb(token.access_token);
+                },
+                volume: 0.5,
+              });
 
-          this.player.addListener('ready', ({ device_id }) => {
-            console.log('Ready with Device ID', device_id);
-          });
+              this.player.addListener('ready', ({ device_id }) => {
+                console.log('Ready with Device ID', device_id);
+              });
 
-          // Not Ready
-          this.player.addListener('not_ready', ({ device_id }) => {
-            console.log('Device ID has gone offline', device_id);
-          });
+              // Not Ready
+              this.player.addListener('not_ready', ({ device_id }) => {
+                console.log('Device ID has gone offline', device_id);
+              });
 
-          this.player.addListener(
-            'initialization_error',
-            ({ message }) => {
-              console.error(message);
+              this.player.addListener('initialization_error', ({ message }) => {
+                console.error(message);
+              });
+
+              this.player.addListener('authentication_error', ({ message }) => {
+                console.error(message);
+              });
+
+              this.player.addListener('account_error', ({ message }) => {
+                console.error(message);
+              });
+
+              this.player.connect();
+            } else {
+              console.log('no access token available cant create spotify web player')
             }
-          );
-
-          this.player.addListener(
-            'authentication_error',
-            ({ message }) => {
-              console.error(message);
-            }
-          );
-
-          this.player.addListener('account_error', ({ message }) => {
-            console.error(message);
-          });
-
-          this.player.connect();
+            
+          })
         }
     
     }
 
   ngOnInit(): void {
-    this.spotifySdkPlayerReady$.subscribe(()=>{
-    })
   }
 
   togglePlay(){
@@ -88,12 +87,7 @@ export class SpotifyWebPlayerComponent implements OnInit {
       console.log('script loaded ', data);
   }
 
-  getSpotifyAccessToken() {
-    return localStorage.getItem('spotify_access_token') as string;
-    //return this.spotifySdkService.getAccessToken();
+  private getSpotifyAccessToken() {
+    return this.spotifySdkService.getAccessTokenUsedByCurrentSdkInstance();
   }
 }
-
-/* interface CustomWindow extends Window {
-  onSpotifyWebPlaybackSDKReady: any;
-} */
