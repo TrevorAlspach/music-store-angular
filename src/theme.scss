@@ -5,10 +5,13 @@
 @use 'themes/home.theme' as home-theme;
 @use 'themes/playlist-selector.theme' as playlist-selector-theme;
 @use 'themes/button.theme' as button-theme;
+@use 'themes/global_flex.scss' as global_flex;
 //@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 // Define a custom theme
 @include mat.core();
+
+
 
 //$custom-typography: mat.m2-define-typography-config($font-family: 'Roboto, sans-serif',);
 $custom-theme: m3.$light-theme;
@@ -20,6 +23,7 @@ html, body{
     @include login-theme.theme($custom-theme);
     @include home-theme.color($custom-theme);
     @include playlist-selector-theme.color($custom-theme);
+    @include global_flex.global_flex($custom-theme);
     //@include button-theme.custom-border-radius();
     @include button-theme.color($custom-theme);
     }

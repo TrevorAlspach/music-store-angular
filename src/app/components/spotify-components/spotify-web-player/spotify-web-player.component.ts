@@ -3,12 +3,16 @@ import { ScriptService } from '../../../scripts/script.service';
 import { CustomWindow, WindowRefService } from '../../../services/window-ref.service';
 import { Subject } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { SpotifySdkService } from '../../../services/spotify-sdk.service';
+import { AccessToken } from '@spotify/web-api-ts-sdk';
 ///  <reference types="@types/spotify-web-playback-sdk"/>
 
 @Component({
   selector: 'app-spotify-web-player',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './spotify-web-player.component.html',
   styleUrl: './spotify-web-player.component.scss',
 })
@@ -25,47 +29,47 @@ export class SpotifyWebPlayerComponent implements OnInit {
     this.window = windowRef.nativeWindow;
 
     this.window.onSpotifyWebPlaybackSDKReady = () => {
-      console.log(this.getSpotifyAccessToken() + " token!!")
-      const token = this.getSpotifyAccessToken();
-      this.player = new Spotify.Player({
-        name: 'Web Playback SDK Quick Start Player',
-        getOAuthToken: (cb) => {
-          cb(token);
-        },
-        volume: 0.5,
-      });
-      //this.spotifySdkPlayerReady$.next('player_ready');
+          const token = this.getSpotifyAccessToken();
+          console.log('TOKEN!!!')
+          this.player = new Spotify.Player({
+            name: 'Web Playback SDK Quick Start Player',
+            getOAuthToken: (cb) => {
+              cb(token);
+            },
+            volume: 0.5,
+          });
 
-      this.player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-      });
+          this.player.addListener('ready', ({ device_id }) => {
+            console.log('Ready with Device ID', device_id);
+          });
 
-      // Not Ready
-      this.player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
-      });
+          // Not Ready
+          this.player.addListener('not_ready', ({ device_id }) => {
+            console.log('Device ID has gone offline', device_id);
+          });
 
-      this.player.addListener(
-        'initialization_error',
-        ({ message }) => {
-          console.error(message);
+          this.player.addListener(
+            'initialization_error',
+            ({ message }) => {
+              console.error(message);
+            }
+          );
+
+          this.player.addListener(
+            'authentication_error',
+            ({ message }) => {
+              console.error(message);
+            }
+          );
+
+          this.player.addListener('account_error', ({ message }) => {
+            console.error(message);
+          });
+
+          this.player.connect();
         }
-      );
-
-      this.player.addListener(
-        'authentication_error',
-        ({ message }) => {
-          console.error(message);
-        }
-      );
-
-      this.player.addListener('account_error', ({ message }) => {
-        console.error(message);
-      });
-
-      this.player.connect();
-    };
-  }
+    
+    }
 
   ngOnInit(): void {
     this.spotifySdkPlayerReady$.subscribe(()=>{
@@ -86,6 +90,7 @@ export class SpotifyWebPlayerComponent implements OnInit {
 
   getSpotifyAccessToken() {
     return localStorage.getItem('spotify_access_token') as string;
+    //return this.spotifySdkService.getAccessToken();
   }
 }
 

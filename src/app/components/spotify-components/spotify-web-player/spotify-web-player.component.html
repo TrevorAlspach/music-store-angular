@@ -1,1 +1,17 @@
-<button mat-raised-button (click)="togglePlay()">Start Playing Spotify</button>
+
+
+<mat-card>
+    
+    
+
+    <div class="flex-row">
+    <button mat-icon-button>
+        <mat-icon>skip_previous</mat-icon>
+    </button>
+    <button mat-icon-button (click)="togglePlay()"><mat-icon>play_arrow</mat-icon></button>
+    <button mat-icon-button>
+        <mat-icon>skip_next</mat-icon>
+    </button>
+    </div>
+    
+</mat-card>
