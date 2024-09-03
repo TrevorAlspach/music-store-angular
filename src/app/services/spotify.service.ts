@@ -43,7 +43,7 @@ export class SpotifyService {
   readonly redirectUri = environment.spotifyRedirectUrl;
 
   readonly scope =
-    'user-read-private user-read-email playlist-modify-private playlist-modify-public streaming user-read-playback-state';
+    'user-read-private user-read-email playlist-modify-private playlist-modify-public streaming user-read-playback-state user-read-currently-playing';
   readonly authUrl = new URL(environment.spotifyAuthUrl);
   readonly tokenUrl = environment.spotifyTokenUrl;
 
@@ -87,11 +87,11 @@ export class SpotifyService {
       }
       return throwError(error);
     });
-  }
+  };
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getAuthenticatedUser(){
+  getAuthenticatedUser() {
     return this.authenticatedUser;
   }
 
@@ -108,9 +108,7 @@ export class SpotifyService {
           },
         }
       )
-      .pipe(
-        this.customCatchErrorOperator()
-      );
+      .pipe(this.customCatchErrorOperator());
   }
 
   getPlaylistFromId(id: string): Observable<SpotifyPlaylistResponse> {
@@ -123,9 +121,7 @@ export class SpotifyService {
           }),
         }
       )
-      .pipe(
-        this.customCatchErrorOperator()
-      );
+      .pipe(this.customCatchErrorOperator());
   }
 
   createPlaylist(name: string, description: string, songs: Song[]) {
@@ -152,16 +148,15 @@ export class SpotifyService {
           }
         })
       )
-      .pipe(
-        this.customCatchErrorOperator()
-      );
+      .pipe(this.customCatchErrorOperator());
   }
 
-  transferPlayback(){
-    
-  }
+  transferPlayback() {}
 
-  addSongsToPlaylist(songs: Song[], playlistId: string): Observable<SpotifyPlaylistResponse> {
+  addSongsToPlaylist(
+    songs: Song[],
+    playlistId: string
+  ): Observable<SpotifyPlaylistResponse> {
     const errors = [];
     const searchRequests: Observable<TracksSearchResponse>[] = [];
     for (let song of songs) {
@@ -196,10 +191,11 @@ export class SpotifyService {
             concatMap((batch) => this.addBatchToPlaylist(batch, playlistId))
           )
         )
-      ).pipe(switchMap(()=>this.getPlaylistFromId(playlistId)));
+      )
+      .pipe(switchMap(() => this.getPlaylistFromId(playlistId)));
   }
 
-  addBatchToPlaylist(batch: string[], playlistId: string){
+  addBatchToPlaylist(batch: string[], playlistId: string) {
     return this.http.post(
       `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
       {
@@ -230,9 +226,7 @@ export class SpotifyService {
           .set('limit', '1')
           .set('type', 'track'),
       })
-      .pipe(
-        this.customCatchErrorOperator()
-      )
+      .pipe(this.customCatchErrorOperator())
       .pipe(
         retry({
           count: 5,
@@ -266,9 +260,7 @@ export class SpotifyService {
           }),
         }
       )
-      .pipe(
-        this.customCatchErrorOperator()
-      );
+      .pipe(this.customCatchErrorOperator());
   }
 
   getUserProfile(): Observable<SpotifyUser> {
@@ -278,9 +270,7 @@ export class SpotifyService {
           Authorization: `Bearer ${this.getStoredAccessToken()}`,
         }),
       })
-      .pipe(
-        this.customCatchErrorOperator()
-      )
+      .pipe(this.customCatchErrorOperator())
       .pipe(tap((userProfile) => (this.authenticatedUser = userProfile)));
   }
 
@@ -333,19 +323,19 @@ export class SpotifyService {
         },
       })
       .pipe(
-        switchMap((response:AccessToken) =>
+        switchMap((response: AccessToken) =>
           this.storeAccessAndRefreshToken(
             JSON.stringify(response),
             response['refresh_token']
-          ).pipe(
-            switchMap(()=> this.getUserProfile())
-          ).pipe(switchMap(() => of(response)))
+          )
+            .pipe(switchMap(() => this.getUserProfile()))
+            .pipe(switchMap(() => of(response)))
         )
       );
   }
 
   storeAccessAndRefreshToken(accessToken: string, refreshToken: string) {
-   //console.log('storing tokens function');
+    //console.log('storing tokens function');
     localStorage.setItem('spotify_access_token', accessToken);
     return this.authService.updateSpotifyRefreshToken(refreshToken);
   }
@@ -395,8 +385,10 @@ export class SpotifyService {
   }
 
   getStoredAccessToken() {
-    let stringifiedToken = localStorage.getItem('spotify_access_token') as string;
-    if (!stringifiedToken){
+    let stringifiedToken = localStorage.getItem(
+      'spotify_access_token'
+    ) as string;
+    if (!stringifiedToken) {
       stringifiedToken = '{}';
     }
 
@@ -405,16 +397,15 @@ export class SpotifyService {
     return token.access_token;
   }
 
-  getFullAccessToken(){
+  getFullAccessToken() {
     const stringifiedToken = localStorage.getItem(
       'spotify_access_token'
     ) as string;
 
-    if (stringifiedToken){
+    if (stringifiedToken) {
       return JSON.parse(stringifiedToken);
     } else {
       return null;
     }
-    
   }
 }

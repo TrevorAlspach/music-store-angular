@@ -12,6 +12,7 @@ import {MatListModule} from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
+import { SpotifyWebPlayerComponent } from "../spotify-components/spotify-web-player/spotify-web-player.component";
 
 
 @Component({
@@ -30,7 +31,8 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
     MatSidenavModule,
     MatListModule,
     MatTooltipModule,
-  ],
+    SpotifyWebPlayerComponent
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

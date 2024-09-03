@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { AccessToken, AuthorizationCodeWithPKCEStrategy, PlaybackState, SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { environment } from '../../environments/environment.development';
-import { defer, from, Observable, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, defer, from, Observable, of, Subject, switchMap, throwError } from 'rxjs';
 import { SpotifyService } from './spotify.service';
 import { SpotifyUser } from '../models/spotify-api.model';
 import { AuthService } from './auth.service';
@@ -15,6 +15,9 @@ export class SpotifySdkService implements OnInit {
   readonly clientId = environment.spotifyClientId;
   private window!: CustomWindow;
   private player!: Spotify.Player;
+
+  public playerState$: Subject<Spotify.PlaybackState> = new Subject();
+
   deviceId!: string;
 
   sdk!: SpotifyApi;
@@ -66,29 +69,38 @@ export class SpotifySdkService implements OnInit {
     return defer(() => this.sdk.player.getPlaybackState());
   }
 
-  public authenticate() {
-    this.spotifyService.getAuthorizationCode();
+  public getCurrentlyPlayingTrack(): Observable<PlaybackState> {
+    return defer(() => this.sdk.player.getCurrentlyPlayingTrack());
   }
 
-  public handleAuthCode(authCode: string) {
-    return this.spotifyService.getAccessToken(authCode);
-  }
-
-  public getAccessTokenUsedByCurrentSdkInstance() {
-    if (!this.sdk) {
-      console.log('sdk not init yet');
-      return throwError(() => 'sdk not init yet');
-    }
-    return defer(() => from(this.sdk.getAccessToken()));
-  }
-
-  public createSdkFromAccessToken(access_token: AccessToken) {
-    this.sdk = SpotifyApi.withAccessToken(this.clientId, access_token);
-    console.log('created spotify sdk with access token');
-  }
-
-  public togglePlayer(){
+  public togglePlayer() {
     this.player.togglePlay();
+  }
+
+/*   public resumePlayer() {
+    //this.player.resume();
+  } */
+
+  public nextTrack() {
+    return defer(() =>this.player.nextTrack());
+  }
+
+  public prevTrack() {
+    return defer(() =>this.player.previousTrack());
+  }
+
+  public adjustPlayerVolume(number: number) {
+    this.player.setVolume(number);
+  }
+
+  public getPlayerState() {
+    if (this.player) {
+      return defer(() => this.player.getCurrentState());
+    } else {
+      return of(null);
+    }
+
+    // return this.playerState$.
   }
 
   private initWebPlayer() {
@@ -132,6 +144,11 @@ export class SpotifySdkService implements OnInit {
             console.error(message);
           });
 
+          this.player.addListener('player_state_changed', (playbackState) => {
+            console.log(playbackState);
+            this.playerState$.next(playbackState);
+          });
+
           this.player.connect();
         } else {
           console.log(
@@ -149,7 +166,28 @@ export class SpotifySdkService implements OnInit {
     console.log('script loaded ', data);
   }
 
-  public getWebPlayerDeviceId(){
+  public authenticate() {
+    this.spotifyService.getAuthorizationCode();
+  }
+
+  public handleAuthCode(authCode: string) {
+    return this.spotifyService.getAccessToken(authCode);
+  }
+
+  public getAccessTokenUsedByCurrentSdkInstance() {
+    if (!this.sdk) {
+      console.log('sdk not init yet');
+      return throwError(() => 'sdk not init yet');
+    }
+    return defer(() => from(this.sdk.getAccessToken()));
+  }
+
+  public createSdkFromAccessToken(access_token: AccessToken) {
+    this.sdk = SpotifyApi.withAccessToken(this.clientId, access_token);
+    console.log('created spotify sdk with access token');
+  }
+
+  public getWebPlayerDeviceId() {
     return this.deviceId;
   }
 }

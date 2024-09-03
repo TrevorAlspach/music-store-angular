@@ -1,17 +1,48 @@
-
-
-<mat-card>
-    
-    
-
-    <div class="flex-row">
-    <button mat-icon-button>
-        <mat-icon>skip_previous</mat-icon>
-    </button>
-    <button mat-icon-button (click)="togglePlay()"><mat-icon>play_arrow</mat-icon></button>
-    <button mat-icon-button>
-        <mat-icon>skip_next</mat-icon>
-    </button>
+<div>
+<div class="flex-row align-center">
+  <div class="flex-row track-section">
+    <img [src]="this.coverImageUrl" class="player-album-cover" />
+    <div class="track-details" *ngIf="this.currentPlayerItem">
+      <span class="track-name">{{ this.currentPlayerItem.name }}</span>
+      <span class="track-artist">{{
+        this.currentPlayerItem.artists[0].name
+      }}</span>
     </div>
+  </div>
+
+  <button mat-icon-button (click)="prevTrack()">
+    <mat-icon>skip_previous</mat-icon>
+  </button>
+  <button
+    *ngIf="!this.playerState || this.playerState.paused"
+    mat-icon-button
+    (click)="togglePlay()"
+  >
+    <mat-icon>play_arrow</mat-icon>
+  </button>
+  <button
+    *ngIf="this.playerState && !this.playerState.paused"
+    mat-icon-button
+    (click)="togglePlay()"
+  >
+    <mat-icon>pause</mat-icon>
+  </button>
+  <button mat-icon-button (click)="nextTrack()">
+    <mat-icon>skip_next</mat-icon>
+  </button>
+      <mat-slider min="0" max="1" step="0.1">
+      <input
+        matSliderThumb
+        [(ngModel)]="volume"
+        (ngModelChange)="onVolumeChange()"
+        #volumeslider
+      />
+    </mat-slider>
+</div>
+<div class="flex-row align-center gap-5">
+    <div class="track-time">{{this.trackPosition | millisecondToTime}}</div>
     
-</mat-card>
+<mat-progress-bar mode="determinate" [value]="this.trackPositionAsDecimal"></mat-progress-bar>
+<div class="track-time">{{this.trackDuration | millisecondToTime}}</div>
+</div>
+</div>

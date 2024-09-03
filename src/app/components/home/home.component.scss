@@ -2,8 +2,12 @@
     height: 100%;
 } */
 
-.example-spacer {
-    flex: 1 1 auto;
+.toolbar-flex{
+    //flex: 3 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
     gap: 20px;
 }
 
