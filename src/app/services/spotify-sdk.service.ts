@@ -17,6 +17,7 @@ export class SpotifySdkService implements OnInit {
   private player!: Spotify.Player;
 
   public playerState$: Subject<Spotify.PlaybackState> = new Subject();
+  public playerReady$: Subject<boolean> = new BehaviorSubject(false);
 
   deviceId!: string;
 
@@ -77,12 +78,13 @@ export class SpotifySdkService implements OnInit {
     this.player.togglePlay();
   }
 
-/*   public resumePlayer() {
+  public resumePlayer() {
     //this.player.resume();
-  } */
+  }
 
   public nextTrack() {
     return defer(() =>this.player.nextTrack());
+
   }
 
   public prevTrack() {
@@ -95,6 +97,7 @@ export class SpotifySdkService implements OnInit {
 
   public getPlayerState() {
     if (this.player) {
+      //console.log('getplayerstate player is not nul')
       return defer(() => this.player.getCurrentState());
     } else {
       return of(null);
@@ -114,6 +117,7 @@ export class SpotifySdkService implements OnInit {
       //const token = this.getSpotifyAccessToken();
       this.getAccessTokenUsedByCurrentSdkInstance().subscribe((token) => {
         if (token) {
+          console.log('player should be init now')
           this.player = new Spotify.Player({
             name: 'Web Playback SDK Quick Start Player',
             getOAuthToken: (cb) => {
@@ -124,6 +128,7 @@ export class SpotifySdkService implements OnInit {
 
           this.player.addListener('ready', ({ device_id }) => {
             console.log('Ready with Device ID', device_id);
+            this.playerReady$.next(true);
             this.deviceId = device_id;
           });
 
@@ -145,7 +150,7 @@ export class SpotifySdkService implements OnInit {
           });
 
           this.player.addListener('player_state_changed', (playbackState) => {
-            console.log(playbackState);
+            //console.log(playbackState);
             this.playerState$.next(playbackState);
           });
 

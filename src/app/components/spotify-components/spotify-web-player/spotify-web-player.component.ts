@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ScriptService } from '../../../scripts/script.service';
 import { CustomWindow, WindowRefService } from '../../../services/window-ref.service';
-import { exhaustMap, Observable, of, Subject, switchMap, tap } from 'rxjs';
+import { exhaustMap, filter, Observable, of, retry, Subject, switchMap, tap, throwError } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,18 +32,19 @@ import { MillisecondToTimePipe } from "../../../pipes/millisecond-to-time.pipe";
   styleUrl: './spotify-web-player.component.scss',
 })
 export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
-  //API playback state
-  //playbackState!: PlaybackState;
   //local web player state
   playerState!: Spotify.PlaybackState;
   //cover album image url
   coverImageUrl: string = '';
   currentTrackItem!: Track;
   currentPlayerItem!: Spotify.Track;
+  deviceReady: boolean = false;
   volume: number = 0.5;
   trackDuration: number = 0;
   trackPositionAsDecimal: number = 0;
   trackPosition: number = 0;
+
+  updatePlayerStateInterval!: NodeJS.Timeout;
 
   constructor(
     private scriptService: ScriptService,
@@ -53,6 +54,57 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+
+/*     this.spotifySdkService.playerReady$
+      .pipe(
+        filter((ready) => {
+          console.log('in filter');
+          this.deviceReady = ready;
+          return ready;
+        }),
+          switchMap(()=>
+            this.spotifySdkService.getCurrentlyPlayingTrack()),
+
+              retry({
+        count: 5,
+        delay: 1000
+      })
+      )
+      .subscribe((playbackState) => {
+        console.log(playbackState)
+        if (playbackState) {
+          console.log('player state is here');
+          this.updateCurrentTrackDetails(
+            playbackState
+          );
+        }
+        console.log('player state is not here');
+
+        this.updatePlayerStateInterval = setInterval(() => {
+          this.spotifySdkService.getPlayerState().subscribe({
+            next: (playbackState) => {
+              if (playbackState) {
+                this.spotifySdkService.playerState$.next(playbackState);
+              }
+            },
+          });
+        }, 1000);
+      }); */
+
+    this.spotifySdkService.playerReady$.subscribe((ready)=>{
+      this.deviceReady = ready;
+      this.updatePlayerStateInterval = setInterval(() => {
+        this.spotifySdkService.getPlayerState().subscribe({
+          next: (playbackState) => {
+            if (playbackState) {
+              this.spotifySdkService.playerState$.next(playbackState);
+            }
+          },
+        });
+      }, 1000);
+    })
+
+
     this.spotifySdkService.playerState$.subscribe({
       next: (playerState: Spotify.PlaybackState) => {
         this.currentPlayerItem = playerState.track_window.current_track;
@@ -61,23 +113,14 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
         this.trackPosition = playerState.position;
         this.trackPositionAsDecimal =
           (playerState.position / playerState.duration) * 100;
-        //console.log(this.trackPosition)
       },
     });
 
-    const x = setInterval(() => {
-      this.spotifySdkService.getPlayerState().subscribe({
-        next: (playbackState) => {
-          if (playbackState) {
-            this.spotifySdkService.playerState$.next(playbackState);
-          }
-        },
-      });
-    }, 1000);
+    
   }
 
   ngOnDestroy(): void {
-    //console.log('on destroy')
+    clearInterval(this.updatePlayerStateInterval)
   }
 
   onVolumeChange() {
@@ -85,30 +128,21 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
   }
 
   nextTrack() {
-         const webPlayerDeviceId = this.spotifySdkService.getWebPlayerDeviceId();
-    this.spotifySdkService
-      .nextTrack()
-      .pipe(
-        switchMap((playback) => {
-          return this.spotifySdkService.getPlayerState();
-        })
-      )
-      .subscribe((playbackState: Spotify.PlaybackState | null) => {
-        //console.log(this.playbackState)
-        if (playbackState){
-        this.updateCurrentTrackDetailsFromPlayer(
-          playbackState?.track_window.current_track
-        );
-        this.changeDetectorRef.detectChanges();
-        }
-
-      }); 
+      this.spotifySdkService
+        .nextTrack()
+        .subscribe(()=>{
+          this.updateCurrentTrackDetailsFromPlayer(
+            this.playerState.track_window.next_tracks[0]
+          );
+        });
   }
 
   prevTrack() {
-    this.spotifySdkService.prevTrack().subscribe(() => {
-      this.updateCurrentTrackDetailsFromPlayer(this.currentPlayerItem);
-    });
+         this.spotifySdkService.prevTrack().subscribe(() => {
+           this.updateCurrentTrackDetailsFromPlayer(
+             this.playerState.track_window.previous_tracks[1]
+           );
+         });
   }
 
   togglePlay() {
@@ -122,21 +156,10 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
               .transferPlayback(webPlayerDeviceId)
               .pipe(
                 switchMap(() => this.spotifySdkService.getPlaybackState())
-                /*               tap((playbackState)=> {
-                this.playbackState = playbackState;
-                //this.updateCurrentTrackDetails(playbackState);
-
-              }) */
               );
           } else if (playbackState.device.id !== webPlayerDeviceId) {
-            //this.playbackState = playbackState;
-            //this.updateCurrentTrackDetails(playbackState);
-
             return this.spotifySdkService.transferPlayback(webPlayerDeviceId);
           } else {
-            //console.log(playbackState)
-            //this.playbackState = playbackState;
-            //this.updateCurrentTrackDetails(playbackState);
             return of(playbackState);
           }
         }),
@@ -159,7 +182,7 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
       });
   }
 
-/*   updateCurrentTrackDetails(playbackState: PlaybackState) {
+  updateCurrentTrackDetails(playbackState: PlaybackState) {
     const track = playbackState.item as Track;
     if (track.album) {
       console.log(this.currentTrackItem);
@@ -175,16 +198,11 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
     } else {
       this.coverImageUrl = '';
     }
-  } */
+  }
 
   updateCurrentTrackDetailsFromPlayer(track: Spotify.Track) {
     if (track.album) {
-      console.log(this.currentPlayerItem);
-
-      console.log(this.currentPlayerItem);
-      console.log('this is an music track');
       if (track.album.images && track.album.images.length > 0) {
-        console.log(track.album.images[0].url);
         this.coverImageUrl = track.album.images[0].url;
       } else {
         this.coverImageUrl = '';

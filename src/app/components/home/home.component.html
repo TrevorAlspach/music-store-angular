@@ -34,21 +34,22 @@
 
   </mat-sidenav>
 
-      <mat-toolbar style="position: relative !important; z-index: 5; top: 0;" class="primary-light mat-elevation-z5">
-    <button mat-icon-button (click)="collapsed.set(!collapsed())">
-      <mat-icon>menu</mat-icon>
-    </button>
+  <mat-toolbar  class="primary-light mat-elevation-z5 toolbar-position toolbar-flex" >
+
 
     
-    <span class="toolbar-flex">
-    <span>
+    <div class="flex-row align-center">
+          <button mat-icon-button (click)="collapsed.set(!collapsed())">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div>
       Syncify
-    </span>
+    </div>
+    </div>
       <app-spotify-web-player></app-spotify-web-player>
            <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>account_circle</mat-icon>
      </button>
-    </span>
 
     <!-- <nav class="right-button-padding">
 

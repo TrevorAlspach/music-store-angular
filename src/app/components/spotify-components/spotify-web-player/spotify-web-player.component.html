@@ -1,7 +1,12 @@
-<div>
-<div class="flex-row align-center">
+<div class="flex-row gap-15">
+  <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo"> 
   <div class="flex-row track-section">
-    <img [src]="this.coverImageUrl" class="player-album-cover" />
+    @if(this.coverImageUrl){
+          <img [src]="this.coverImageUrl" class="player-album-cover" />
+    } @else {
+      <img [src]="'assets/defaultAlbum.jpg'" class="player-album-cover" />
+    }
+
     <div class="track-details" *ngIf="this.currentPlayerItem">
       <span class="track-name">{{ this.currentPlayerItem.name }}</span>
       <span class="track-artist">{{
@@ -9,28 +14,45 @@
       }}</span>
     </div>
   </div>
-
-  <button mat-icon-button (click)="prevTrack()">
-    <mat-icon>skip_previous</mat-icon>
-  </button>
-  <button
-    *ngIf="!this.playerState || this.playerState.paused"
-    mat-icon-button
-    (click)="togglePlay()"
-  >
-    <mat-icon>play_arrow</mat-icon>
-  </button>
-  <button
-    *ngIf="this.playerState && !this.playerState.paused"
-    mat-icon-button
-    (click)="togglePlay()"
-  >
-    <mat-icon>pause</mat-icon>
-  </button>
-  <button mat-icon-button (click)="nextTrack()">
-    <mat-icon>skip_next</mat-icon>
-  </button>
-      <mat-slider min="0" max="1" step="0.1">
+  <div>
+    <div class="flex-row align-center justify-center">
+      <div #buttonGroup class="gap-15 flex-row">
+    <button
+    class="small-icon-button"
+      mat-icon-button
+      (click)="prevTrack()"
+      [disabled]="!this.deviceReady"
+    >
+      <mat-icon class="icon-size">skip_previous</mat-icon>
+    </button>
+    <button
+    class="small-icon-button"
+      *ngIf="!this.playerState || this.playerState.paused"
+      [disabled]="!this.deviceReady"
+      mat-icon-button
+      (click)="togglePlay()"
+    >
+      <mat-icon>play_arrow</mat-icon>
+    </button>
+    <button
+    class="small-icon-button"
+      [disabled]="!this.deviceReady"
+      *ngIf="this.playerState && !this.playerState.paused"
+      mat-icon-button
+      (click)="togglePlay()"
+    >
+      <mat-icon>pause</mat-icon>
+    </button>
+    <button
+    class="small-icon-button"
+      mat-icon-button
+      (click)="nextTrack()"
+      [disabled]="!this.deviceReady"
+    >
+      <mat-icon>skip_next</mat-icon>
+    </button>
+    </div>
+    <mat-slider min="0" max="1" step="0.1" [disabled]="!this.deviceReady">
       <input
         matSliderThumb
         [(ngModel)]="volume"
@@ -38,11 +60,15 @@
         #volumeslider
       />
     </mat-slider>
-</div>
-<div class="flex-row align-center gap-5">
-    <div class="track-time">{{this.trackPosition | millisecondToTime}}</div>
-    
-<mat-progress-bar mode="determinate" [value]="this.trackPositionAsDecimal"></mat-progress-bar>
-<div class="track-time">{{this.trackDuration | millisecondToTime}}</div>
-</div>
+    </div>
+    <div class="flex-row align-center gap-5 negative-margin-top progress-bar" #progressBar>
+      <div class="track-time">{{ this.trackPosition | millisecondToTime }}</div>
+
+      <mat-progress-bar
+        mode="determinate"
+        [value]="this.trackPositionAsDecimal"
+      ></mat-progress-bar>
+      <div class="track-time">{{ this.trackDuration | millisecondToTime }}</div>
+    </div>
+  </div>
 </div>
