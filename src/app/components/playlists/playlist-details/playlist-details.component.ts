@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Playlist, PlaylistDetails, Song, SourceType } from '../../../models/music.model';
+import { Playlist, PlaylistDetails, Song, SourceType, SpotifyPlaylistDetails, SpotifySong } from '../../../models/music.model';
 import { CommonModule, Location } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SpotifyService } from '../../../services/spotify.service';
@@ -13,6 +13,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { PlaylistEventService } from '../playlist-event.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SpotifySdkService } from '../../../services/spotify-sdk.service';
+import { switchMap } from 'rxjs';
+import { Track } from '@spotify/web-api-ts-sdk';
 
 @Component({
   selector: 'app-playlist-details',
@@ -25,7 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatCardModule,
     MatMenuModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './playlist-details.component.html',
   styleUrl: './playlist-details.component.scss',
@@ -42,9 +45,6 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
   @Input()
   readonly: boolean = false;
 
-  /*   name!:string;
-  description!:string; */
-
   playlist!: PlaylistDetails;
 
   isLoading: boolean = true;
@@ -53,7 +53,8 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
     private spotifyService: SpotifyService,
     private location: Location,
     private playlistsService: PlaylistsService,
-    private playlistEventService: PlaylistEventService
+    private playlistEventService: PlaylistEventService,
+    private spotifySdkService: SpotifySdkService
   ) {}
 
   ngOnInit() {
@@ -61,73 +62,93 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      if (changes['id'].previousValue){
-        this.loadPlaylistDetails();
-      }
+    if (changes['id'].previousValue) {
+      this.loadPlaylistDetails();
+    }
   }
 
-  loadPlaylistDetails(){
+  loadPlaylistDetails() {
     this.isLoading = true;
-if (this.source === SourceType.SPOTIFY) {
-  this.spotifyService.getPlaylistFromId(this.id).subscribe({
-    next: (playlist: SpotifyPlaylistResponse) => {
-      console.log(playlist);
-      this.isLoading = false;
+    if (this.source === SourceType.SPOTIFY) {
+      this.spotifyService.getPlaylistFromId(this.id).subscribe({
+        next: (playlist: SpotifyPlaylistResponse) => {
+          console.log(playlist);
+          this.isLoading = false;
 
-      let imageUrl: string;
-      if (playlist.images && playlist.images.length > 0) {
-        imageUrl = playlist.images[0].url;
-      } else {
-        imageUrl = 'assets/defaultAlbum.jpg';
-      }
-
-      this.playlist = <PlaylistDetails>{
-        name: playlist.name,
-        description: playlist.description,
-        id: playlist.id,
-        songs: playlist.tracks.items.map(
-          (spotifyTrack: SpotifyTrackWrapper) => {
-            return <Song>{
-              name: spotifyTrack.track.name,
-              album: spotifyTrack.track.album.name,
-              artist: spotifyTrack.track.artists
-                .map((artist) => {
-                  return artist.name;
-                })
-                .join(', '),
-              time: this.millisToMinutesAndSeconds(
-                spotifyTrack.track.duration_ms
-              ),
-              imageUrl: spotifyTrack.track.album.images[0].url,
-            };
+          let imageUrl: string;
+          if (playlist.images && playlist.images.length > 0) {
+            imageUrl = playlist.images[0].url;
+          } else {
+            imageUrl = 'assets/defaultAlbum.jpg';
           }
-        ),
-        imageUrl: imageUrl,
-        songCount: playlist.tracks.total,
-        source: SourceType.SPOTIFY,
-        href: playlist.external_urls.spotify,
-      };
-    },
-  });
-}
 
-if (this.source === SourceType.SYNCIFY) {
-  this.playlistsService.getPlaylist(this.id).subscribe({
-    next: (res: PlaylistDetails) => {
-      console.log(res);
-      this.playlist = res;
-      this.isLoading = false;
+          this.playlist = <SpotifyPlaylistDetails>{
+            name: playlist.name,
+            description: playlist.description,
+            id: playlist.id,
+            songs: playlist.tracks.items.map(
+              (spotifyTrack: SpotifyTrackWrapper) => {
+                return <SpotifySong>{
+                  name: spotifyTrack.track.name,
+                  album: spotifyTrack.track.album.name,
+                  artist: spotifyTrack.track.artists
+                    .map((artist) => {
+                      return artist.name;
+                    })
+                    .join(', '),
+                  time: this.millisToMinutesAndSeconds(
+                    spotifyTrack.track.duration_ms
+                  ),
+                  imageUrl: spotifyTrack.track.album.images[0].url,
+                  hovered: false,
+                  href: spotifyTrack.track.href,
+                  remoteId: spotifyTrack.track.id,
+                  contextUri: `spotify:track:${spotifyTrack.track.id}`
+                };
+              }
+            ),
+            imageUrl: imageUrl,
+            songCount: playlist.tracks.total,
+            source: SourceType.SPOTIFY,
+            href: playlist.external_urls.spotify,
+            contextUri: playlist.uri
+          };
+        },
+      });
+    }
 
-      if (!this.playlist.imageUrl || this.playlist.imageUrl === '') {
-        this.playlist.imageUrl = 'assets/defaultAlbum.jpg';
-      }
-    },
-  });
-}
+    if (this.source === SourceType.SYNCIFY) {
+      this.playlistsService.getPlaylist(this.id).subscribe({
+        next: (res: PlaylistDetails) => {
+          console.log(res);
+          this.playlist = res;
+          this.isLoading = false;
+
+          if (!this.playlist.imageUrl || this.playlist.imageUrl === '') {
+            this.playlist.imageUrl = 'assets/defaultAlbum.jpg';
+          }
+        },
+      });
+    }
   }
 
   viewPlaylistInSpotify() {
     window.open(this.playlist.href);
+  }
+
+  playSong(song: Song){
+    if (this.source === SourceType.SPOTIFY){
+      const spotifyPlaylist = this.playlist as SpotifyPlaylistDetails;
+      const spotifySong = song as SpotifySong;
+          this.spotifySdkService
+            .startPlayback([spotifySong.contextUri])
+            .pipe(
+              //switchMap(()=>this.spotifySdkService.getTrackInfo(spotifySong.remoteId)),
+              switchMap(() => this.spotifySdkService.preparePlayer())
+            )
+            .subscribe(() => {});
+    }
+
   }
 
   deletePlaylist() {
@@ -154,5 +175,9 @@ if (this.source === SourceType.SYNCIFY) {
 
   get SourceType() {
     return SourceType;
+  }
+
+  mouseLeave(song: Song) {
+    song.hovered = false;
   }
 }

@@ -43,8 +43,11 @@
     <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef > Song </th>
     <td mat-cell *matCellDef="let song"> 
-        <div class="song-column">
-        <img [src]="song.imageUrl" class="table-album-cover">
+        <div class="song-column" (mouseenter)="song.hovered = true;"  (mouseleave)="mouseLeave(song)">
+        <img [src]="song.imageUrl" class="table-album-cover" [ngClass]="{'hovered': song.hovered}">
+        <div  *ngIf="song.hovered">
+          <button style="margin-left: -65px;"  mat-icon-button (click)="playSong(song)"><mat-icon style="color: white;">play_arrow</mat-icon></button>
+        </div>
         {{song.name}} </div></td>
     </ng-container>
 

@@ -14,6 +14,10 @@ export interface PlaylistDetails extends Playlist{
     //song_count:number;
 }
 
+export interface SpotifyPlaylistDetails extends PlaylistDetails{
+  contextUri: string;
+}
+
 export enum SourceType {
     SPOTIFY="spotify",
     APPLE_MUSIC="apple_music",
@@ -31,15 +35,20 @@ export enum ReleaseType {
     SINGLE="Single", 
     ALBUM="Album"
 }
-
-export type Song = {
-    name: string;
-    artist: string;
-    album: string;
-    genre: string;
-    time?: string;
-    imageUrl?:string;
-    href: string;
-    releaseYear:number;
-    
+ 
+export interface SpotifySong extends Song{
+  contextUri: string;
 }
+
+export interface Song{
+  name: string;
+  artist: string;
+  album: string;
+  genre: string;
+  time?: string;
+  imageUrl?: string;
+  href: string;
+  remoteId:string
+  releaseYear: number;
+  hovered: false;
+};

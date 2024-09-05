@@ -66,6 +66,14 @@ export class SpotifySdkService implements OnInit {
     return defer(() => this.sdk.player.transferPlayback([deviceId], true));
   }
 
+  public startPlayback( trackUris:string[]){
+    return defer(() => this.sdk.player.startResumePlayback(this.deviceId, undefined,trackUris ));
+  }
+
+  public getTrackInfo(id:string){
+    return defer(()=> this.sdk.tracks.get(id));
+  }
+
   public getPlaybackState(): Observable<PlaybackState> {
     return defer(() => this.sdk.player.getPlaybackState());
   }
@@ -80,6 +88,26 @@ export class SpotifySdkService implements OnInit {
 
   public resumePlayer() {
     //this.player.resume();
+  }
+
+  public preparePlayer(contextUri?: string){
+   const webPlayerDeviceId = this.getWebPlayerDeviceId();
+   return this.getPlaybackState().pipe(
+     switchMap((playbackState) => {
+       if (!playbackState) {
+         return this
+           .transferPlayback(webPlayerDeviceId)
+           .pipe(switchMap(() => this.getPlaybackState()));
+       } else if (playbackState.device.id !== webPlayerDeviceId) {
+         return this.transferPlayback(webPlayerDeviceId);
+       } else {
+         return of(playbackState);
+       }
+     }),
+     switchMap((playback) => {
+       return this.getPlayerState();
+     })
+   );
   }
 
   public nextTrack() {

@@ -16,6 +16,10 @@
     border-radius: 5px;
 }
 
+.hovered {
+    filter: brightness(60%);
+}
+
 .playlist-info {
     display: flex;
     gap: 50px;

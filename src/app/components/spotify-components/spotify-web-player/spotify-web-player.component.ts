@@ -113,6 +113,9 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
         this.trackPosition = playerState.position;
         this.trackPositionAsDecimal =
           (playerState.position / playerState.duration) * 100;
+          this.updateCurrentTrackDetailsFromPlayer(
+            playerState.track_window.current_track
+          );
       },
     });
 
@@ -146,7 +149,7 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
   }
 
   togglePlay() {
-    const webPlayerDeviceId = this.spotifySdkService.getWebPlayerDeviceId();
+/*     const webPlayerDeviceId = this.spotifySdkService.getWebPlayerDeviceId();
     this.spotifySdkService
       .getPlaybackState()
       .pipe(
@@ -166,7 +169,8 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
         switchMap((playback) => {
           return this.spotifySdkService.getPlayerState();
         })
-      )
+      ) */
+     this.spotifySdkService.preparePlayer()
       .subscribe({
         next: (playbackState: Spotify.PlaybackState | null) => {
           if (playbackState) {
