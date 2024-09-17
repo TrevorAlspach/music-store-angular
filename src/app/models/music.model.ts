@@ -22,7 +22,9 @@ export enum SourceType {
     SPOTIFY="spotify",
     APPLE_MUSIC="apple_music",
     SYNCIFY="syncify",
-    NONE="none"
+    NONE="none",
+    CSV="csv",
+    JSON="json"
 }
 
 

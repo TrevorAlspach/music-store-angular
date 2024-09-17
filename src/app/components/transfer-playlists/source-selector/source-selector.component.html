@@ -36,6 +36,14 @@
         <img src="../../../assets/guitar_icon.jpg" class="spotify-logo">
         <div>Syncify</div>
       </button>
+      <button  mat-button class="image-button" [disabled]="otherService===SourceType.JSON" (click)="this.sourceSelected(SourceType.JSON)">
+        <img src="../../../assets/light-json.svg" class="spotify-logo">
+        <div>JSON</div>
+      </button>
+      <button  mat-button class="image-button" [disabled]="otherService===SourceType.CSV" (click)="this.sourceSelected(SourceType.CSV)">
+        <img src="../../../assets/csv_icon.png" class="spotify-logo">
+        <div>CSV</div>
+      </button>
       <!-- </form> -->
     </div>
 
@@ -51,6 +59,14 @@
         <div *ngIf="this.selectedService === SourceType.SYNCIFY" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
         <img src="../../../assets/guitar_icon.jpg" class="spotify-logo">
         <h3>Syncify</h3>
+        </div>
+        <div *ngIf="this.selectedService === SourceType.JSON" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
+        <img src="../../../assets/light-json.svg" class="spotify-logo">
+        <h3>JSON</h3>
+        </div>
+        <div *ngIf="this.selectedService === SourceType.CSV" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
+        <img src="../../../assets/csv_icon.png" class="spotify-logo">
+        <h3>CSV</h3>
         </div>
     </div>
   </mat-card-content>
