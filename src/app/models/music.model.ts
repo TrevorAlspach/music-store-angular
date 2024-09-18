@@ -27,6 +27,12 @@ export enum SourceType {
     JSON="json"
 }
 
+export enum SyncType {
+  REPLACE="replace", 
+  MERGE="merge",
+  ADD="add"
+}
+
 
 export enum TransferSide {
   SOURCE = 'Source',

@@ -12,16 +12,17 @@ import { PlaylistsService } from '../../services/playlists.service';
   providedIn: 'root',
 })
 export class TransferPlaylistsService {
-  constructor(
-    private playlistsService: PlaylistsService
-  ) {}
+  constructor(private playlistsService: PlaylistsService) {}
 
   selectedSource$: BehaviorSubject<SourceType> =
     new BehaviorSubject<SourceType>(SourceType.NONE);
   selectedDestination$: BehaviorSubject<SourceType> =
     new BehaviorSubject<SourceType>(SourceType.NONE);
 
-  selectedPlaylist$: BehaviorSubject<Playlist | null> =
+  selectedSourcePlaylist$: BehaviorSubject<Playlist | null> =
+    new BehaviorSubject<Playlist | null>(null);
+
+  selectedDestinationPlaylist$: BehaviorSubject<Playlist | null> =
     new BehaviorSubject<Playlist | null>(null);
   selectedSongs$: BehaviorSubject<Song[]> = new BehaviorSubject<Song[]>([]);
   transferedSongs$: BehaviorSubject<Song[]> = new BehaviorSubject<Song[]>([]);
@@ -29,9 +30,6 @@ export class TransferPlaylistsService {
   currentProgress$: Subject<number> = new Subject();
 
   transferSongsToMusicStore(destinationDetails: Playlist) {
-    /*  for (let song of songs){
-     song.imageUrl = 'https://www.shareicon.net/data/128x128/2015/10/19/658317_music_512x512.png';
-    } */
     return this.playlistsService.createNewPlaylist(destinationDetails);
   }
 }

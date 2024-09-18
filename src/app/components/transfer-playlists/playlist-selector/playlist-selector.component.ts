@@ -78,11 +78,14 @@ export class PlaylistSelectorComponent
       this.selectedSourceSubscription =
         this.transferPlaylistsService.selectedDestination$.subscribe({
           next: (sourceType: SourceType) => {
+            console.log('hitting this ')
+            console.log(sourceType);
+
             if (sourceType === SourceType.NONE) {
-              
+              this.sourceSelected = false;
               return;
             }
-            
+            this.sourceSelected = true;
             this.loadPlaylists(sourceType);
           },
         });
@@ -131,7 +134,9 @@ export class PlaylistSelectorComponent
     if (sourceType === SourceType.SYNCIFY){
       this.playlistsService.fetchAllPlaylistsForUser().subscribe({
         next: (playlists: Playlist[])=>{
+                      console.log(playlists);
           this.playlistsDataSource.data = playlists;
+          this.changeDetectorRef.detectChanges();
           this.isLoading = false;
         }
       })
@@ -143,9 +148,19 @@ export class PlaylistSelectorComponent
 
     if (this.selection.isSelected(row)){
       this.selection.deselect(row);
-      this.transferPlaylistsService.selectedPlaylist$.next(null);
+      if (this.transferSide === TransferSide.SOURCE){
+        this.transferPlaylistsService.selectedSourcePlaylist$.next(null);
+      } else {
+        this.transferPlaylistsService.selectedDestinationPlaylist$.next(null);
+      }
+      
     } else {
-      this.transferPlaylistsService.selectedPlaylist$.next(row);
+      if (this.transferSide === TransferSide.SOURCE) {
+        this.transferPlaylistsService.selectedSourcePlaylist$.next(row);
+      } else {
+        this.transferPlaylistsService.selectedDestinationPlaylist$.next(row);
+      }
+      
       this.selection.select(row)
     }
     

@@ -1,4 +1,5 @@
-<!-- <h1>Transfer Playlist</h1> -->
+<h1>Transfer Playlist</h1>
+<p>Transfer your playlists to another service. Select Source and Destination services to begin</p>
 
 <mat-stepper
   labelPosition="bottom"
@@ -7,7 +8,7 @@
   [linear]="true"
 >
   <mat-step>
-    <ng-template matStepLabel>Select Source and Destination</ng-template>
+    <ng-template matStepLabel><!-- Select Source and Destination --></ng-template>
     <div>
       <h1 class="title-center">Select Source and Destination</h1>
       <div class="flex-container-source">
@@ -32,7 +33,7 @@
     </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Select Playlist to Transfer</ng-template>
+    <ng-template matStepLabel><!-- Select Playlist to Transfer --></ng-template>
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
     </button>
@@ -56,7 +57,7 @@
   </mat-step>
   <mat-step>
     <ng-template matStepLabel
-      >Configure Destination Playlist Details</ng-template
+      ><!-- Configure Destination Playlist Details --></ng-template
     >
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
@@ -129,7 +130,7 @@
   </mat-step>
   <mat-step>
     <ng-template matStepLabel
-      >Transfer</ng-template
+      ><!-- Transfer --></ng-template
     >
     <div *ngIf="!this.transferComplete">
     <h2>Transfer In Progress</h2>

@@ -6,7 +6,6 @@ import { Playlist, PlaylistDetails, Song, SourceType, TransferSide } from '../..
 import { SongSelectorComponent } from './song-selector/song-selector.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { TransferDialogComponent } from './transfer-dialog/transfer-dialog.component';
 import { TransferPlaylistsService } from './transfer-playlists.service';
 import { expand, map, merge, Observable, reduce, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -169,7 +168,7 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
     this.combinedSubject$ = merge(
       this.transferPlaylistsService.selectedSource$,
       this.transferPlaylistsService.selectedDestination$,
-      this.transferPlaylistsService.selectedPlaylist$
+      this.transferPlaylistsService.selectedSourcePlaylist$
     );
 
     this.combinedSubjectSubscription = this.combinedSubject$.subscribe({
@@ -179,7 +178,7 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
             SourceType.NONE &&
           this.transferPlaylistsService.selectedDestination$.value !==
             SourceType.NONE &&
-          this.transferPlaylistsService.selectedPlaylist$.value !== null
+          this.transferPlaylistsService.selectedSourcePlaylist$.value !== null
         ) {
           this.transferReady = true;
         } else {
@@ -199,7 +198,7 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
       },
     });
 
-    this.selectedPlaylistSubscription = this.transferPlaylistsService.selectedPlaylist$.subscribe({
+    this.selectedPlaylistSubscription = this.transferPlaylistsService.selectedSourcePlaylist$.subscribe({
       next: (selectedPlaylist)=>{
         if (selectedPlaylist !== null){
           this.selectedPlaylist = selectedPlaylist;
@@ -222,7 +221,7 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
 
       this.transferPlaylistsService.selectedSource$.next(SourceType.NONE);
       this.transferPlaylistsService.selectedDestination$.next(SourceType.NONE);
-      this.transferPlaylistsService.selectedPlaylist$.next(null);
+      this.transferPlaylistsService.selectedSourcePlaylist$.next(null);
   }
 
   initiateTransfer() {
@@ -233,12 +232,12 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
     if (destination === SourceType.SYNCIFY) {
       //this.transferInitiated = true;
       this.playlistToTransferToMusicStore$.next(
-        this.transferPlaylistsService.selectedPlaylist$.value as Playlist
+        this.transferPlaylistsService.selectedSourcePlaylist$.value as Playlist
       );
     } else if (destination === SourceType.SPOTIFY) {
       //this.transferInitiated = true;
       this.playlistToTransferToSpotify$.next(
-        this.transferPlaylistsService.selectedPlaylist$.value as Playlist
+        this.transferPlaylistsService.selectedSourcePlaylist$.value as Playlist
       );
     }
   }
