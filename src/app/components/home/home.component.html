@@ -1,18 +1,18 @@
 <div style="display: flex; flex-direction: column; height: 100%;">
-<!-- <mat-toolbar style="position: relative !important; z-index: 5; top: 0;" class="primary-light mat-elevation-z5">
-    <button mat-icon-button (click)="collapsed.set(!collapsed())">
+  <mat-toolbar  class="primary-light mat-elevation-z5 toolbar-position toolbar-flex" >
+
+
+    
+    <div class="flex-row align-center">
+          <button mat-icon-button (click)="collapsed.set(!collapsed())">
       <mat-icon>menu</mat-icon>
     </button>
-    <span>
-      Syncify
-    </span>
-    <span class="example-spacer"></span>
-    <nav class="right-button-padding">
-     <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>account_circle</mat-icon>
+    </div>
+      <app-spotify-web-player></app-spotify-web-player>
+           <button mat-icon-button [matMenuTriggerFor]="menu">
+      <!-- <mat-icon>account_circle</mat-icon> -->
      </button>
-    </nav>
-  </mat-toolbar> -->
+  </mat-toolbar>
 
   <mat-sidenav-container class="example-container mat-elevation-z10 fade-into-grey" autosize>
   <mat-sidenav #drawer class="example-sidenav neutral-20" mode="side" [opened]="true" [style.width]="sideNavWidth()">
@@ -34,7 +34,7 @@
 
   </mat-sidenav>
 
-  <mat-toolbar  class="primary-light mat-elevation-z5 toolbar-position toolbar-flex" >
+ <!--  <mat-toolbar  class="primary-light mat-elevation-z5 toolbar-position toolbar-flex" >
 
 
     
@@ -42,19 +42,11 @@
           <button mat-icon-button (click)="collapsed.set(!collapsed())">
       <mat-icon>menu</mat-icon>
     </button>
-    <div>
-      Syncify
-    </div>
     </div>
       <app-spotify-web-player></app-spotify-web-player>
            <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>account_circle</mat-icon>
      </button>
-
-    <!-- <nav class="right-button-padding">
-
-    </nav> -->
-  </mat-toolbar>
+  </mat-toolbar> -->
   <div class="example-sidenav-content ">
     <router-outlet></router-outlet>
   </div>
