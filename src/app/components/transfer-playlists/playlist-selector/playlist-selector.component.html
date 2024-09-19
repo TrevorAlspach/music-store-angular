@@ -7,12 +7,6 @@
 <mat-table mat-table  [dataSource]="this.playlistsDataSource" *ngIf="!this.isLoading">
   
   <ng-container matColumnDef="select">
-    <!-- <th mat-header-cell *matHeaderCellDef>
-      <mat-checkbox (change)="$event ? masterToggle() : null"
-                    [checked]="selection.hasValue() && isAllSelected()"
-                    [indeterminate]="selection.hasValue() && !isAllSelected()">
-      </mat-checkbox>
-    </th> -->
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let row">
       <mat-checkbox (click)="$event.stopPropagation()"

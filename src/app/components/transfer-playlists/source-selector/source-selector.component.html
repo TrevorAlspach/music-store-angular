@@ -1,73 +1,155 @@
 <mat-card
   id="source"
   class="playlist-container neutral-20"
-  style=" width: 300px; height: 100% !important;"
+  style="width: 300px; height: 100% !important"
 >
   <mat-card-header
     ><mat-card-title>{{ this.transferSide }}</mat-card-title></mat-card-header
   >
   <mat-card-actions [align]="'end'" style="margin-top: -40px"
-    ><button mat-icon-button (click)="back()" *ngIf="this.step > 0">
+    ><button mat-icon-button (click)="back()" *ngIf="this.step === 2">
       <mat-icon>arrow_back</mat-icon>
     </button></mat-card-actions
   >
 
-  <mat-card-content style="height: 100%; display: flex; justify-content: center; align-items: center;">
+  <mat-card-content
+    style="
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
+  >
     <div class="single-button" *ngIf="this.step === 0">
-      <button mat-button (click)="onInitialAddClicked()" >
+      <button mat-button (click)="onInitialAddClicked()">
         <mat-icon>add</mat-icon>
-        <div>
-      {{'Select '}}{{this.transferSide}}</div>
+        <div>{{ "Select " }}{{ this.transferSide }}</div>
       </button>
-      
     </div>
 
-  <div class="service-selection" *ngIf="this.step === 1">
+    <div class="service-selection" *ngIf="this.step === 1">
       <!-- <form [formGroup]="serviceSelectionGroup"> -->
-      <button  mat-button class="image-button" [disabled]="otherService===SourceType.APPLE_MUSIC" (click)="this.sourceSelected(SourceType.APPLE_MUSIC)">
-        <img src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="spotify-logo">
+      <button
+        mat-button
+        class="image-button"
+        [disabled]="otherService === SourceType.APPLE_MUSIC"
+        (click)="this.sourceSelected(SourceType.APPLE_MUSIC)"
+      >
+        <img
+          src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg"
+          class="spotify-logo"
+        />
         <div>Apple Music</div>
       </button>
-      <button  mat-button class="image-button" [disabled]="otherService===SourceType.SPOTIFY" (click)="this.sourceSelected(SourceType.SPOTIFY)">
-        <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo">
+      <button
+        mat-button
+        class="image-button"
+        [disabled]="otherService === SourceType.SPOTIFY"
+        (click)="this.sourceSelected(SourceType.SPOTIFY)"
+      >
+        <img
+          src="../../../assets/Spotify_Primary_Logo_RGB_Green.png"
+          class="spotify-logo"
+        />
         <div>Spotify</div>
       </button>
-      <button  mat-button class="image-button" [disabled]="otherService===SourceType.SYNCIFY" (click)="this.sourceSelected(SourceType.SYNCIFY)">
-        <img src="../../../assets/guitar_icon.jpg" class="spotify-logo">
+      <button
+        mat-button
+        class="image-button"
+        [disabled]="otherService === SourceType.SYNCIFY"
+        (click)="this.sourceSelected(SourceType.SYNCIFY)"
+      >
+        <img src="../../../assets/guitar_icon.jpg" class="spotify-logo" />
         <div>Syncify</div>
       </button>
-      <button  mat-button class="image-button" [disabled]="otherService===SourceType.JSON" (click)="this.sourceSelected(SourceType.JSON)">
-        <img src="../../../assets/light-json.svg" class="spotify-logo">
+      <button
+        mat-button
+        class="image-button"
+        [disabled]="otherService === SourceType.JSON"
+        (click)="this.sourceSelected(SourceType.JSON)"
+      >
+        <img src="../../../assets/light-json.svg" class="spotify-logo" />
         <div>JSON</div>
       </button>
-      <button  mat-button class="image-button" [disabled]="otherService===SourceType.CSV" (click)="this.sourceSelected(SourceType.CSV)">
-        <img src="../../../assets/csv_icon.png" class="spotify-logo">
+      <button
+        mat-button
+        class="image-button"
+        [disabled]="otherService === SourceType.CSV"
+        (click)="this.sourceSelected(SourceType.CSV)"
+      >
+        <img src="../../../assets/csv_icon.png" class="spotify-logo" />
         <div>CSV</div>
       </button>
       <!-- </form> -->
     </div>
 
     <div *ngIf="this.step === 2">
-        <div *ngIf="this.selectedService === SourceType.SPOTIFY" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
-        <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="spotify-logo"> 
+      <div
+        *ngIf="this.selectedService === SourceType.SPOTIFY"
+        style="
+          justify-content: center;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+        "
+      >
+        <img
+          src="../../../assets/Spotify_Primary_Logo_RGB_Green.png"
+          class="spotify-logo"
+        />
         <h3>Spotify</h3>
-        </div>
-        <div *ngIf="this.selectedService === SourceType.APPLE_MUSIC" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
-         <img src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="spotify-logo">
+      </div>
+      <div
+        *ngIf="this.selectedService === SourceType.APPLE_MUSIC"
+        style="
+          justify-content: center;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+        "
+      >
+        <img
+          src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg"
+          class="spotify-logo"
+        />
         <h3>Apple Music</h3>
-        </div>
-        <div *ngIf="this.selectedService === SourceType.SYNCIFY" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
-        <img src="../../../assets/guitar_icon.jpg" class="spotify-logo">
+      </div>
+      <div
+        *ngIf="this.selectedService === SourceType.SYNCIFY"
+        style="
+          justify-content: center;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+        "
+      >
+        <img src="../../../assets/guitar_icon.jpg" class="spotify-logo" />
         <h3>Syncify</h3>
-        </div>
-        <div *ngIf="this.selectedService === SourceType.JSON" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
-        <img src="../../../assets/light-json.svg" class="spotify-logo">
+      </div>
+      <div
+        *ngIf="this.selectedService === SourceType.JSON"
+        style="
+          justify-content: center;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+        "
+      >
+        <img src="../../../assets/light-json.svg" class="spotify-logo" />
         <h3>JSON</h3>
-        </div>
-        <div *ngIf="this.selectedService === SourceType.CSV" style="justify-content: center; display: flex; align-items: center; flex-direction: column;">
-        <img src="../../../assets/csv_icon.png" class="spotify-logo">
+      </div>
+      <div
+        *ngIf="this.selectedService === SourceType.CSV"
+        style="
+          justify-content: center;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+        "
+      >
+        <img src="../../../assets/csv_icon.png" class="spotify-logo" />
         <h3>CSV</h3>
-        </div>
+      </div>
     </div>
   </mat-card-content>
 </mat-card>

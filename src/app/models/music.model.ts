@@ -60,3 +60,9 @@ export interface Song{
   releaseYear: number;
   hovered: false;
 };
+
+export interface PlaylistSelectedEvent {
+  sourceType: SourceType,
+  playlist: Playlist | null,
+  transferSide: TransferSide
+}

@@ -6,9 +6,23 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { PlaylistSelectorComponent } from "../transfer-playlists/playlist-selector/playlist-selector.component";
-import { Playlist, PlaylistDetails, Song, SourceType, SyncType, TransferSide } from '../../models/music.model';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PlaylistSelectorComponent } from '../transfer-playlists/playlist-selector/playlist-selector.component';
+import {
+  Playlist,
+  PlaylistDetails,
+  PlaylistSelectedEvent,
+  Song,
+  SourceType,
+  SyncType,
+  TransferSide,
+} from '../../models/music.model';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -18,7 +32,17 @@ import { PlaylistDetailsComponent } from '../playlists/playlist-details/playlist
 import { SongSelectorComponent } from '../transfer-playlists/song-selector/song-selector.component';
 import { SourceSelectorComponent } from '../transfer-playlists/source-selector/source-selector.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, Subject, Subscription, switchMap, map, tap, merge, expand, reduce } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  Subscription,
+  switchMap,
+  map,
+  tap,
+  merge,
+  expand,
+  reduce,
+} from 'rxjs';
 import { SpotifyTrackWrapper } from '../../models/spotify-api.model';
 import { PlaylistsService } from '../../services/playlists.service';
 import { SpotifyService } from '../../services/spotify.service';
@@ -60,24 +84,14 @@ export class SyncPlaylistsComponent {
   i: number = 0;
 
   combinedSubject$!: Observable<SourceType | Playlist | null>;
-  selectedSourcePlaylist!: Playlist;
-  selectedDestinationPlaylist!: Playlist;
+  selectedSourcePlaylist!: Playlist | null;
+  selectedDestinationPlaylist!: Playlist | null;
 
+  selectedSource!: SourceType;
   selectedDestination!: SourceType;
+  selectedSyncType!: SyncType;
 
-  /* syncTypeFormGroup = this.fb.group({
-    syncType: ['merge', Validators.required]
-  }) */
-
-  syncType = new FormControl();
-
-  createDestinationPlaylistFormGroup: FormGroup = this.fb.group({
-    name: [
-      '',
-      [Validators.required, Validators.minLength(0), Validators.maxLength(20)],
-    ],
-    description: [''],
-  });
+  syncTypeForm = new FormControl<SyncType>(SyncType.MERGE);
 
   playlistToTransferToSpotify$ = new Subject<Playlist>();
   playlistToTransferToMusicStore$ = new Subject<Playlist>();
@@ -96,79 +110,49 @@ export class SyncPlaylistsComponent {
   ) {}
 
   ngOnInit(): void {
-    this.combinedSubject$ = merge(
-      this.transferPlaylistsService.selectedSource$,
-      this.transferPlaylistsService.selectedDestination$,
-      this.transferPlaylistsService.selectedSourcePlaylist$
-    );
+    this.syncTypeForm.setValue(null);
 
-    this.combinedSubjectSubscription = this.combinedSubject$.subscribe({
-      next: (subjectChanged) => {
-        if (
-          this.transferPlaylistsService.selectedSource$.value !==
-            SourceType.NONE &&
-          this.transferPlaylistsService.selectedDestination$.value !==
-            SourceType.NONE &&
-          this.transferPlaylistsService.selectedSourcePlaylist$.value !== null
-        ) {
-          this.transferReady = true;
+    this.syncTypeForm.valueChanges.subscribe((val) => {
+      if (val && Array.isArray(val)) {
+        const stringVal = val[0];
+        if (!stringVal) {
+          this.syncTypeForm.disable({ emitEvent: false });
         } else {
-          this.transferReady = false;
+          this.syncTypeForm.enable({ emitEvent: false });
+          this.selectedSyncType = stringVal;
+          console.log(stringVal);
         }
-
-        if (
-          this.transferPlaylistsService.selectedSource$.value !==
-            SourceType.NONE &&
-          this.transferPlaylistsService.selectedDestination$.value !==
-            SourceType.NONE
-        ) {
-          this.sourceAndDestinationReady = true;
-        } else {
-          this.sourceAndDestinationReady = false;
-        }
-      },
+      }
     });
-
-    this.selectedPlaylistSubscription =
-      this.transferPlaylistsService.selectedSourcePlaylist$.subscribe({
-        next: (selectedPlaylist) => {
-          if (selectedPlaylist !== null) {
-            this.selectedSourcePlaylist = selectedPlaylist;
-          }
-        },
-      });
-
-    this.selectedDestinationPlaylistSubscription =
-      this.transferPlaylistsService.selectedDestinationPlaylist$.subscribe({
-        next: (selectedPlaylist) => {
-          console.log('on destination playlist selected!!')
-          if (selectedPlaylist !== null) {
-            this.selectedDestinationPlaylist = selectedPlaylist;
-          }
-        },
-      });
-
-    this.selectedDestinationSubscription =
-      this.transferPlaylistsService.selectedDestination$.subscribe(
-        (selectedDestination) => {
-          if (selectedDestination) {
-            this.selectedDestination = selectedDestination;
-          }
-        }
-      );
   }
 
-  initiateSync() {}
-
-  ngOnDestroy(): void {
-    this.combinedSubjectSubscription.unsubscribe();
-    this.selectedPlaylistSubscription.unsubscribe();
-
-    this.transferPlaylistsService.selectedSource$.next(SourceType.NONE);
-    this.transferPlaylistsService.selectedDestination$.next(SourceType.NONE);
-    this.transferPlaylistsService.selectedSourcePlaylist$.next(null);
-    this.transferPlaylistsService.selectedDestinationPlaylist$.next(null);
+  initiateSync() {
+    console.log('this.initiateSync');
   }
+
+  onSelectedSourceChanged($event: SourceType) {
+    this.selectedSource = $event;
+  }
+
+  onSelectedDestinationChanged($event: SourceType) {
+    this.selectedDestination = $event;
+  }
+
+  onSelectedSourcePlaylistChanged($event: PlaylistSelectedEvent) {
+    console.log($event);
+
+    this.selectedSourcePlaylist = $event.playlist;
+  }
+
+  onSelectedDestinationPlaylistChanged($event: PlaylistSelectedEvent) {
+    this.selectedDestinationPlaylist = $event.playlist;
+  }
+
+  getSyncTypeAsString(syncType: SyncType) {
+    return syncType.toString().toUpperCase();
+  }
+
+  ngOnDestroy(): void {}
 
   getAllSongsOfSpotifyPlaylist(
     playlistId: string

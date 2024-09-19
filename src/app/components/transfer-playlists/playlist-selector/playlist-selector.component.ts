@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { Playlist, SourceType, TransferSide } from '../../../models/music.model';
+import { Playlist, PlaylistSelectedEvent, SourceType, TransferSide } from '../../../models/music.model';
 import { SpotifyService } from '../../../services/spotify.service';
 import { SpotifySimplePlaylist } from '../../../models/spotify-api.model';
 import { Subscription, map } from 'rxjs';
@@ -36,7 +36,8 @@ export class PlaylistSelectorComponent
 
   @Input() transferSide!: TransferSide;
 
-  //playlists: Playlist[] = [];
+  @Output() onPlaylistSelected = new EventEmitter<PlaylistSelectedEvent>()
+
   playlistsDataSource: MatTableDataSource<Playlist> =
     new MatTableDataSource<Playlist>();
   selection = new SelectionModel<Playlist>(false, []);
@@ -135,6 +136,12 @@ export class PlaylistSelectorComponent
       this.playlistsService.fetchAllPlaylistsForUser().subscribe({
         next: (playlists: Playlist[])=>{
                       console.log(playlists);
+      for (let playlist of playlists) {
+      if (!playlist.imageUrl || playlist.imageUrl === '') {
+        playlist.imageUrl = 'assets/defaultAlbum.jpg';
+      }
+      }
+
           this.playlistsDataSource.data = playlists;
           this.changeDetectorRef.detectChanges();
           this.isLoading = false;
@@ -153,6 +160,12 @@ export class PlaylistSelectorComponent
       } else {
         this.transferPlaylistsService.selectedDestinationPlaylist$.next(null);
       }
+
+      this.onPlaylistSelected.emit(<PlaylistSelectedEvent>{
+        playlist: null,
+        sourceType: this.sourceType,
+        transferSide: this.transferSide,
+      });
       
     } else {
       if (this.transferSide === TransferSide.SOURCE) {
@@ -160,6 +173,11 @@ export class PlaylistSelectorComponent
       } else {
         this.transferPlaylistsService.selectedDestinationPlaylist$.next(row);
       }
+      this.onPlaylistSelected.emit(<PlaylistSelectedEvent>{
+        playlist: row,
+        sourceType:this.sourceType,
+        transferSide: this.transferSide
+      })
       
       this.selection.select(row)
     }

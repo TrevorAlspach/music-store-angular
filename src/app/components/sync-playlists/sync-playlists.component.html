@@ -1,5 +1,8 @@
 <h1>Sync Playlists</h1>
-<p>Synchronize your playlists between services. Select Source and Destination services to begin</p>
+<p>
+  Synchronize your playlists between services. Select Source and Destination
+  services to begin
+</p>
 
 <mat-stepper
   labelPosition="bottom"
@@ -8,12 +11,15 @@
   [linear]="true"
 >
   <mat-step>
-    <ng-template matStepLabel><!-- Select Source and Destination --></ng-template>
+    <ng-template matStepLabel
+      ><!-- Select Source and Destination --></ng-template
+    >
     <div>
       <h1 class="title-center">Select Source and Destination</h1>
       <div class="flex-container-source">
         <app-source-selector
           [transferSide]="TransferSide.SOURCE"
+          (onSelectedSourceChanged)="onSelectedSourceChanged($event)"
           style="min-height: 300px"
         ></app-source-selector>
         <button
@@ -21,19 +27,25 @@
           color="primary"
           style="align-self: center"
           matStepperNext
-          [disabled]="!sourceAndDestinationReady"
+          [disabled]="
+            !selectedSource ||
+            !selectedDestination ||
+            selectedDestination === SourceType.NONE ||
+            selectedSource === SourceType.NONE
+          "
         >
           Begin
         </button>
         <app-source-selector
           [transferSide]="TransferSide.DESTINATION"
+          (onSelectedSourceChanged)="onSelectedDestinationChanged($event)"
           style="min-height: 300px"
         ></app-source-selector>
       </div>
     </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel><!-- Select Playlist to Transfer --></ng-template>
+    <ng-template matStepLabel></ng-template>
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
     </button>
@@ -42,22 +54,28 @@
       <div style="display: flex; flex-direction: column; gap: 10px">
         <app-playlist-selector
           [transferSide]="TransferSide.SOURCE"
+          (onPlaylistSelected)="onSelectedSourcePlaylistChanged($event)"
         ></app-playlist-selector>
         <button
           mat-raised-button
           color="primary"
-          [disabled]="!this.transferReady"
+          [disabled]="!this.selectedSourcePlaylist"
           matStepperNext
         >
           Confirm Selection
         </button>
       </div>
-      <app-playlist-details *ngIf="this.selectedSourcePlaylist" [id]="this.selectedSourcePlaylist.id" [source]="selectedSourcePlaylist.source" [readonly]="true"></app-playlist-details>
+      <app-playlist-details
+        *ngIf="this.selectedSourcePlaylist"
+        [id]="this.selectedSourcePlaylist.id"
+        [source]="selectedSourcePlaylist.source"
+        [readonly]="true"
+      ></app-playlist-details>
     </div>
   </mat-step>
 
-    <mat-step>
-    <ng-template matStepLabel><!-- Select Playlist to Transfer --></ng-template>
+  <mat-step>
+    <ng-template matStepLabel></ng-template>
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
     </button>
@@ -66,137 +84,240 @@
       <div style="display: flex; flex-direction: column; gap: 10px">
         <app-playlist-selector
           [transferSide]="TransferSide.DESTINATION"
+          (onPlaylistSelected)="onSelectedDestinationPlaylistChanged($event)"
         ></app-playlist-selector>
         <button
           mat-raised-button
           color="primary"
-          [disabled]="!this.transferReady"
+          [disabled]="!this.selectedDestinationPlaylist"
           matStepperNext
         >
           Confirm Selection
         </button>
       </div>
-      <app-playlist-details *ngIf="this.selectedDestinationPlaylist" [id]="this.selectedDestinationPlaylist.id" [source]="selectedDestinationPlaylist.source" [readonly]="true"></app-playlist-details>
+      <app-playlist-details
+        *ngIf="this.selectedDestinationPlaylist"
+        [id]="this.selectedDestinationPlaylist.id"
+        [source]="selectedDestinationPlaylist.source"
+        [readonly]="true"
+      ></app-playlist-details>
     </div>
   </mat-step>
 
-
   <mat-step>
-    <ng-template matStepLabel
-      ></ng-template
-    >
+    <ng-template matStepLabel></ng-template>
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
     </button>
     <h1 class="title-center">Select Synchronization Method</h1>
-    <!-- <form [formGroup]="syncTypeFormGroup"> -->
-    <mat-selection-list [formControl]="syncType" [multiple]="false">
+    <mat-selection-list [formControl]="syncTypeForm" [multiple]="false">
       <mat-list-option [value]="SyncType.MERGE">
         <span matListItemTitle>Merge</span>
-        <span matListItemLine>Combines all source and destination songs into one playlist</span>
+        <span matListItemLine
+          >Combines all source and destination songs into one playlist</span
+        >
       </mat-list-option>
       <mat-list-option [value]="SyncType.ADD">
         <span matListItemTitle>Add</span>
-        <span matListItemLine>Append all songs from the source playlist onto the end of the destination playlist</span>
+        <span matListItemLine
+          >Append all songs from the source playlist onto the end of the
+          destination playlist</span
+        >
       </mat-list-option>
       <mat-list-option [value]="SyncType.REPLACE">
         <span matListItemTitle>Replace</span>
-        <span matListItemLine>Removes all songs from destination playlist and replaces with songs of source playlist</span>
-      </mat-list-option>
-      </mat-selection-list>
-      <!-- </form> -->
-      <p>
-     Option selected: {{syncType.value ? syncType.value : 'None'}} 
-  </p>
-<button
-          mat-raised-button
-          color="primary"
-          [disabled]="!this.transferReady"
-          matStepperNext
+        <span matListItemLine
+          >Removes all songs from destination playlist and replaces with songs
+          of source playlist</span
         >
-          Confirm Selection
-        </button>
-  
-  </mat-step>
-  
-  
-  <mat-step>
-    <ng-template matStepLabel
-      ><!-- Configure Destination Playlist Details --></ng-template
+      </mat-list-option>
+    </mat-selection-list>
+    <button
+      [disabled]="!syncTypeForm.value"
+      mat-raised-button
+      color="primary"
+      matStepperNext
     >
+      Confirm Selection
+    </button>
+    <p></p>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel></ng-template>
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
     </button>
     <h1 class="title-center">Confirm Sync Details</h1>
-    
-    <div style="justify-content: center; display: flex;">
-      <!-- <form
-        [formGroup]="this.createDestinationPlaylistFormGroup"
-        (ngSubmit)="initiateSync()"
-      > -->
-        
-        <div class="transfer-summary-col">
-          <div class="transfer-summary" *ngIf="this.selectedSourcePlaylist && this.selectedDestinationPlaylist">
-             <div class="playlist-info">
-    <img [src]="this.selectedSourcePlaylist.imageUrl" class="playlist-cover-image" />
-    <div class="playlist-text">
-      <div class="flex-container-row" style="width:100%">
-      <h1>{{ this.selectedSourcePlaylist.name }}</h1>
-      <img *ngIf="this.selectedSourcePlaylist.source === SourceType.SPOTIFY" src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="logo-source" [matTooltip]="'Spotify Playlist'">
-      <img *ngIf="this.selectedSourcePlaylist.source === SourceType.APPLE_MUSIC" src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="logo-source" [matTooltip]="'Apple Music Playlist'"> 
-      <img *ngIf="this.selectedSourcePlaylist.source === SourceType.SYNCIFY" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'Syncify Playlist'">  
-      <img *ngIf="this.selectedSourcePlaylist.source === SourceType.JSON" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'JSON'">
-      <img *ngIf="this.selectedSourcePlaylist.source === SourceType.CSV" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'CSV'">
-      </div>
-      <p>{{ this.selectedSourcePlaylist.description }}</p>
-      <p>{{ this.selectedSourcePlaylist.songCount }}{{ " songs" }}</p>
 
-    </div>
-  </div>
+    <div style="justify-content: center; display: flex">
+      <div class="transfer-summary-col">
+        <div
+          class="transfer-summary"
+          *ngIf="
+            this.selectedSourcePlaylist && this.selectedDestinationPlaylist
+          "
+        >
+          <div class="playlist-info">
+            <img
+              [src]="this.selectedSourcePlaylist.imageUrl"
+              class="playlist-cover-image"
+            />
+            <div class="playlist-text">
+              <div class="flex-container-row" style="width: 100%">
+                <h1>{{ this.selectedSourcePlaylist.name }}</h1>
+                <img
+                  *ngIf="
+                    this.selectedSourcePlaylist.source === SourceType.SPOTIFY
+                  "
+                  src="../../../assets/Spotify_Primary_Logo_RGB_Green.png"
+                  class="logo-source"
+                  [matTooltip]="'Spotify Playlist'"
+                />
+                <img
+                  *ngIf="
+                    this.selectedSourcePlaylist.source ===
+                    SourceType.APPLE_MUSIC
+                  "
+                  src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg"
+                  class="logo-source"
+                  [matTooltip]="'Apple Music Playlist'"
+                />
+                <img
+                  *ngIf="
+                    this.selectedSourcePlaylist.source === SourceType.SYNCIFY
+                  "
+                  src="../../../assets/guitar_icon.jpg"
+                  class="logo-source"
+                  [matTooltip]="'Syncify Playlist'"
+                />
+                <img
+                  *ngIf="this.selectedSourcePlaylist.source === SourceType.JSON"
+                  src="../../../assets/guitar_icon.jpg"
+                  class="logo-source"
+                  [matTooltip]="'JSON'"
+                />
+                <img
+                  *ngIf="this.selectedSourcePlaylist.source === SourceType.CSV"
+                  src="../../../assets/guitar_icon.jpg"
+                  class="logo-source"
+                  [matTooltip]="'CSV'"
+                />
+              </div>
+              <p>{{ this.selectedSourcePlaylist.description }}</p>
+              <p>{{ this.selectedSourcePlaylist.songCount }}{{ " songs" }}</p>
+            </div>
+          </div>
+          <div class="flex-col justify-center align-center">
+            <!-- <h3 *ngIf="syncTypeForm.value">
+              {{ this.getSyncTypeAsString(syncTypeForm.value) }}
+            </h3> -->
             <mat-icon>arrow_forward</mat-icon>
-            <div class="playlist-info">
-    <img [src]="this.selectedDestinationPlaylist.imageUrl" class="playlist-cover-image" />
-    <div class="playlist-text">
-      <div class="flex-container-row" style="width:100%">
-      <h1>{{ this.selectedDestinationPlaylist.name }}</h1>
-      <img *ngIf="this.selectedDestinationPlaylist.source === SourceType.SPOTIFY" src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="logo-source" [matTooltip]="'Spotify Playlist'">
-      <img *ngIf="this.selectedDestinationPlaylist.source === SourceType.APPLE_MUSIC" src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="logo-source" [matTooltip]="'Apple Music Playlist'"> 
-      <img *ngIf="this.selectedDestinationPlaylist.source === SourceType.SYNCIFY" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'Syncify Playlist'">  
-      <img *ngIf="this.selectedDestinationPlaylist.source === SourceType.JSON" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'JSON'">
-      <img *ngIf="this.selectedDestinationPlaylist.source === SourceType.CSV" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'CSV'">
-      </div>
-      <p>{{ this.selectedDestinationPlaylist.description }}</p>
-      <p>{{ this.selectedDestinationPlaylist.songCount }}{{ " songs" }}</p>
-
-    </div>
-  </div>
-        
+          </div>
+          <div class="playlist-info">
+            <img
+              [src]="this.selectedDestinationPlaylist.imageUrl"
+              class="playlist-cover-image"
+            />
+            <div class="playlist-text">
+              <div class="flex-container-row" style="width: 100%">
+                <h1>{{ this.selectedDestinationPlaylist.name }}</h1>
+                <img
+                  *ngIf="
+                    this.selectedDestinationPlaylist.source ===
+                    SourceType.SPOTIFY
+                  "
+                  src="../../../assets/Spotify_Primary_Logo_RGB_Green.png"
+                  class="logo-source"
+                  [matTooltip]="'Spotify Playlist'"
+                />
+                <img
+                  *ngIf="
+                    this.selectedDestinationPlaylist.source ===
+                    SourceType.APPLE_MUSIC
+                  "
+                  src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg"
+                  class="logo-source"
+                  [matTooltip]="'Apple Music Playlist'"
+                />
+                <img
+                  *ngIf="
+                    this.selectedDestinationPlaylist.source ===
+                    SourceType.SYNCIFY
+                  "
+                  src="../../../assets/guitar_icon.jpg"
+                  class="logo-source"
+                  [matTooltip]="'Syncify Playlist'"
+                />
+                <img
+                  *ngIf="
+                    this.selectedDestinationPlaylist.source === SourceType.JSON
+                  "
+                  src="../../../assets/guitar_icon.jpg"
+                  class="logo-source"
+                  [matTooltip]="'JSON'"
+                />
+                <img
+                  *ngIf="
+                    this.selectedDestinationPlaylist.source === SourceType.CSV
+                  "
+                  src="../../../assets/guitar_icon.jpg"
+                  class="logo-source"
+                  [matTooltip]="'CSV'"
+                />
+              </div>
+              <p>{{ this.selectedDestinationPlaylist.description }}</p>
+              <p>
+                {{ this.selectedDestinationPlaylist.songCount }}{{ " songs" }}
+              </p>
+            </div>
           </div>
         </div>
+      </div>
 
       <!-- </form> -->
     </div>
-             <button
-          mat-raised-button
-          type="submit"
-          color="primary"
-          matStepperNext
-        >
-          Begin Sync
-        </button>
+    <div class="justify-center flex-row">
+      <mat-list class="sync-type-list">
+        <mat-list-item *ngIf="this.selectedSyncType === SyncType.MERGE">
+          <span matListItemTitle>Merge</span>
+          <span matListItemLine
+            >Combines all source and destination songs into one playlist</span
+          >
+        </mat-list-item>
+        <mat-list-item *ngIf="this.selectedSyncType === SyncType.ADD">
+          <span matListItemTitle>Add</span>
+          <span matListItemLine
+            >Append all songs from the source playlist onto the end of the
+            destination playlist</span
+          >
+        </mat-list-item>
+        <mat-list-item *ngIf="this.selectedSyncType === SyncType.REPLACE">
+          <span matListItemTitle>Replace</span>
+          <span matListItemLine
+            >Removes all songs from destination playlist and replaces with songs
+            of source playlist</span
+          >
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <button
+      mat-raised-button
+      (click)="initiateSync()"
+      color="primary"
+      matStepperNext
+    >
+      Begin Sync
+    </button>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel
-      ></ng-template
-    >
+    <ng-template matStepLabel></ng-template>
     <div *ngIf="!this.syncComplete">
-    <h2>Sync In Progress</h2>
-    <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
-  </div>
+      <h2>Sync In Progress</h2>
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
     <div *ngIf="this.syncComplete">
       <h2>Sync Complete</h2>
     </div>
-
   </mat-step>
 </mat-stepper>
-
