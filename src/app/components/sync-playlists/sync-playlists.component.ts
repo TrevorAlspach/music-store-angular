@@ -48,6 +48,7 @@ import { PlaylistsService } from '../../services/playlists.service';
 import { SpotifyService } from '../../services/spotify.service';
 import { TransferPlaylistsService } from '../transfer-playlists/transfer-playlists.service';
 import { MatListModule } from '@angular/material/list';
+import { SyncPlaylistsService } from '../../sync-playlists.service';
 
 @Component({
   selector: 'app-sync-playlists',
@@ -106,7 +107,8 @@ export class SyncPlaylistsComponent {
     private transferPlaylistsService: TransferPlaylistsService,
     private spotifyService: SpotifyService,
     private fb: FormBuilder,
-    private playlistsService: PlaylistsService
+    private playlistsService: PlaylistsService,
+    private syncPlaylistService: SyncPlaylistsService
   ) {}
 
   ngOnInit(): void {
@@ -127,7 +129,31 @@ export class SyncPlaylistsComponent {
   }
 
   initiateSync() {
-    console.log('this.initiateSync');
+    if (!this.selectedSourcePlaylist || !this.selectedDestinationPlaylist) {
+      //handle case
+      return;
+    }
+    console.log('initiate merge sync');
+    console.log(this.syncTypeForm.value);
+    const syncType = this.selectedSyncType;
+    if (syncType === SyncType.MERGE) {
+      this.syncPlaylistService
+        .mergePlaylists(
+          this.selectedSourcePlaylist,
+          this.selectedDestinationPlaylist
+        )
+        .subscribe({
+          next: (id: string) => {
+            this.syncComplete = true;
+            console.log(`playlist merged successfully. DestinationID: ${id}`);
+          },
+          error: (err: any) => {
+            //handle error
+            console.log(err);
+            console.log('error merging playlist');
+          },
+        });
+    }
   }
 
   onSelectedSourceChanged($event: SourceType) {

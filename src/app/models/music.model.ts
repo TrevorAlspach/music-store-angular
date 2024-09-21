@@ -1,38 +1,37 @@
-export interface Playlist{
-    id:string;
-    creator?:string;
-    name:string;
-    description?: string;
-    songCount: number;
-    source: SourceType;
-    imageUrl: string;
-    href: string;  //to get more data from api
+export interface Playlist {
+  id: string;
+  creator?: string;
+  name: string;
+  description?: string;
+  songCount: number;
+  source: SourceType;
+  imageUrl: string;
+  href: string; //to get more data from api
 }
 
-export interface PlaylistDetails extends Playlist{
-    songs: Song[];
-    //song_count:number;
+export interface PlaylistDetails extends Playlist {
+  songs: Song[];
+  //song_count:number;
 }
 
-export interface SpotifyPlaylistDetails extends PlaylistDetails{
+export interface SpotifyPlaylistDetails extends PlaylistDetails {
   contextUri: string;
 }
 
 export enum SourceType {
-    SPOTIFY="spotify",
-    APPLE_MUSIC="apple_music",
-    SYNCIFY="syncify",
-    NONE="none",
-    CSV="csv",
-    JSON="json"
+  SPOTIFY = 'spotify',
+  APPLE_MUSIC = 'apple_music',
+  SYNCIFY = 'syncify',
+  NONE = 'none',
+  CSV = 'csv',
+  JSON = 'json',
 }
 
 export enum SyncType {
-  REPLACE="replace", 
-  MERGE="merge",
-  ADD="add"
+  REPLACE = 'replace',
+  MERGE = 'merge',
+  ADD = 'add',
 }
-
 
 export enum TransferSide {
   SOURCE = 'Source',
@@ -40,15 +39,15 @@ export enum TransferSide {
 }
 
 export enum ReleaseType {
-    SINGLE="Single", 
-    ALBUM="Album"
+  SINGLE = 'Single',
+  ALBUM = 'Album',
 }
- 
-export interface SpotifySong extends Song{
+
+export interface SpotifySong extends Song {
   contextUri: string;
 }
 
-export interface Song{
+export interface Song {
   name: string;
   artist: string;
   album: string;
@@ -56,13 +55,13 @@ export interface Song{
   time?: string;
   imageUrl?: string;
   href: string;
-  remoteId:string
+  remoteId: string;
   releaseYear: number;
   hovered: false;
-};
+}
 
 export interface PlaylistSelectedEvent {
-  sourceType: SourceType,
-  playlist: Playlist | null,
-  transferSide: TransferSide
+  sourceType: SourceType;
+  playlist: PlaylistDetails | null;
+  transferSide: TransferSide;
 }

@@ -1,27 +1,149 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { PlaylistsService } from './services/playlists.service';
-import { Playlist } from '@spotify/web-api-ts-sdk';
-import { BehaviorSubject } from 'rxjs';
-import { SourceType, Song } from './models/music.model';
+import {
+  BehaviorSubject,
+  forkJoin,
+  map,
+  of,
+  switchMap,
+  throwError,
+} from 'rxjs';
+import {
+  SourceType,
+  Song,
+  Playlist,
+  PlaylistDetails,
+  SpotifyPlaylistDetails,
+  SpotifySong,
+} from './models/music.model';
+import { SpotifySdkService } from './services/spotify-sdk.service';
+import { TransferPlaylistsService } from './components/transfer-playlists/transfer-playlists.service';
+import { SpotifyService } from './services/spotify.service';
+import {
+  Track,
+  Playlist as SdkPlaylist,
+  PlaylistedTrack,
+} from '@spotify/web-api-ts-sdk';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SyncPlaylistsService {
-  constructor(private playlistsService: PlaylistsService) {}
+  constructor(
+    private playlistsService: PlaylistsService,
+    private spotifySdkService: SpotifySdkService,
+    private spotifyService: SpotifyService,
+    private transferPlaylistService: TransferPlaylistsService
+  ) {}
 
-  selectedSource$: BehaviorSubject<SourceType> =
-    new BehaviorSubject<SourceType>(SourceType.NONE);
-  selectedDestination$: BehaviorSubject<SourceType> =
-    new BehaviorSubject<SourceType>(SourceType.NONE);
+  mergePlaylists(source: Playlist, destination: Playlist) {
+    let sourceDetails: PlaylistDetails;
+    let destinationDetails: PlaylistDetails;
 
-  selectedSourcePlaylist$: BehaviorSubject<Playlist | null> =
-    new BehaviorSubject<Playlist | null>(null);
+    return forkJoin([
+      this.getPlaylistDetails(source),
+      this.getPlaylistDetails(destination),
+    ]).pipe(
+      switchMap((result) => {
+        console.log(result);
+        const destinationSongSet = new Set();
+        const songsToAdd = [];
+        sourceDetails = result[0] as PlaylistDetails;
+        destinationDetails = result[1] as PlaylistDetails;
 
-  selectedDestinationPlaylist$: BehaviorSubject<Playlist | null> =
-    new BehaviorSubject<Playlist | null>(null);
+        for (let song of destinationDetails.songs) {
+          destinationSongSet.add({
+            name: song.name,
+            artist: song.artist,
+          });
+        }
 
+        for (let song of sourceDetails.songs) {
+          if (
+            !destinationSongSet.has({
+              name: song.name,
+              artist: song.artist,
+            })
+          ) {
+            songsToAdd.push(song);
+          }
+        }
 
-  //selectedSongs$: BehaviorSubject<Song[]> = new BehaviorSubject<Song[]>([]);
-  //transferedSongs$: BehaviorSubject<Song[]> = new BehaviorSubject<Song[]>([]);
+        if (destination.source === SourceType.SPOTIFY) {
+          return this.spotifyService
+            .addSongsToPlaylist(songsToAdd, destination.id)
+            .pipe(map((spotifyPlaylistResponse) => spotifyPlaylistResponse.id));
+        } else if (destination.source === SourceType.SYNCIFY) {
+          const newPlaylist = destinationDetails;
+          newPlaylist.songs.push(...songsToAdd);
+          return this.transferPlaylistService
+            .transferSongsToMusicStore(newPlaylist)
+            .pipe(map((playlist) => playlist.id));
+        } else {
+          return of('');
+        }
+      })
+    );
+  }
+
+  getPlaylistDetails(playlist: Playlist) {
+    if (playlist.source === SourceType.SPOTIFY) {
+      return this.spotifySdkService.getPlaylistFromId(playlist.id).pipe(
+        map(
+          (playlist: SdkPlaylist<Track>) =>
+            <PlaylistDetails>{
+              name: playlist.name,
+              description: playlist.description,
+              id: playlist.id,
+              songs: playlist.tracks.items.map(
+                (spotifyTrack: PlaylistedTrack<Track>) => {
+                  let songImageUrl = '';
+                  let album = spotifyTrack.track.album;
+                  if (
+                    album.images &&
+                    Array.isArray(album.images) &&
+                    album.images.length > 0
+                  ) {
+                    songImageUrl = spotifyTrack.track.album.images[0].url;
+                  } else {
+                    songImageUrl = 'assets/defaultAlbum.jpg';
+                  }
+                  return <SpotifySong>{
+                    name: spotifyTrack.track.name,
+                    album: spotifyTrack.track.album.name,
+                    artist: spotifyTrack.track.artists
+                      .map((artist) => {
+                        return artist.name;
+                      })
+                      .join(', '),
+                    time: this.millisToMinutesAndSeconds(
+                      spotifyTrack.track.duration_ms
+                    ),
+                    imageUrl: songImageUrl,
+                    hovered: false,
+                    href: spotifyTrack.track.href,
+                    remoteId: spotifyTrack.track.id,
+                    contextUri: `spotify:track:${spotifyTrack.track.id}`,
+                  };
+                }
+              ),
+              imageUrl: 'assets/defaultAlbum.jpg',
+              songCount: playlist.tracks.total,
+              source: SourceType.SPOTIFY,
+              href: playlist.external_urls.spotify,
+            }
+        )
+      );
+    } else if (playlist.source === SourceType.SYNCIFY) {
+      return this.playlistsService.getPlaylist(playlist.id);
+    } else {
+      return throwError(() => {});
+    }
+  }
+
+  millisToMinutesAndSeconds(millis: any) {
+    var minutes = Math.floor(millis / 60000);
+    var seconds: any = ((millis % 60000) / 1000).toFixed(0);
+    return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+  }
 }
