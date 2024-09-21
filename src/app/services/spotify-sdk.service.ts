@@ -1,7 +1,22 @@
 import { Injectable, OnInit } from '@angular/core';
-import { AccessToken, AuthorizationCodeWithPKCEStrategy, PlaybackState, SpotifyApi } from '@spotify/web-api-ts-sdk';
+import {
+  AccessToken,
+  AuthorizationCodeWithPKCEStrategy,
+  PlaybackState,
+  SpotifyApi,
+} from '@spotify/web-api-ts-sdk';
 import { environment } from '../../environments/environment.development';
-import { BehaviorSubject, defer, from, Observable, of, Subject, switchMap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  defer,
+  from,
+  Observable,
+  of,
+  ReplaySubject,
+  Subject,
+  switchMap,
+  throwError,
+} from 'rxjs';
 import { SpotifyService } from './spotify.service';
 import { SpotifyUser } from '../models/spotify-api.model';
 import { AuthService } from './auth.service';
@@ -11,7 +26,7 @@ import { ScriptService } from '../scripts/script.service';
 @Injectable({
   providedIn: 'root',
 })
-export class SpotifySdkService implements OnInit {
+export class SpotifySdkService {
   readonly clientId = environment.spotifyClientId;
   private window!: CustomWindow;
   private player!: Spotify.Player;
@@ -29,10 +44,12 @@ export class SpotifySdkService implements OnInit {
         const refreshToken = tokenResponse.token;
         return this.spotifyService.refreshAccessToken(refreshToken);
       } else {
-        return throwError(() => 'refresh token not found');
+        return throwError(() => console.log('refresh token not found'));
       }
     })
   );
+
+  sdkReady$: Subject<boolean> = new ReplaySubject(1);
 
   constructor(
     private spotifyService: SpotifyService,
@@ -40,38 +57,55 @@ export class SpotifySdkService implements OnInit {
     private windowRef: WindowRefService,
     private scriptService: ScriptService
   ) {
+    console.log('sdk init');
     //need to find our access token or get one for the sdk
     const token = this.spotifyService.getFullAccessToken();
+    console.log(token);
+    console.log('above is token on init sdk');
     if (token) {
       this.createSdkFromAccessToken(token);
-      this.initWebPlayer();
+      //this.initWebPlayer();
     } else {
       this.handleNoAccessToken$.subscribe({
         next: (accessToken: AccessToken) => {
           this.createSdkFromAccessToken(accessToken);
-          this.initWebPlayer();
+          //this.initWebPlayer();
         },
         error: () => {
           //no refresh or access token
           console.log('no refresh or access token');
+          this.sdkReady$.next(false);
         },
       });
     }
   }
 
-  ngOnInit(): void {}
+  public getPlaylistsOfCurrentUser() {
+    return defer(() => this.sdk.currentUser.playlists.playlists());
+  }
+
+  public getPlaylistFromId(playlistId: string) {
+    return defer(() => this.sdk.playlists.getPlaylist(playlistId));
+  }
+
+  public getUserProfile() {
+    //return defer(() => this.sdk.currentUser);
+    return defer(() => this.sdk.currentUser.profile());
+  }
 
   /**Wrap every used method from the sdk's promise with observable */
   public transferPlayback(deviceId: string): Observable<void> {
     return defer(() => this.sdk.player.transferPlayback([deviceId], true));
   }
 
-  public startPlayback( trackUris:string[]){
-    return defer(() => this.sdk.player.startResumePlayback(this.deviceId, undefined,trackUris ));
+  public startPlayback(trackUris: string[]) {
+    return defer(() =>
+      this.sdk.player.startResumePlayback(this.deviceId, undefined, trackUris)
+    );
   }
 
-  public getTrackInfo(id:string){
-    return defer(()=> this.sdk.tracks.get(id));
+  public getTrackInfo(id: string) {
+    return defer(() => this.sdk.tracks.get(id));
   }
 
   public getPlaybackState(): Observable<PlaybackState> {
@@ -90,33 +124,32 @@ export class SpotifySdkService implements OnInit {
     //this.player.resume();
   }
 
-  public preparePlayer(contextUri?: string){
-   const webPlayerDeviceId = this.getWebPlayerDeviceId();
-   return this.getPlaybackState().pipe(
-     switchMap((playbackState) => {
-       if (!playbackState) {
-         return this
-           .transferPlayback(webPlayerDeviceId)
-           .pipe(switchMap(() => this.getPlaybackState()));
-       } else if (playbackState.device.id !== webPlayerDeviceId) {
-         return this.transferPlayback(webPlayerDeviceId);
-       } else {
-         return of(playbackState);
-       }
-     }),
-     switchMap((playback) => {
-       return this.getPlayerState();
-     })
-   );
+  public preparePlayer(contextUri?: string) {
+    const webPlayerDeviceId = this.getWebPlayerDeviceId();
+    return this.getPlaybackState().pipe(
+      switchMap((playbackState) => {
+        if (!playbackState) {
+          return this.transferPlayback(webPlayerDeviceId).pipe(
+            switchMap(() => this.getPlaybackState())
+          );
+        } else if (playbackState.device.id !== webPlayerDeviceId) {
+          return this.transferPlayback(webPlayerDeviceId);
+        } else {
+          return of(playbackState);
+        }
+      }),
+      switchMap((playback) => {
+        return this.getPlayerState();
+      })
+    );
   }
 
   public nextTrack() {
-    return defer(() =>this.player.nextTrack());
-
+    return defer(() => this.player.nextTrack());
   }
 
   public prevTrack() {
-    return defer(() =>this.player.previousTrack());
+    return defer(() => this.player.previousTrack());
   }
 
   public adjustPlayerVolume(number: number) {
@@ -145,7 +178,7 @@ export class SpotifySdkService implements OnInit {
       //const token = this.getSpotifyAccessToken();
       this.getAccessTokenUsedByCurrentSdkInstance().subscribe((token) => {
         if (token) {
-          console.log('player should be init now')
+          console.log('player should be init now');
           this.player = new Spotify.Player({
             name: 'Web Playback SDK Quick Start Player',
             getOAuthToken: (cb) => {
@@ -218,6 +251,8 @@ export class SpotifySdkService implements OnInit {
   public createSdkFromAccessToken(access_token: AccessToken) {
     this.sdk = SpotifyApi.withAccessToken(this.clientId, access_token);
     console.log('created spotify sdk with access token');
+    this.initWebPlayer();
+    this.sdkReady$.next(true);
   }
 
   public getWebPlayerDeviceId() {

@@ -1,10 +1,27 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Playlist, PlaylistDetails, Song, SourceType, SpotifyPlaylistDetails, SpotifySong } from '../../../models/music.model';
+import {
+  Playlist,
+  PlaylistDetails,
+  Song,
+  SourceType,
+  SpotifyPlaylistDetails,
+  SpotifySong,
+} from '../../../models/music.model';
 import { CommonModule, Location } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SpotifyService } from '../../../services/spotify.service';
-import { SpotifyPlaylistResponse, SpotifySimplePlaylist, SpotifyTrackWrapper } from '../../../models/spotify-api.model';
+import {
+  SpotifyPlaylistResponse,
+  SpotifySimplePlaylist,
+  SpotifyTrackWrapper,
+} from '../../../models/spotify-api.model';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +32,11 @@ import { PlaylistEventService } from '../playlist-event.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpotifySdkService } from '../../../services/spotify-sdk.service';
 import { switchMap } from 'rxjs';
-import { Track } from '@spotify/web-api-ts-sdk';
+import {
+  Track,
+  Playlist as SdkPlaylist,
+  PlaylistedTrack,
+} from '@spotify/web-api-ts-sdk';
 
 @Component({
   selector: 'app-playlist-details',
@@ -62,22 +83,29 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['id'].previousValue) {
+    /* if (changes['id'].previousValue) {
       this.loadPlaylistDetails();
-    }
+    } */
   }
 
   loadPlaylistDetails() {
     this.isLoading = true;
     if (this.source === SourceType.SPOTIFY) {
-      this.spotifyService.getPlaylistFromId(this.id).subscribe({
-        next: (playlist: SpotifyPlaylistResponse) => {
+      //this.spotifyService.getPlaylistFromId(this.id).subscribe({
+      this.spotifySdkService.getPlaylistFromId(this.id).subscribe({
+        next: (playlist: SdkPlaylist<Track>) => {
           console.log(playlist);
-          this.isLoading = false;
-
-          let imageUrl: string;
-          if (playlist.images && playlist.images.length > 0) {
-            imageUrl = playlist.images[0].url;
+          let imageUrl: string = '';
+          if (
+            playlist.images &&
+            Array.isArray(playlist.images) &&
+            playlist.images.length > 0
+          ) {
+            if (playlist.images[0].url) {
+              imageUrl = playlist.images[0].url;
+            } else {
+              imageUrl = 'assets/defaultAlbum.jpg';
+            }
           } else {
             imageUrl = 'assets/defaultAlbum.jpg';
           }
@@ -87,7 +115,18 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
             description: playlist.description,
             id: playlist.id,
             songs: playlist.tracks.items.map(
-              (spotifyTrack: SpotifyTrackWrapper) => {
+              (spotifyTrack: PlaylistedTrack<Track>) => {
+                let songImageUrl = '';
+                let album = spotifyTrack.track.album;
+                if (
+                  album.images &&
+                  Array.isArray(album.images) &&
+                  album.images.length > 0
+                ) {
+                  songImageUrl = spotifyTrack.track.album.images[0].url;
+                } else {
+                  songImageUrl = 'assets/defaultAlbum.jpg';
+                }
                 return <SpotifySong>{
                   name: spotifyTrack.track.name,
                   album: spotifyTrack.track.album.name,
@@ -99,11 +138,11 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
                   time: this.millisToMinutesAndSeconds(
                     spotifyTrack.track.duration_ms
                   ),
-                  imageUrl: spotifyTrack.track.album.images[0].url,
+                  imageUrl: songImageUrl,
                   hovered: false,
                   href: spotifyTrack.track.href,
                   remoteId: spotifyTrack.track.id,
-                  contextUri: `spotify:track:${spotifyTrack.track.id}`
+                  contextUri: `spotify:track:${spotifyTrack.track.id}`,
                 };
               }
             ),
@@ -111,8 +150,9 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
             songCount: playlist.tracks.total,
             source: SourceType.SPOTIFY,
             href: playlist.external_urls.spotify,
-            contextUri: playlist.uri
+            contextUri: playlist.uri,
           };
+          this.isLoading = false;
         },
       });
     }
@@ -136,19 +176,18 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
     window.open(this.playlist.href);
   }
 
-  playSong(song: Song){
-    if (this.source === SourceType.SPOTIFY){
+  playSong(song: Song) {
+    if (this.source === SourceType.SPOTIFY) {
       const spotifyPlaylist = this.playlist as SpotifyPlaylistDetails;
       const spotifySong = song as SpotifySong;
-          this.spotifySdkService
-            .startPlayback([spotifySong.contextUri])
-            .pipe(
-              //switchMap(()=>this.spotifySdkService.getTrackInfo(spotifySong.remoteId)),
-              switchMap(() => this.spotifySdkService.preparePlayer())
-            )
-            .subscribe(() => {});
+      this.spotifySdkService
+        .startPlayback([spotifySong.contextUri])
+        .pipe(
+          //switchMap(()=>this.spotifySdkService.getTrackInfo(spotifySong.remoteId)),
+          switchMap(() => this.spotifySdkService.preparePlayer())
+        )
+        .subscribe(() => {});
     }
-
   }
 
   deletePlaylist() {

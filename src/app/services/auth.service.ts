@@ -12,13 +12,9 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 export class AuthService {
   apiBaseUrl = environment.apiBaseUrl;
 
-  constructor(
-    private http: HttpClient,
-    private auth0Service: Auth0Service
-  ) {
-  }
+  constructor(private http: HttpClient, private auth0Service: Auth0Service) {}
 
-  getOrCreateUser(){
+  getOrCreateUser() {
     return this.http.get(this.apiBaseUrl + 'api/user/createOrFindUser');
   }
 
@@ -26,7 +22,7 @@ export class AuthService {
     return this.http.get<boolean>(this.apiBaseUrl + 'auth/isTokenValid');
   }
 
-  login(email: string, password: string) {
+  /*   login(email: string, password: string) {
     return (
       this.http
         .post<User>(this.apiBaseUrl + 'auth/login', { email, password })
@@ -34,7 +30,7 @@ export class AuthService {
         // we still need to handle the reception of the token
         .pipe(shareReplay())
     );
-  }
+  } */
 
   logout() {
     localStorage.clear();
@@ -74,4 +70,3 @@ export class AuthService {
     );
   }
 }
-          

@@ -6,11 +6,17 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { SpotifyService } from '../../services/spotify.service';
-import { SpotifyPlaylistsResponse, SpotifySimplePlaylist } from '../../models/spotify-api.model';
+import {
+  SpotifyPlaylistsResponse,
+  SpotifySimplePlaylist,
+} from '../../models/spotify-api.model';
 import { PlaylistLargeComponent } from './playlist-large/playlist-large.component';
-import { map } from 'rxjs';
+import { map, switchMap, throwError } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import { SlickCarouselComponent, SlickCarouselModule } from 'ngx-slick-carousel';
+import {
+  SlickCarouselComponent,
+  SlickCarouselModule,
+} from 'ngx-slick-carousel';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,6 +24,8 @@ import { CreatePlaylistDialogComponent } from './create-playlist-dialog/create-p
 import { PlaylistEvent, PlaylistEventService } from './playlist-event.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DashboardService } from '../dashboard/dashboard.service';
+import { SpotifySdkService } from '../../services/spotify-sdk.service';
+import { SimplifiedPlaylist, TrackReference } from '@spotify/web-api-ts-sdk';
 
 @Component({
   selector: 'app-playlists',
@@ -48,7 +56,6 @@ export class PlaylistsComponent implements OnInit {
       {
         breakpoint: 812,
         settings: {
-          
           slidesToShow: 2,
           infinite: true,
         },
@@ -56,7 +63,6 @@ export class PlaylistsComponent implements OnInit {
       {
         breakpoint: 1024,
         settings: {
-          
           slidesToShow: 3,
           infinite: true,
         },
@@ -97,7 +103,8 @@ export class PlaylistsComponent implements OnInit {
     private matDialog: MatDialog,
     private playlistEventService: PlaylistEventService,
     private snackBar: MatSnackBar,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private spotifySdkService: SpotifySdkService
   ) {}
   ngOnInit(): void {
     this.getSpotifyPlaylists();
@@ -126,11 +133,21 @@ export class PlaylistsComponent implements OnInit {
 
   getSpotifyPlaylists() {
     this.spotifyPlaylistsLoading = true;
-    this.spotifyService
-      .getPlaylistsOfLoggedInUser()
+    this.spotifySdkService.sdkReady$
+      .pipe(
+        switchMap((ready) => {
+          if (ready) {
+            return this.spotifySdkService.getPlaylistsOfCurrentUser();
+          } else {
+            return throwError(() => {
+              console.log('sdk not init yet');
+            });
+          }
+        })
+      )
       .pipe(map((response) => response.items))
       .subscribe({
-        next: (playlists: SpotifySimplePlaylist[]) => {
+        next: (playlists: SimplifiedPlaylist[]) => {
           for (let playlist of playlists) {
             let imageUrl: string;
             if (playlist.images && playlist.images.length > 0) {
@@ -145,7 +162,7 @@ export class PlaylistsComponent implements OnInit {
               source: SourceType.SPOTIFY,
               imageUrl: imageUrl,
               href: playlist.external_urls.spotify,
-              songCount: playlist.tracks.total,
+              songCount: (playlist.tracks as TrackReference).total,
             });
           }
           this.spotifyPlaylistsLoading = false;
@@ -162,7 +179,6 @@ export class PlaylistsComponent implements OnInit {
     this.playlistsService.fetchAllPlaylistsForUser().subscribe({
       next: (res) => {
         this.syncifyPlaylistsLoading = false;
-        console.log(res);
         this.syncifyPlaylists = res;
       },
     });
@@ -211,9 +227,7 @@ export class PlaylistsComponent implements OnInit {
     this.getSpotifyPlaylists();
   }
 
-  slickInit(e: any) {
-    console.log('slick initialized');
-  }
+  slickInit(e: any) {}
 
   get SourceType() {
     return SourceType;

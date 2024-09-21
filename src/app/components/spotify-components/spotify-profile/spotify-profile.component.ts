@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { SpotifySdkService } from '../../../services/spotify-sdk.service';
+import { UserProfile } from '@spotify/web-api-ts-sdk';
+import { switchMap, throwError } from 'rxjs';
 
 @Component({
   selector: 'spotify-profile',
@@ -31,28 +33,47 @@ export class SpotifyProfileComponent implements OnInit {
   isLoading = true;
   notAuthorized = false;
 
-  constructor(private spotifyService: SpotifyService, private changeDetectorRef: ChangeDetectorRef, private dashboardService: DashboardService, private spotifySdkService: SpotifySdkService) {}
+  constructor(
+    private spotifyService: SpotifyService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private dashboardService: DashboardService,
+    private spotifySdkService: SpotifySdkService
+  ) {}
 
   ngOnInit() {
-    this.spotifyService.getUserProfile().subscribe({
-      next: (res: SpotifyUser) => {
-        this.spotifyUser = res;
+    this.spotifySdkService.sdkReady$
+      .pipe(
+        switchMap((ready) => {
+          if (ready === true) {
+            return this.spotifySdkService.getUserProfile();
+          } else {
+            return throwError(() => {
+              console.log('sdk not init yet');
+              this.isLoading = false;
+              this.notAuthorized = true;
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (res: UserProfile) => {
+          this.spotifyUser = res;
 
-        //let imageUrl: string;
-        if (this.spotifyUser.images && this.spotifyUser.images.length > 0) {
-          this.profileImageUrl = this.spotifyUser.images[0].url;
-        } else {
-          this.profileImageUrl = '';
-        }
+          //let imageUrl: string;
+          if (this.spotifyUser.images && this.spotifyUser.images.length > 0) {
+            this.profileImageUrl = this.spotifyUser.images[0].url;
+          } else {
+            this.profileImageUrl = '';
+          }
 
-        this.isLoading = false;
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-        this.isLoading = false;
-        this.notAuthorized = true;
-      },
-    });
+          this.isLoading = false;
+        },
+        error: (err: any) => {
+          console.log(err);
+          this.isLoading = false;
+          this.notAuthorized = true;
+        },
+      });
   }
 
   connectSpotifyAccount() {
@@ -65,10 +86,9 @@ export class SpotifyProfileComponent implements OnInit {
     this.spotifyUser = this.spotifyService.getAuthenticatedUser();
     this.dashboardService.dashboardRefreshSubject$.next(true);
     this.notAuthorized = true;
-
   }
 
-  navigateToSpotifyAccount(){
+  navigateToSpotifyAccount() {
     window.open(this.spotifyUser.external_urls.spotify);
   }
 }

@@ -26,14 +26,14 @@ export class SpotifyAuthComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     this.route.queryParamMap.subscribe({
-      next: (queryParams)=>{
-        const authCode = queryParams.get("code");
-        if (authCode !== null){
+      next: (queryParams) => {
+        const authCode = queryParams.get('code');
+        if (authCode !== null) {
           this.spotifySdkService.handleAuthCode(authCode).subscribe({
             next: (response) => {
               this.spotifySdkService.createSdkFromAccessToken(response);
+              //this.spotifySdkService.
               this.router.navigate(['dashboard']);
             },
             error: (e: HttpErrorResponse) => {
@@ -43,7 +43,7 @@ export class SpotifyAuthComponent implements OnInit {
         } else {
           //handle error
         }
-      }
-    })
+      },
+    });
   }
 }

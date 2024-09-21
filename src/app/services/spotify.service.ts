@@ -263,7 +263,7 @@ export class SpotifyService {
       .pipe(this.customCatchErrorOperator());
   }
 
-  getUserProfile(): Observable<SpotifyUser> {
+  /*  getUserProfile(): Observable<SpotifyUser> {
     return this.http
       .get<any>('https://api.spotify.com/v1/me', {
         headers: new HttpHeaders({
@@ -272,7 +272,7 @@ export class SpotifyService {
       })
       .pipe(this.customCatchErrorOperator())
       .pipe(tap((userProfile) => (this.authenticatedUser = userProfile)));
-  }
+  } */
 
   getAccessToken(authCode: string) {
     const codeVerifier = localStorage.getItem('code_verifier') as string;
@@ -328,7 +328,7 @@ export class SpotifyService {
             JSON.stringify(response),
             response['refresh_token']
           )
-            .pipe(switchMap(() => this.getUserProfile()))
+            //.pipe(switchMap(() => this.getUserProfile()))
             .pipe(switchMap(() => of(response)))
         )
       );
