@@ -30,7 +30,6 @@ export enum SourceType {
 export enum SyncType {
   REPLACE = 'replace',
   MERGE = 'merge',
-  ADD = 'add',
 }
 
 export enum TransferSide {

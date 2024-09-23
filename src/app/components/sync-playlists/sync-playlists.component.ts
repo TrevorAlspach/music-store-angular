@@ -133,12 +133,27 @@ export class SyncPlaylistsComponent {
       //handle case
       return;
     }
-    console.log('initiate merge sync');
-    console.log(this.syncTypeForm.value);
     const syncType = this.selectedSyncType;
     if (syncType === SyncType.MERGE) {
       this.syncPlaylistService
         .mergePlaylists(
+          this.selectedSourcePlaylist,
+          this.selectedDestinationPlaylist
+        )
+        .subscribe({
+          next: (id: string) => {
+            this.syncComplete = true;
+            console.log(`playlist merged successfully. DestinationID: ${id}`);
+          },
+          error: (err: any) => {
+            //handle error
+            console.log(err);
+            console.log('error merging playlist');
+          },
+        });
+    } else if (syncType === SyncType.REPLACE) {
+      this.syncPlaylistService
+        .replacePlaylistSync(
           this.selectedSourcePlaylist,
           this.selectedDestinationPlaylist
         )

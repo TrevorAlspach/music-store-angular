@@ -4,6 +4,7 @@ import {
   BehaviorSubject,
   forkJoin,
   map,
+  Observable,
   of,
   switchMap,
   throwError,
@@ -24,6 +25,7 @@ import {
   Playlist as SdkPlaylist,
   PlaylistedTrack,
 } from '@spotify/web-api-ts-sdk';
+import { SpotifyPlaylistResponse } from './models/spotify-api.model';
 
 @Injectable({
   providedIn: 'root',
@@ -76,6 +78,52 @@ export class SyncPlaylistsService {
         } else if (destination.source === SourceType.SYNCIFY) {
           const newPlaylist = destinationDetails;
           newPlaylist.songs.push(...songsToAdd);
+          return this.transferPlaylistService
+            .transferSongsToMusicStore(newPlaylist)
+            .pipe(map((playlist) => playlist.id));
+        } else {
+          return of('');
+        }
+      })
+    );
+  }
+
+  replacePlaylistSync(
+    source: Playlist,
+    destination: Playlist
+  ): Observable<string> {
+    let sourceDetails: PlaylistDetails;
+    let destinationDetails: PlaylistDetails;
+
+    return forkJoin([
+      this.getPlaylistDetails(source),
+      this.getPlaylistDetails(destination),
+    ]).pipe(
+      switchMap((result) => {
+        console.log(result);
+        const songsToAdd: Song[] = [];
+        sourceDetails = result[0] as PlaylistDetails;
+        destinationDetails = result[1] as PlaylistDetails;
+
+        songsToAdd.push(...sourceDetails.songs);
+        destinationDetails.songCount = songsToAdd.length;
+
+        if (destination.source === SourceType.SPOTIFY) {
+          return this.spotifySdkService
+            .deleteAllTracksFromPlaylist(destination.id)
+            .pipe(
+              switchMap((res) => {
+                return this.spotifyService.addSongsToPlaylist(
+                  songsToAdd,
+                  destination.id
+                );
+              })
+            )
+            .pipe(map((playlist) => playlist.id));
+        } else if (destination.source === SourceType.SYNCIFY) {
+          const newPlaylist = destinationDetails;
+          newPlaylist.songs = songsToAdd;
+          //newPlaylist.songs.push(...songsToAdd);
           return this.transferPlaylistService
             .transferSongsToMusicStore(newPlaylist)
             .pipe(map((playlist) => playlist.id));

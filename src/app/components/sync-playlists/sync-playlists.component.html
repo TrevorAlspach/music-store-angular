@@ -112,19 +112,14 @@
     <h1 class="title-center">Select Synchronization Method</h1>
     <mat-selection-list [formControl]="syncTypeForm" [multiple]="false">
       <mat-list-option [value]="SyncType.MERGE">
+        <mat-icon matListItemIcon>merge</mat-icon>
         <span matListItemTitle>Merge</span>
         <span matListItemLine
           >Combines all source and destination songs into one playlist</span
         >
       </mat-list-option>
-      <mat-list-option [value]="SyncType.ADD">
-        <span matListItemTitle>Add</span>
-        <span matListItemLine
-          >Append all songs from the source playlist onto the end of the
-          destination playlist</span
-        >
-      </mat-list-option>
       <mat-list-option [value]="SyncType.REPLACE">
+        <mat-icon matListItemIcon>playlist_remove</mat-icon>
         <span matListItemTitle>Replace</span>
         <span matListItemLine
           >Removes all songs from destination playlist and replaces with songs
@@ -283,13 +278,6 @@
           <span matListItemTitle>Merge</span>
           <span matListItemLine
             >Combines all source and destination songs into one playlist</span
-          >
-        </mat-list-item>
-        <mat-list-item *ngIf="this.selectedSyncType === SyncType.ADD">
-          <span matListItemTitle>Add</span>
-          <span matListItemLine
-            >Append all songs from the source playlist onto the end of the
-            destination playlist</span
           >
         </mat-list-item>
         <mat-list-item *ngIf="this.selectedSyncType === SyncType.REPLACE">

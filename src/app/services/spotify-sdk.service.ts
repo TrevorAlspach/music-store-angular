@@ -2,20 +2,31 @@ import { Injectable, OnInit } from '@angular/core';
 import {
   AccessToken,
   AuthorizationCodeWithPKCEStrategy,
+  MaxInt,
+  Page,
   PlaybackState,
+  PlaylistedTrack,
   SpotifyApi,
+  Track,
 } from '@spotify/web-api-ts-sdk';
 import { environment } from '../../environments/environment.development';
 import {
   BehaviorSubject,
+  concatMap,
   defer,
+  EMPTY,
+  expand,
+  filter,
   from,
+  map,
   Observable,
   of,
   ReplaySubject,
   Subject,
   switchMap,
+  tap,
   throwError,
+  toArray,
 } from 'rxjs';
 import { SpotifyService } from './spotify.service';
 import { SpotifyUser } from '../models/spotify-api.model';
@@ -86,6 +97,90 @@ export class SpotifySdkService {
 
   public getPlaylistFromId(playlistId: string) {
     return defer(() => this.sdk.playlists.getPlaylist(playlistId));
+  }
+
+  public deleteAllTracksFromPlaylist(playlistId: string) {
+    return this.getAllTracksFromPlaylist(playlistId).pipe(
+      concatMap((tracks: Track[]) => {
+        console.log('in concat map');
+        return this.deleteTracksInBatches(playlistId, tracks);
+      })
+    );
+  }
+
+  private getAllTracksFromPlaylist(playlistId: string): Observable<Track[]> {
+    const limit = 50; // Spotify's limit for playlist tracks per request
+    let offset = 0; // Start at the first track
+    let allTracks: Track[] = [];
+
+    // Fetch the first page of tracks
+    return this.getPageOfPlaylistTracks(playlistId, limit, offset).pipe(
+      expand((response: Page<PlaylistedTrack<Track>>) => {
+        console.log('response below');
+        console.log(response);
+        allTracks = allTracks.concat(response.items.map((item) => item.track)); // Collect tracks
+
+        // Check if there are more tracks to fetch
+        offset += limit;
+        if (offset < response.total) {
+          return this.getPageOfPlaylistTracks(playlistId, limit, offset);
+        } else {
+          return EMPTY;
+        }
+      }),
+      // Filter out the final null response and return all collected tracks
+      map((response) =>
+        response ? response.items.map((item) => item.track) : []
+      ),
+      toArray(), // Combine all emitted track arrays into a single array
+      map(() => allTracks) // Return all collected tracks as a single array
+    );
+  }
+
+  private getPageOfPlaylistTracks(
+    playlistId: string,
+    limit: MaxInt<50>,
+    offset: number
+  ): Observable<Page<PlaylistedTrack<Track>>> {
+    return defer(() =>
+      this.sdk.playlists.getPlaylistItems(
+        playlistId,
+        undefined,
+        undefined,
+        limit,
+        offset
+      )
+    );
+  }
+
+  private deleteTracksInBatches(playlistId: string, tracks: Track[]) {
+    const trackUris = tracks.map((track) => ({ uri: track.uri }));
+    const batchSize = 100;
+    const batches = [];
+
+    // Split tracks into batches of 100
+    for (let i = 0; i < trackUris.length; i += batchSize) {
+      batches.push(trackUris.slice(i, i + batchSize));
+    }
+
+    // Send delete requests for each batch
+    return from(batches).pipe(
+      concatMap((batch) =>
+        /* this.sdk.playlists.removeItemsFromPlaylist(playlistId, {
+          tracks: batch,
+        }) */
+        this.removeBatchFromPlaylist(playlistId, batch)
+      ),
+      toArray() // Gather all responses
+    );
+  }
+
+  private removeBatchFromPlaylist(playlistId: string, batch: any[]) {
+    return defer(() =>
+      this.sdk.playlists.removeItemsFromPlaylist(playlistId, {
+        tracks: batch,
+      })
+    );
   }
 
   public getUserProfile() {

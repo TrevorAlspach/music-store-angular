@@ -5,7 +5,7 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   Playlist,
   PlaylistDetails,
@@ -75,7 +75,8 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
     private location: Location,
     private playlistsService: PlaylistsService,
     private playlistEventService: PlaylistEventService,
-    private spotifySdkService: SpotifySdkService
+    private spotifySdkService: SpotifySdkService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -198,6 +199,7 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
           message: 'Playlist Deleted',
           source: SourceType.SYNCIFY,
         });
+        this.router.navigate(['dashboard']);
       },
     });
   }
