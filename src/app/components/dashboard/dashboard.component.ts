@@ -7,6 +7,8 @@ import { PlaylistsComponent } from '../playlists/playlists.component';
 import { HttpClient } from '@angular/common/http';
 import { AppleMusicProfileComponent } from '../apple-music-profile/apple-music-profile.component';
 import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-player/spotify-web-player.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { ServicesComponent } from '../services/services.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +19,8 @@ import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-pla
     PlaylistsComponent,
     AppleMusicProfileComponent,
     SpotifyWebPlayerComponent,
+    MatGridListModule,
+    ServicesComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -27,15 +31,6 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService,
     private http: HttpClient
   ) {}
-
-  /* getSpotifyProfile(){
-    //this.spotifyService.getAuthorizationCode()
-    this.spotifyService.getUserProfile().subscribe({
-      next: (res)=>{
-        console.log(res)
-      }
-    })
-  } */
 
   ngOnInit(): void {
     this.authService.getOrCreateUser().subscribe({
@@ -56,4 +51,11 @@ export class DashboardComponent implements OnInit {
       }
     })
   } */
+}
+
+export interface Tile {
+  color: string;
+  cols: number;
+  rows: number;
+  text: string;
 }

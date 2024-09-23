@@ -27,7 +27,8 @@
     //height: calc(100vh - 64px);
     height: 100%;
     //height: calc(100% - 64px);
-    width: 100%;
+    max-width: 100% !important;
+    width: 100% !important;
 }
 
 .example-sidenav-content {
@@ -39,8 +40,9 @@
     margin-right: 3%;
     //padding-left: 1%;
     //padding-top: 1%;
-    //height: calc(100% - 64px);
-    height: 97%;
+    height: calc(100% - 64px);
+    max-width: 100% !important;
+    //height: 97%;
 }
 
 .example-sidenav {

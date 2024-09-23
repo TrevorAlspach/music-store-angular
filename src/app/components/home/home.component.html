@@ -1,40 +1,46 @@
-<div style="display: flex; flex-direction: column; height: 100%;">
-  <mat-toolbar  class="primary-light mat-elevation-z5 toolbar-position toolbar-flex" >
-
-
-    
+<div style="display: flex; flex-direction: column; height: 100%">
+  <mat-toolbar
+    class="primary-light mat-elevation-z5 toolbar-position toolbar-flex"
+  >
     <div class="flex-row align-center">
-          <button mat-icon-button (click)="collapsed.set(!collapsed())">
-      <mat-icon>menu</mat-icon>
-    </button>
+      <button mat-icon-button (click)="collapsed.set(!collapsed())">
+        <!-- <mat-icon>menu</mat-icon> -->
+      </button>
     </div>
-      <app-spotify-web-player></app-spotify-web-player>
-           <button mat-icon-button [matMenuTriggerFor]="menu">
+    <app-spotify-web-player></app-spotify-web-player>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
       <!-- <mat-icon>account_circle</mat-icon> -->
-     </button>
+    </button>
   </mat-toolbar>
 
-  <mat-sidenav-container class="example-container mat-elevation-z10 fade-into-grey" autosize>
-  <mat-sidenav #drawer class="example-sidenav neutral-20" mode="side" [opened]="true" [style.width]="sideNavWidth()">
+  <mat-sidenav-container
+    class="example-container mat-elevation-z10 fade-into-grey"
+  >
+    <mat-sidenav
+      #drawer
+      class="example-sidenav neutral-20"
+      mode="side"
+      [opened]="true"
+      [style.width]="sideNavWidth()"
+    >
       <mat-list-item></mat-list-item><mat-list-item></mat-list-item>
-    <mat-nav-list  *ngFor="let route of routeLinks" >
-
-        <mat-list-item [routerLink]="route.link" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive" style="border-radius: 0px;" [matTooltip]="route.name" [matTooltipDisabled]="!collapsed()" >
-          <mat-icon
-            matListItemIcon
-          >
-            {{ route.icon }}</mat-icon
-          >
+      <mat-nav-list *ngFor="let route of routeLinks">
+        <mat-list-item
+          [routerLink]="route.link"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [activated]="rla.isActive"
+          style="border-radius: 0px"
+          [matTooltip]="route.name"
+          [matTooltipDisabled]="!collapsed()"
+        >
+          <mat-icon matListItemIcon> {{ route.icon }}</mat-icon>
           <div *ngIf="!collapsed()" matListItemTitle>{{ route.name }}</div>
-          
-          </mat-list-item>
-        
-    </mat-nav-list>
-    
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
 
-  </mat-sidenav>
-
- <!--  <mat-toolbar  class="primary-light mat-elevation-z5 toolbar-position toolbar-flex" >
+    <!--  <mat-toolbar  class="primary-light mat-elevation-z5 toolbar-position toolbar-flex" >
 
 
     
@@ -47,21 +53,22 @@
            <button mat-icon-button [matMenuTriggerFor]="menu">
      </button>
   </mat-toolbar> -->
-  <div class="example-sidenav-content ">
-    <router-outlet></router-outlet>
-  </div>
-
-</mat-sidenav-container>
+    <div class="example-sidenav-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-container>
 </div>
 
-  <mat-menu #menu="matMenu" xPosition="before">
-    <button mat-menu-item>
-      <mat-icon>settings</mat-icon>
-    <span>Settings</span></button>
-    <mat-divider></mat-divider>
-     <button mat-menu-item (click)="logout()">
-      <mat-icon>logout</mat-icon>
-    <span>Logout</span></button>
-  </mat-menu>
+<mat-menu #menu="matMenu" xPosition="before">
+  <button mat-menu-item>
+    <mat-icon>settings</mat-icon>
+    <span>Settings</span>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>
 
- <!--  <button mat-button (click)="hitapi()">button</button> -->
+<!--  <button mat-button (click)="hitapi()">button</button> -->

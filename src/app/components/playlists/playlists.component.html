@@ -1,81 +1,96 @@
-
-<!-- <mat-card class="neutral-20" > -->
-  <div style="padding: 20px">
-    <!-- <h1>My Playlists</h1> -->
-    <div class="toggle-grid-list-container">
-      <button mat-icon-button (click)="true" [matTooltip]="'Create Spotify Playlist'">
-        <mat-icon color="primary">list</mat-icon>
+<div style="padding: 20px" style="width: 100%">
+  <!--   <div class="toggle-grid-list-container">
+    <button
+      mat-icon-button
+      (click)="(true)"
+      [matTooltip]="'Create Spotify Playlist'"
+    >
+      <mat-icon color="primary">list</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      (click)="(true)"
+      [matTooltip]="'Create Spotify Playlist'"
+    >
+      <mat-icon color="primary">grid_view</mat-icon>
+    </button>
+  </div> -->
+  <div class="flex-row">
+    <h2 style="font-weight: 500" class="heading-no-margin">Spotify</h2>
+    <button
+      mat-icon-button
+      (click)="openCreatePlaylistDialog(SourceType.SPOTIFY)"
+      [matTooltip]="'Create Spotify Playlist'"
+    >
+      <mat-icon color="primary">add</mat-icon>
+    </button>
+  </div>
+  <div style="width: 100%">
+    <div
+      style="display: flex; align-items: center; width: 80%"
+      *ngIf="!spotifyPlaylistsLoading"
+    >
+      <button
+        mat-icon-button
+        style="margin-bottom: 15px"
+        (click)="spotifyCarouselBack()"
+      >
+        <mat-icon>chevron_left</mat-icon>
       </button>
-      <button mat-icon-button (click)="true" [matTooltip]="'Create Spotify Playlist'">
-        <mat-icon color="primary">grid_view</mat-icon>
-      </button>
-    </div>
-    <div class="flex-row">
-      <h2 style="font-weight: 500;" class="heading-no-margin">Spotify</h2>
-      <button mat-icon-button (click)="openCreatePlaylistDialog(SourceType.SPOTIFY)" [matTooltip]="'Create Spotify Playlist'">
-        <mat-icon color="primary">add</mat-icon>
-      </button>
-    </div>
-    <div>
-      <div style="display: flex; align-items: center" *ngIf="!spotifyPlaylistsLoading">
-        <button
-          mat-icon-button
-          style="margin-bottom: 15px"
-          (click)="spotifyCarouselBack()"
-        >
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-        <ngx-slick-carousel
-          class="carousel"
-          style="width: 95%"
-          #slickModalSpotify="slick-carousel"
-          [config]="slideConfig"
-          (init)="slickInit($event)"
-        >
-          @for (playlist of this.spotifyPlaylists; track playlist.imageUrl){
-          <div ngxSlickItem class="slide" style="padding: 15px">
-            <playlist-large [playlist]="playlist"></playlist-large>
-          </div>
-          }
-        </ngx-slick-carousel>
-        <button
-          mat-icon-button
-          style="margin-bottom: 15px"
-          (click)="spotifyCarouselNext()"
-        >
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-      </div>
-      <div *ngIf="spotifyPlaylistsLoading">
-      <mat-spinner></mat-spinner>
-    </div>
-    </div>
-
-    <div class="flex-row">
-      <h2 style="font-weight: 500" class="heading-no-margin">Syncify</h2>
-      <button mat-icon-button (click)="openCreatePlaylistDialog(SourceType.SYNCIFY)" [matTooltip]="'Create Syncify Playlist'">
-        <mat-icon color="primary">add</mat-icon>
-      </button>
-    </div>
-    <div style="padding-left: 20px" *ngIf="!syncifyPlaylistsLoading">
       <ngx-slick-carousel
-        *ngIf="this.syncifyPlaylists.length > 0"
         class="carousel"
         style="width: 95%"
-        #slickModal="slick-carousel"
+        #slickModalSpotify="slick-carousel"
         [config]="slideConfig"
         (init)="slickInit($event)"
       >
-        @for (playlist of this.syncifyPlaylists; track playlist.imageUrl){
+        @for (playlist of this.spotifyPlaylists; track playlist.imageUrl){
         <div ngxSlickItem class="slide" style="padding: 15px">
           <playlist-large [playlist]="playlist"></playlist-large>
         </div>
         }
       </ngx-slick-carousel>
-
+      <button
+        mat-icon-button
+        style="margin-bottom: 15px"
+        (click)="spotifyCarouselNext()"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
     </div>
-    <div *ngIf="syncifyPlaylistsLoading">
+    <div *ngIf="spotifyPlaylistsLoading">
       <mat-spinner></mat-spinner>
     </div>
   </div>
+
+  <div class="flex-row">
+    <h2 style="font-weight: 500" class="heading-no-margin">Syncify</h2>
+    <button
+      mat-icon-button
+      (click)="openCreatePlaylistDialog(SourceType.SYNCIFY)"
+      [matTooltip]="'Create Syncify Playlist'"
+    >
+      <mat-icon color="primary">add</mat-icon>
+    </button>
+  </div>
+  <div style="padding-left: 20px" *ngIf="!syncifyPlaylistsLoading">
+    <ngx-slick-carousel
+      *ngIf="this.syncifyPlaylists.length > 0"
+      class="carousel"
+      style="width: 95%"
+      #slickModal="slick-carousel"
+      [config]="slideConfig"
+      (init)="slickInit($event)"
+    >
+      @for (playlist of this.syncifyPlaylists; track playlist.imageUrl){
+      <div ngxSlickItem class="slide" style="padding: 15px">
+        <playlist-large [playlist]="playlist"></playlist-large>
+      </div>
+      }
+    </ngx-slick-carousel>
+  </div>
+  <div *ngIf="syncifyPlaylistsLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
 <!-- </mat-card> -->
