@@ -50,6 +50,8 @@ export class PlaylistsComponent implements OnInit {
   slideConfig = {
     slidesToShow: 5,
     slidesToScroll: 5,
+    //centerMode: false,
+    //variableWidth: true,
     //rows:2,
     arrows: false,
     responsive: [

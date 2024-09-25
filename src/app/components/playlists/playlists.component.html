@@ -1,5 +1,6 @@
-<div style="padding: 20px" style="width: 100%">
-  <!--   <div class="toggle-grid-list-container">
+<div style="width: 100%; margin: 10px">
+  <h1>Playlists</h1>
+  <div class="toggle-grid-list-container">
     <button
       mat-icon-button
       (click)="(true)"
@@ -14,9 +15,9 @@
     >
       <mat-icon color="primary">grid_view</mat-icon>
     </button>
-  </div> -->
+  </div>
   <div class="flex-row">
-    <h2 style="font-weight: 500" class="heading-no-margin">Spotify</h2>
+    <!-- <h2 style="font-weight: 500" class="heading-no-margin">Spotify</h2> -->
     <button
       mat-icon-button
       (click)="openCreatePlaylistDialog(SourceType.SPOTIFY)"
@@ -25,9 +26,9 @@
       <mat-icon color="primary">add</mat-icon>
     </button>
   </div>
-  <div style="width: 100%">
+  <div id="spotify-section">
     <div
-      style="display: flex; align-items: center; width: 80%"
+      style="display: flex; align-items: center; width: 100%"
       *ngIf="!spotifyPlaylistsLoading"
     >
       <button
@@ -37,19 +38,22 @@
       >
         <mat-icon>chevron_left</mat-icon>
       </button>
-      <ngx-slick-carousel
-        class="carousel"
-        style="width: 95%"
-        #slickModalSpotify="slick-carousel"
-        [config]="slideConfig"
-        (init)="slickInit($event)"
-      >
-        @for (playlist of this.spotifyPlaylists; track playlist.imageUrl){
-        <div ngxSlickItem class="slide" style="padding: 15px">
-          <playlist-large [playlist]="playlist"></playlist-large>
-        </div>
-        }
-      </ngx-slick-carousel>
+      <div style="width: 88%">
+        <ngx-slick-carousel
+          class="carousel"
+          style="width: 100%"
+          #slickModalSpotify="slick-carousel"
+          [config]="slideConfig"
+          (init)="slickInit($event)"
+        >
+          @for (playlist of this.spotifyPlaylists; track playlist.imageUrl){
+          <div ngxSlickItem class="slide">
+            <!-- style="padding: 15px" -->
+            <playlist-large [playlist]="playlist"></playlist-large>
+          </div>
+          }
+        </ngx-slick-carousel>
+      </div>
       <button
         mat-icon-button
         style="margin-bottom: 15px"
@@ -63,7 +67,7 @@
     </div>
   </div>
 
-  <div class="flex-row">
+  <!--   <div class="flex-row">
     <h2 style="font-weight: 500" class="heading-no-margin">Syncify</h2>
     <button
       mat-icon-button
@@ -92,5 +96,6 @@
   <div *ngIf="syncifyPlaylistsLoading">
     <mat-spinner></mat-spinner>
   </div>
+</div> -->
+  <!-- </mat-card> -->
 </div>
-<!-- </mat-card> -->

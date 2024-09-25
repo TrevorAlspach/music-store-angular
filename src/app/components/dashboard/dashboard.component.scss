@@ -1,5 +1,5 @@
 :host{
-    width: 100%;
+    width: 100% !important;
     height: 100%;
     //padding: 3%;
 }
@@ -16,4 +16,6 @@
 
 .playlists-container{
     flex: 0 0 80%;
+    width: 80%;
+    //flex-grow: 0;
 }
