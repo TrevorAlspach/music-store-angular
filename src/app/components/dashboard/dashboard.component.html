@@ -3,18 +3,20 @@
   <div class="header-bottom-border"></div>
 </div> -->
 
-<div class="top-dashboard-row">
-  <spotify-profile></spotify-profile>
-  <apple-music-profile></apple-music-profile>
-</div>
 <h1>Home</h1>
 <div class="flex-row flex-fill-item gap-3" style="height: 60%">
   <!-- style="height: 100%; width: 100%; gap: 3%" -->
-  <div style="background-color: green" class="services-container">
+  <div class="services-container">
     <app-services class="flex-fill-item"></app-services>
   </div>
   <div class="playlists-container">
-    <app-playlists style="width: 100% !important"></app-playlists>
+    <h2>Playlists</h2>
+    @for(service of this.connectedServices; track service){
+    <app-playlists
+      style="width: 100% !important"
+      [source]="service.externalService"
+    ></app-playlists>
+    }
   </div>
 </div>
 

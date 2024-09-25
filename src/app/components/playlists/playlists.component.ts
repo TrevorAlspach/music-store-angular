@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { PlaylistsService } from '../../services/playlists.service';
-import { Playlist, SourceType } from '../../models/music.model';
+import { Playlist, SourceType, ViewType } from '../../models/music.model';
 import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -46,13 +46,12 @@ import { SimplifiedPlaylist, TrackReference } from '@spotify/web-api-ts-sdk';
   styleUrl: './playlists.component.scss',
 })
 export class PlaylistsComponent implements OnInit {
+  @Input() source!: SourceType;
+
   @ViewChild('slickModalSpotify') slickModal!: SlickCarouselComponent;
   slideConfig = {
     slidesToShow: 5,
     slidesToScroll: 5,
-    //centerMode: false,
-    //variableWidth: true,
-    //rows:2,
     arrows: false,
     responsive: [
       {
@@ -93,11 +92,10 @@ export class PlaylistsComponent implements OnInit {
     ],
   };
 
-  spotifyPlaylists: Playlist[] = [];
-  syncifyPlaylists: Playlist[] = [];
+  playlists: Playlist[] = [];
 
-  spotifyPlaylistsLoading = false;
-  syncifyPlaylistsLoading = false;
+  playlistsLoading = false;
+  //syncifyPlaylistsLoading = false;
 
   constructor(
     private playlistsService: PlaylistsService,
@@ -109,18 +107,23 @@ export class PlaylistsComponent implements OnInit {
     private spotifySdkService: SpotifySdkService
   ) {}
   ngOnInit(): void {
-    this.getSpotifyPlaylists();
-    this.getSyncifyPlaylists();
+    this.loadPlaylists();
 
     this.playlistEventService.playlistEvent$.subscribe({
       next: (playlistEvent: PlaylistEvent) => {
         this.snackBar.open(playlistEvent.message, 'Close', {
           duration: 5000,
         });
-        if (playlistEvent.source === SourceType.SPOTIFY) {
+        if (
+          playlistEvent.source === SourceType.SPOTIFY &&
+          this.source === SourceType.SPOTIFY
+        ) {
           this.getSpotifyPlaylists();
         }
-        if (playlistEvent.source === SourceType.SYNCIFY) {
+        if (
+          playlistEvent.source === SourceType.SYNCIFY &&
+          this.source === SourceType.SYNCIFY
+        ) {
           this.getSyncifyPlaylists();
         }
       },
@@ -133,8 +136,16 @@ export class PlaylistsComponent implements OnInit {
     });
   }
 
+  loadPlaylists() {
+    if (this.source === SourceType.SPOTIFY) {
+      this.getSpotifyPlaylists();
+    } else if (this.source === SourceType.SYNCIFY) {
+      this.getSyncifyPlaylists();
+    }
+  }
+
   getSpotifyPlaylists() {
-    this.spotifyPlaylistsLoading = true;
+    this.playlistsLoading = true;
     this.spotifySdkService.sdkReady$
       .pipe(
         switchMap((ready) => {
@@ -158,7 +169,7 @@ export class PlaylistsComponent implements OnInit {
               imageUrl = '';
             }
 
-            this.spotifyPlaylists.push({
+            this.playlists.push({
               name: playlist.name,
               id: playlist.id,
               source: SourceType.SPOTIFY,
@@ -167,21 +178,21 @@ export class PlaylistsComponent implements OnInit {
               songCount: (playlist.tracks as TrackReference).total,
             });
           }
-          this.spotifyPlaylistsLoading = false;
+          this.playlistsLoading = false;
         },
         error: () => {
-          this.spotifyPlaylistsLoading = false;
-          this.spotifyPlaylists = [];
+          this.playlistsLoading = false;
+          this.playlists = [];
         },
       });
   }
 
   getSyncifyPlaylists() {
-    this.syncifyPlaylistsLoading = true;
+    this.playlistsLoading = true;
     this.playlistsService.fetchAllPlaylistsForUser().subscribe({
       next: (res) => {
-        this.syncifyPlaylistsLoading = false;
-        this.syncifyPlaylists = res;
+        this.playlistsLoading = false;
+        this.playlists = res;
       },
     });
   }
@@ -204,16 +215,16 @@ export class PlaylistsComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (closeValue) => {
         if (closeValue === true) {
-          if (sourceType === SourceType.SYNCIFY) {
-            this.getSyncifyPlaylists();
+          if (this.source === SourceType.SYNCIFY) {
+            //this.getSyncifyPlaylists();
             this.playlistEventService.playlistEvent$.next({
               message: 'Syncify Playlist Created Successfully',
               source: SourceType.SYNCIFY,
             });
           }
 
-          if (sourceType === SourceType.SPOTIFY) {
-            this.getSpotifyPlaylists();
+          if (this.source === SourceType.SPOTIFY) {
+            //this.getSpotifyPlaylists();
             this.playlistEventService.playlistEvent$.next({
               message: 'Spotify Playlist Created Successfully',
               source: SourceType.SPOTIFY,
@@ -225,8 +236,7 @@ export class PlaylistsComponent implements OnInit {
   }
 
   refreshPlaylists() {
-    this.getSyncifyPlaylists();
-    this.getSpotifyPlaylists();
+    this.loadPlaylists();
   }
 
   slickInit(e: any) {}

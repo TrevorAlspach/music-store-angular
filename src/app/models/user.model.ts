@@ -7,6 +7,6 @@ export interface User {
 }
 
 export interface ConnectedService {
-  externalService: string;
+  externalService: SourceType;
   imgPath: string;
 }

@@ -1,0 +1,28 @@
+.spotify-logo {
+    width: auto;
+    height: 70px;
+}
+
+.service-selection {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    grid-template-columns: 130px 130px;
+}
+
+.image-button {
+    display: flex;
+    flex-direction: row;
+    //padding: 10px;
+    height: 130px;
+    width: 130px;
+    border-radius: 10px;
+}
+
+.single-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row;
+}

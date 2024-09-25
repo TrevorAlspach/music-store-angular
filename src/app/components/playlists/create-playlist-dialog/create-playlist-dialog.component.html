@@ -1,24 +1,30 @@
 <form [formGroup]="this.createPlaylistFormGroup" (ngSubmit)="createPlaylist()">
-<h2 mat-dialog-title>Create Playlist</h2>
-<mat-dialog-content>
-
-  <div>
-<div class="create-dialog-form">
-      <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name">
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="description">
-        <mat-label>Description</mat-label>
-        <input matInput formControlName="description">
-      </mat-form-field>
+  <h2 mat-dialog-title>
+    Create {{ newPlaylistDestination | titlecase }} Playlist
+  </h2>
+  <mat-dialog-content>
+    <div>
+      <div class="create-dialog-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="description">
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description" />
+        </mat-form-field>
+      </div>
     </div>
-  </div>
-
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button type="submit" [disabled]="this.createPlaylistFormGroup.invalid">Create Playlist</button>
-  <button mat-button mat-dialog-close>Cancel</button>
-  <!-- <button mat-button mat-dialog-close cdkFocusInitial>Ok</button> -->
-</mat-dialog-actions>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button
+      mat-button
+      type="submit"
+      [disabled]="this.createPlaylistFormGroup.invalid"
+    >
+      Create Playlist
+    </button>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <!-- <button mat-button mat-dialog-close cdkFocusInitial>Ok</button> -->
+  </mat-dialog-actions>
 </form>

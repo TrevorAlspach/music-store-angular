@@ -13,6 +13,8 @@ import { AuthService } from '../../services/auth.service';
 import { ConnectedService } from '../../models/user.model';
 import { SourceType } from '../../models/music.model';
 import { ServiceComponent } from './service/service.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ConnectServiceDialogComponent } from './connect-service-dialog/connect-service-dialog.component';
 
 @Component({
   selector: 'app-services',
@@ -33,7 +35,7 @@ import { ServiceComponent } from './service/service.component';
   styleUrl: './services.component.scss',
 })
 export class ServicesComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private matDialog: MatDialog) {}
 
   readonly addExternalServiceListItem = {
     externalService: SourceType.NONE,
@@ -72,5 +74,18 @@ export class ServicesComponent implements OnInit {
     }
 
     return 'assets/defaultAlbum.jpg';
+  }
+
+  openConnectDialog() {
+    console.log('connect dialog');
+    let dialogRef = this.matDialog.open(ConnectServiceDialogComponent, {
+      minHeight: '400px',
+      minWidth: '500px',
+      data: this.connectedServices,
+    });
+
+    dialogRef.afterClosed().subscribe({
+      next: () => {},
+    });
   }
 }

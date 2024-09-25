@@ -22,16 +22,47 @@ export enum SourceType {
   SPOTIFY = 'SPOTIFY',
   APPLE_MUSIC = 'APPLE_MUSIC',
   SYNCIFY = 'SYNCIFY',
+  YOUTUBE_MUSIC = 'YOUTUBE_MUSIC',
   NONE = 'NONE',
   CSV = 'CSV',
   JSON = 'JSON',
 }
 
-/* export const sourceTypeToAssetMap: Map<string, string> = {
-  : 'assets/Spotify_Primary_Logo_RGB_Green.png',
-  apple_music: 'assets/Apple_Music_Icon_RGB_sm_073120.svg',
-  syncify: 'assets/guitar_icon.jpg',
-}; */
+export enum ViewType {
+  CAROUSEL = 'CAROUSEL',
+  TABLE = 'TABLE',
+}
+
+export const connectableServices = [
+  {
+    sourceType: SourceType.APPLE_MUSIC,
+    logoPath: 'assets/Apple_Music_Icon_RGB_sm_073120.svg',
+    name: 'Apple Music',
+    supported: false,
+    alreadyConnected: false,
+  },
+  {
+    sourceType: SourceType.SPOTIFY,
+    logoPath: 'assets/Spotify_Primary_Logo_RGB_Green.png',
+    name: 'Spotify',
+    supported: true,
+    alreadyConnected: false,
+  },
+  {
+    sourceType: SourceType.SYNCIFY,
+    logoPath: 'assets/guitar_icon.jpg',
+    name: 'Syncify',
+    supported: true,
+    alreadyConnected: false,
+  },
+  {
+    sourceType: SourceType.YOUTUBE_MUSIC,
+    logoPath: '',
+    name: 'Youtube Music',
+    supported: false,
+    alreadyConnected: false,
+  },
+];
 
 export enum SyncType {
   REPLACE = 'replace',

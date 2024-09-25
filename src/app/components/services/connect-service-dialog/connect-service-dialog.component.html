@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Connect External Service</h2>
+<mat-dialog-content>
+  <div class="flex-col justify-content align-center">
+    <div class="service-selection">
+      @for(service of this.connectableServices; track service){
+      <button
+        mat-button
+        class="image-button"
+        (click)="this.sourceSelected(service.sourceType)"
+        [disabled]="service.alreadyConnected || !service.supported"
+        [matTooltip]="'Already Connected'"
+        [matTooltipDisabled]="!service.alreadyConnected"
+      >
+        <img [src]="service.logoPath" class="spotify-logo" />
+        <div>{{ service.name }}</div>
+      </button>
+      }
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <!-- <button mat-button mat-dialog-close cdkFocusInitial>Ok</button> -->
+</mat-dialog-actions>

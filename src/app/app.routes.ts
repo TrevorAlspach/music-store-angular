@@ -13,6 +13,7 @@ import { TransferPlaylistsComponent } from './components/transfer-playlists/tran
 import { AccountComponent } from './components/account/account.component';
 import { LoginAuth0Component } from './components/auth/login-auth0/login-auth0.component';
 import { authGuardFn } from '@auth0/auth0-angular';
+import { MyPlaylistsComponent } from './components/playlists/my-playlists/my-playlists.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -26,7 +27,7 @@ export const routes: Routes = [
       { path: 'auth', component: LoginAuth0Component },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'account', component: AccountComponent },
-      { path: 'playlists', component: PlaylistsComponent },
+      { path: 'playlists', component: MyPlaylistsComponent },
       { path: 'sync', component: SyncPlaylistsComponent },
       { path: 'transfer', component: TransferPlaylistsComponent },
       { path: 'spotify-auth', component: SpotifyAuthComponent },

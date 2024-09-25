@@ -9,11 +9,16 @@ import { AppleMusicProfileComponent } from '../apple-music-profile/apple-music-p
 import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-player/spotify-web-player.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ServicesComponent } from '../services/services.component';
+import { switchMap } from 'rxjs';
+import { ConnectedService } from '../../models/user.model';
+import { SourceType } from '../../models/music.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
+    CommonModule,
     MatButtonModule,
     SpotifyProfileComponent,
     PlaylistsComponent,
@@ -28,9 +33,12 @@ import { ServicesComponent } from '../services/services.component';
 export class DashboardComponent implements OnInit {
   constructor(
     private spotifyService: SpotifyService,
-    private authService: AuthService,
-    private http: HttpClient
+    private authService: AuthService
   ) {}
+
+  connectedServices: ConnectedService[] = [
+    { externalService: SourceType.SYNCIFY, imgPath: 'assets/guitar_icon.jpg' },
+  ];
 
   ngOnInit(): void {
     this.authService.getOrCreateUser().subscribe({
@@ -38,19 +46,23 @@ export class DashboardComponent implements OnInit {
         console.log('got user info from token');
       },
     });
+
+    this.authService
+      .getOrCreateUser()
+      .pipe(switchMap(() => this.authService.connectedServices()))
+      .subscribe({
+        next: (connectedServices: ConnectedService[]) => {
+          for (let service of connectedServices) {
+            this.connectedServices.push(service);
+          }
+        },
+        error: () => {},
+      });
   }
 
   clearTokens() {
     localStorage.removeItem('spotify_access_token');
   }
-
-  /*   getSpotifyRefreshToken(){
-    this.authService.getSpotifyRefreshToken().subscribe({
-      next: (res)=>{
-        console.log(res)
-      }
-    })
-  } */
 }
 
 export interface Tile {
