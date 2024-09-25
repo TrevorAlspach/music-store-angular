@@ -11,11 +11,15 @@
 }
 
 .services-container{
-    flex: 0 0 20%;
+    flex: 0 0 25%;
 }
 
 .playlists-container{
-    flex: 0 0 80%;
-    width: 80%;
+    flex: 0 0 75%;
+    width: 75%;
     //flex-grow: 0;
+}
+
+.gap-3{
+    gap:3%;
 }

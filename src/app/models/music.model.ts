@@ -19,13 +19,19 @@ export interface SpotifyPlaylistDetails extends PlaylistDetails {
 }
 
 export enum SourceType {
-  SPOTIFY = 'spotify',
-  APPLE_MUSIC = 'apple_music',
-  SYNCIFY = 'syncify',
-  NONE = 'none',
-  CSV = 'csv',
-  JSON = 'json',
+  SPOTIFY = 'SPOTIFY',
+  APPLE_MUSIC = 'APPLE_MUSIC',
+  SYNCIFY = 'SYNCIFY',
+  NONE = 'NONE',
+  CSV = 'CSV',
+  JSON = 'JSON',
 }
+
+/* export const sourceTypeToAssetMap: Map<string, string> = {
+  : 'assets/Spotify_Primary_Logo_RGB_Green.png',
+  apple_music: 'assets/Apple_Music_Icon_RGB_sm_073120.svg',
+  syncify: 'assets/guitar_icon.jpg',
+}; */
 
 export enum SyncType {
   REPLACE = 'replace',

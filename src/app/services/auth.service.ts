@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../models/user.model';
+import { ConnectedService, User } from '../models/user.model';
 import { shareReplay } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { TokenResponse } from '../models/spotify-api.model';
@@ -46,6 +46,12 @@ export class AuthService {
     });
   }
 
+  connectedServices() {
+    return this.http.get<ConnectedService[]>(
+      this.apiBaseUrl + 'api/user/connectedServices'
+    );
+  }
+
   getSpotifyRefreshToken() {
     return this.http.get<TokenResponse>(
       this.apiBaseUrl + 'api/user/spotifyRefreshToken'
@@ -64,6 +70,30 @@ export class AuthService {
   removeSpotifyRefreshToken() {
     return this.http.post<any>(
       this.apiBaseUrl + 'api/user/spotifyRefreshToken',
+      {
+        token: null,
+      }
+    );
+  }
+
+  getAppleMusicRefreshToken() {
+    return this.http.get<TokenResponse>(
+      this.apiBaseUrl + 'api/user/appleMusicRefreshToken'
+    );
+  }
+
+  updateAppleMusicRefreshToken(token: string) {
+    return this.http.post<any>(
+      this.apiBaseUrl + 'api/user/appleMusicRefreshToken',
+      {
+        token: token,
+      }
+    );
+  }
+
+  removeAppleMusicRefreshToken() {
+    return this.http.post<any>(
+      this.apiBaseUrl + 'api/user/appleMusicRefreshToken',
       {
         token: null,
       }

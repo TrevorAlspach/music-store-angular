@@ -1,1 +1,23 @@
-<p>services works!</p>
+<div class="flex-fill-container" style="height: 100%">
+  <mat-card class="flex-fill-item"
+    ><div style="margin: 2%">
+      <h2>Services</h2>
+
+      <mat-selection-list>
+        @for(service of this.connectedServices; track service.externalService){
+        <mat-list-item>
+          <img matListItemAvatar [src]="service.imgPath" alt="..." />
+          <span matListItemTitle>{{
+            service.externalService | titlecase
+          }}</span>
+          <span matListItemLine>{{ "Connected" }}</span>
+        </mat-list-item>
+        }
+        <mat-list-item>
+          <mat-icon matListItemIcon>add</mat-icon>
+          <span matListItemTitle>{{ "Connect External Service" }}</span>
+        </mat-list-item>
+      </mat-selection-list>
+    </div>
+  </mat-card>
+</div>

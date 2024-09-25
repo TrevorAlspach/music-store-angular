@@ -7,6 +7,18 @@
         flex-direction: row;
     }
 
+    .flex-fill-container{
+        display: flex;
+        justify-content: space-between;
+        /* Adjust spacing */
+        align-items: stretch;
+        /* Ensure children fill the container vertically */
+    }
+
+    .flex-fill-item{
+        flex-grow: 1;
+    }
+
     .flex-col{
         display: flex;
         flex-direction: column;
