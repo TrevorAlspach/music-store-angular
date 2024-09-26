@@ -13,6 +13,7 @@ import { switchMap } from 'rxjs';
 import { ConnectedService } from '../../models/user.model';
 import { SourceType } from '../../models/music.model';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,7 +34,8 @@ import { CommonModule } from '@angular/common';
 export class DashboardComponent implements OnInit {
   constructor(
     private spotifyService: SpotifyService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {}
 
   connectedServices: ConnectedService[] = [
@@ -41,13 +43,13 @@ export class DashboardComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.authService.getOrCreateUser().subscribe({
+    /*  this.userService.getOrCreateUser().subscribe({
       next: () => {
         console.log('got user info from token');
       },
-    });
+    }); */
 
-    this.authService
+    this.userService
       .getOrCreateUser()
       .pipe(switchMap(() => this.authService.connectedServices()))
       .subscribe({

@@ -57,7 +57,7 @@ export const connectableServices = [
   },
   {
     sourceType: SourceType.YOUTUBE_MUSIC,
-    logoPath: '',
+    logoPath: 'assets/youtube_icon.png',
     name: 'Youtube Music',
     supported: false,
     alreadyConnected: false,

@@ -123,7 +123,11 @@ export class SyncPlaylistsService {
         } else if (destination.source === SourceType.SYNCIFY) {
           const newPlaylist = destinationDetails;
           newPlaylist.songs = songsToAdd;
-          //newPlaylist.songs.push(...songsToAdd);
+
+          for (let song of newPlaylist.songs) {
+            song.imageUrl = 'assets/defaultAlbum.jpg';
+          }
+
           return this.transferPlaylistService
             .transferSongsToMusicStore(newPlaylist)
             .pipe(map((playlist) => playlist.id));

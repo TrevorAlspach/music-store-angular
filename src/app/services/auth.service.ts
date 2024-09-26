@@ -14,10 +14,6 @@ export class AuthService {
 
   constructor(private http: HttpClient, private auth0Service: Auth0Service) {}
 
-  getOrCreateUser() {
-    return this.http.get(this.apiBaseUrl + 'api/user/createOrFindUser');
-  }
-
   isTokenValid() {
     return this.http.get<boolean>(this.apiBaseUrl + 'auth/isTokenValid');
   }

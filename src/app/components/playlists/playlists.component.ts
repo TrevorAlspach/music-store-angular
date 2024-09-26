@@ -95,7 +95,7 @@ export class PlaylistsComponent implements OnInit {
   playlists: Playlist[] = [];
 
   playlistsLoading = false;
-  //syncifyPlaylistsLoading = false;
+  playlistsLoadError = false;
 
   constructor(
     private playlistsService: PlaylistsService,
@@ -178,10 +178,12 @@ export class PlaylistsComponent implements OnInit {
               songCount: (playlist.tracks as TrackReference).total,
             });
           }
+
           this.playlistsLoading = false;
         },
         error: () => {
           this.playlistsLoading = false;
+          this.playlistsLoadError = true;
           this.playlists = [];
         },
       });
@@ -193,6 +195,11 @@ export class PlaylistsComponent implements OnInit {
       next: (res) => {
         this.playlistsLoading = false;
         this.playlists = res;
+      },
+      error: (err) => {
+        this.playlistsLoading = false;
+        this.playlistsLoadError = true;
+        this.playlists = [];
       },
     });
   }
@@ -236,6 +243,7 @@ export class PlaylistsComponent implements OnInit {
   }
 
   refreshPlaylists() {
+    this.playlistsLoading = true;
     this.loadPlaylists();
   }
 

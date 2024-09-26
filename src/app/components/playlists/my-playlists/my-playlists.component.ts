@@ -20,6 +20,7 @@ import { DashboardService } from '../../dashboard/dashboard.service';
 import { PlaylistEventService } from '../playlist-event.service';
 import { AuthService } from '../../../services/auth.service';
 import { SourceType } from '../../../models/music.model';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-my-playlists',
@@ -41,14 +42,17 @@ import { SourceType } from '../../../models/music.model';
   styleUrl: './my-playlists.component.scss',
 })
 export class MyPlaylistsComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
   connectedServices: ConnectedService[] = [
     { externalService: SourceType.SYNCIFY, imgPath: 'assets/guitar_icon.jpg' },
   ];
 
   ngOnInit(): void {
-    this.authService
+    this.userService
       .getOrCreateUser()
       .pipe(switchMap(() => this.authService.connectedServices()))
       .subscribe({

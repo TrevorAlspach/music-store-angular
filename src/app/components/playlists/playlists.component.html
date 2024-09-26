@@ -16,7 +16,7 @@
       <mat-icon color="primary">grid_view</mat-icon>
     </button>
   </div> -->
-  <div class="flex-row">
+  <div class="flex-row" *ngIf="this.playlists.length > 0">
     <button
       mat-icon-button
       (click)="openCreatePlaylistDialog(source)"
@@ -30,36 +30,76 @@
       style="display: flex; align-items: center; width: 100%"
       *ngIf="!playlistsLoading"
     >
-      <button
-        mat-icon-button
-        style="margin-bottom: 15px"
-        (click)="spotifyCarouselBack()"
+      @if(this.playlistsLoadError){
+      <div
+        class="flex-col justify-content align-center"
+        style="width: 100%; gap: 5px"
       >
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-      <div style="width: 88%">
-        <ngx-slick-carousel
-          class="carousel"
-          style="width: 100%"
-          #slickModalSpotify="slick-carousel"
-          [config]="slideConfig"
-          (init)="slickInit($event)"
-        >
-          @for (playlist of this.playlists; track playlist.imageUrl){
-          <div ngxSlickItem class="slide">
-            <!-- style="padding: 15px" -->
-            <playlist-large [playlist]="playlist"></playlist-large>
+        <mat-icon color="warn">error</mat-icon>
+        <div class="flex-row">
+          <div>
+            {{ "Playlists Failed to Load. Click refresh to try again" }}
           </div>
-          }
-        </ngx-slick-carousel>
+        </div>
+        <button mat-icon-button (click)="refreshPlaylists()">
+          <mat-icon>refresh</mat-icon>
+        </button>
       </div>
-      <button
-        mat-icon-button
-        style="margin-bottom: 15px"
-        (click)="spotifyCarouselNext()"
+      } @else {
+      <div
+        *ngIf="this.playlists.length > 0"
+        style="display: flex; align-items: center; width: 100%"
       >
-        <mat-icon>chevron_right</mat-icon>
-      </button>
+        <button
+          mat-icon-button
+          style="margin-bottom: 15px"
+          (click)="spotifyCarouselBack()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <div style="width: 88%">
+          <ngx-slick-carousel
+            class="carousel"
+            style="width: 100%"
+            #slickModalSpotify="slick-carousel"
+            [config]="slideConfig"
+            (init)="slickInit($event)"
+          >
+            @for (playlist of this.playlists; track playlist.imageUrl){
+            <div ngxSlickItem class="slide">
+              <!-- style="padding: 15px" -->
+              <playlist-large [playlist]="playlist"></playlist-large>
+            </div>
+            }
+          </ngx-slick-carousel>
+        </div>
+        <button
+          mat-icon-button
+          style="margin-bottom: 15px"
+          (click)="spotifyCarouselNext()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+      <div
+        *ngIf="this.playlists.length === 0"
+        class="flex-col justify-content align-center"
+        style="width: 100%; gap: 5px"
+      >
+        <div>
+          {{ "No " }}{{ this.source | titlecase
+          }}{{ " playlists found. Click below to create one!" }}
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openCreatePlaylistDialog(this.source)"
+        >
+          <mat-icon>add</mat-icon>
+          {{ "Create " }}{{ this.source | titlecase }} {{ " Playlist" }}
+        </button>
+      </div>
+      }
     </div>
     <div *ngIf="playlistsLoading">
       <mat-spinner></mat-spinner>

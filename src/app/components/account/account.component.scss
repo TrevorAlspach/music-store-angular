@@ -1,5 +1,22 @@
+:host {
+    width: 100% !important;
+    height: 100%;
+    //padding: 3%;
+}
+
 .menu-container{
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.profile-image {
+    border-radius: 5px;
+    width: 250px;
+    height: auto;
+}
+
+.account-container{
+    gap: 5%;
+    width: 100%;
 }

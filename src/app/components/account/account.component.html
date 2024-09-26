@@ -1,20 +1,39 @@
 <h1>Account</h1>
-<div class="menu-container">
-  <mat-card class="neutral-20">
-    <mat-action-list *ngFor="let route of routeLinks">
-      <mat-list-item [routerLink]="route.link" style="border-radius: 3px">
-        <mat-icon matListItemIcon> {{ route.icon }}</mat-icon>
-        <div matListItemTitle>{{ route.name }}</div>
-      </mat-list-item>
-    </mat-action-list>
-  </mat-card>
+<div class="flex-row justify-center account-container">
+  <div id="account-details flex-row" *ngIf="this.loggedInUser">
+    <img src="assets/image.png" class="profile-image" />
+    <h2>{{ this.loggedInUser.username }}</h2>
+    <!-- <h3>{{ "email@email.com" }}</h3> -->
+  </div>
+  <div class="menu-container">
+    <mat-card>
+      <mat-action-list>
+        <mat-list-item>
+          <mat-icon matListItemIcon> home</mat-icon>
+          <div matListItemTitle>{{ "Disconnect external sources" }}</div>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon matListItemIcon> sync_alt</mat-icon>
+          <div matListItemTitle>{{ "Terms Of Service" }}</div>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon matListItemIcon> trending_flat</mat-icon>
+          <div matListItemTitle>{{ "TBD" }}</div>
+        </mat-list-item>
+        <mat-list-item (click)="deleteAccount()">
+          <mat-icon matListItemIcon> settings</mat-icon>
+          <div matListItemTitle>{{ "Delete Account" }}</div>
+        </mat-list-item>
+      </mat-action-list>
+    </mat-card>
 
-  <mat-card class="neutral-20">
-    <mat-action-list>
-      <button mat-list-item (click)="logout()" >
-        <mat-icon matListItemIcon class="error"> logout</mat-icon>
-        <div matListItemTitle class="error">Logout</div>
-      </button>
-    </mat-action-list>
-  </mat-card>
+    <mat-card>
+      <mat-action-list>
+        <button mat-list-item (click)="logout()">
+          <mat-icon matListItemIcon class="error"> logout</mat-icon>
+          <div matListItemTitle class="error">Logout</div>
+        </button>
+      </mat-action-list>
+    </mat-card>
+  </div>
 </div>
