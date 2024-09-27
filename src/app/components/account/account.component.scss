@@ -11,7 +11,7 @@
 }
 
 .profile-image {
-    border-radius: 5px;
+    border-radius: 50%;
     width: 250px;
     height: auto;
 }
@@ -19,4 +19,12 @@
 .account-container{
     gap: 5%;
     width: 100%;
+}
+
+.list-width{
+    width: 30%;
+}
+
+.margin-top{
+    margin-top: 10px;
 }

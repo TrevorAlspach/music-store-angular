@@ -6,6 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { SpotifySdkService } from '../../../services/spotify-sdk.service';
+import { DashboardService } from '../../dashboard/dashboard.service';
 
 @Component({
   selector: 'app-spotify-auth',
@@ -22,7 +23,8 @@ export class SpotifyAuthComponent implements OnInit {
     private spotifyService: SpotifyService,
     private spotifySdkService: SpotifySdkService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dashboardService: DashboardService
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +37,7 @@ export class SpotifyAuthComponent implements OnInit {
               this.spotifySdkService.createSdkFromAccessToken(response);
               //this.spotifySdkService.
               this.router.navigate(['dashboard']);
+              this.dashboardService.dashboardRefreshSubject$.next(true);
             },
             error: (e: HttpErrorResponse) => {
               //handle error

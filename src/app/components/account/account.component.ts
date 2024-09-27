@@ -19,6 +19,7 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-account',
@@ -52,7 +53,7 @@ export class AccountComponent implements OnInit {
   loggedInUser!: User;
 
   ngOnInit(): void {
-    this.userService.getOrCreateUser().subscribe({
+    this.userService.loggedInUser$.subscribe({
       next: (user) => {
         console.log(user);
         this.loggedInUser = user;
@@ -60,7 +61,15 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  deleteAccount() {}
+  deleteAccount() {
+    this.userService.deleteCurrentUser().subscribe({
+      next: (res) => {
+        console.log(res);
+        localStorage.clear();
+        this.logout();
+      },
+    });
+  }
 
   logout() {
     this.authService.logout();

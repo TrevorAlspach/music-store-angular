@@ -52,8 +52,7 @@ export class MyPlaylistsComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.userService
-      .getOrCreateUser()
+    this.userService.loggedInUser$
       .pipe(switchMap(() => this.authService.connectedServices()))
       .subscribe({
         next: (connectedServices: ConnectedService[]) => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from '../../services/auth.service';
@@ -9,11 +9,12 @@ import { AppleMusicProfileComponent } from '../apple-music-profile/apple-music-p
 import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-player/spotify-web-player.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ServicesComponent } from '../services/services.component';
-import { switchMap } from 'rxjs';
+import { merge, switchMap } from 'rxjs';
 import { ConnectedService } from '../../models/user.model';
 import { SourceType } from '../../models/music.model';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,7 +36,9 @@ export class DashboardComponent implements OnInit {
   constructor(
     private spotifyService: SpotifyService,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private dashboardService: DashboardService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   connectedServices: ConnectedService[] = [
@@ -43,17 +46,12 @@ export class DashboardComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    /*  this.userService.getOrCreateUser().subscribe({
-      next: () => {
-        console.log('got user info from token');
-      },
-    }); */
-
-    this.userService
-      .getOrCreateUser()
+    console.log(this.connectedServices);
+    this.userService.loggedInUser$
       .pipe(switchMap(() => this.authService.connectedServices()))
       .subscribe({
         next: (connectedServices: ConnectedService[]) => {
+          console.log(connectedServices);
           for (let service of connectedServices) {
             this.connectedServices.push(service);
           }
@@ -65,11 +63,4 @@ export class DashboardComponent implements OnInit {
   clearTokens() {
     localStorage.removeItem('spotify_access_token');
   }
-}
-
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
 }

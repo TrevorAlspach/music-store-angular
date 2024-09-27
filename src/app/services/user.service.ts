@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConnectedService, User } from '../models/user.model';
-import { shareReplay } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, shareReplay } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { TokenResponse } from '../models/spotify-api.model';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
@@ -12,13 +12,22 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 export class UserService {
   apiBaseUrl = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient, private auth0Service: Auth0Service) {}
+  loggedInUser$: ReplaySubject<User> = new ReplaySubject(1);
 
-  getOrCreateUser() {
+  constructor(private http: HttpClient, private auth0Service: Auth0Service) {
+    this.getOrCreateUser().subscribe({
+      next: (user) => {
+        this.loggedInUser$.next(user);
+      },
+    });
+  }
+
+  private getOrCreateUser() {
     return this.http.get<User>(this.apiBaseUrl + 'api/user/createOrFindUser');
   }
 
-  deleteUser(id: number) {
-    return this.http.delete<User>(this.apiBaseUrl + `api/user/${id}`);
+  //delete current logged in user.
+  deleteCurrentUser() {
+    return this.http.delete<User>(this.apiBaseUrl + `api/user/deleteUser`);
   }
 }

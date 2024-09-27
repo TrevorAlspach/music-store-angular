@@ -11,7 +11,7 @@
   </div>
   <div class="playlists-container">
     <h2>Playlists</h2>
-    @for(service of this.connectedServices; track service){
+    @for(service of this.connectedServices; track service.externalService){
     <app-playlists
       style="width: 100% !important"
       [source]="service.externalService"
