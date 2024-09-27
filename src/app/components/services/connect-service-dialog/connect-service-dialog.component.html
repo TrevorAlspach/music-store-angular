@@ -11,7 +11,9 @@
         [matTooltip]="'Already Connected'"
         [matTooltipDisabled]="!service.alreadyConnected"
       >
-        <img [src]="service.logoPath" class="spotify-logo" />
+        <div class="logo-container">
+          <img [src]="service.logoPath" class="spotify-logo" />
+        </div>
         <div>{{ service.name }}</div>
       </button>
       }
