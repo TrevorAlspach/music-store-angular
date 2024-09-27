@@ -44,8 +44,8 @@ import {
   reduce,
 } from 'rxjs';
 import { SpotifyTrackWrapper } from '../../models/spotify-api.model';
-import { PlaylistsService } from '../../services/playlists.service';
-import { SpotifyService } from '../../services/spotify.service';
+import { PlaylistsService } from '../../services/syncify/playlists.service';
+import { SpotifyService } from '../../services/external-services/spotify.service';
 import { TransferPlaylistsService } from '../transfer-playlists/transfer-playlists.service';
 import { MatListModule } from '@angular/material/list';
 import { SyncPlaylistsService } from '../../sync-playlists.service';

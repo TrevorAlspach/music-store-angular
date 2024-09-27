@@ -6,8 +6,8 @@ import {
   HttpStatusCode,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.development';
-import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment.development';
+import { AuthService } from '../syncify/auth.service';
 import {
   Observable,
   catchError,
@@ -31,8 +31,8 @@ import {
   SpotifyUser,
   TokenResponse,
   TracksSearchResponse,
-} from '../models/spotify-api.model';
-import { Song } from '../models/music.model';
+} from '../../models/spotify-api.model';
+import { Song } from '../../models/music.model';
 import { AccessToken } from '@spotify/web-api-ts-sdk';
 
 @Injectable({

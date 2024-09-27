@@ -4,8 +4,8 @@ import {
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { SpotifyService } from '../../../services/spotify.service';
-import { PlaylistsService } from '../../../services/playlists.service';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
+import { PlaylistsService } from '../../../services/syncify/playlists.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -27,12 +27,12 @@ import { Playlist, SourceType } from '../../../models/music.model';
     MatFormFieldModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
   ],
   templateUrl: './create-playlist-dialog.component.html',
   styleUrl: './create-playlist-dialog.component.scss',
 })
-export class CreatePlaylistDialogComponent implements OnInit{
+export class CreatePlaylistDialogComponent implements OnInit {
   createPlaylistFormGroup: FormGroup = this.fb.group({
     name: [
       '',
@@ -53,38 +53,36 @@ export class CreatePlaylistDialogComponent implements OnInit{
     this.newPlaylistDestination = data;
   }
 
-  ngOnInit(): void {
-      
-  }
+  ngOnInit(): void {}
 
-  createPlaylist(){
-    if (this.newPlaylistDestination === SourceType.SPOTIFY){
-      this.spotifyService.createPlaylist(
-        this.createPlaylistFormGroup.get('name')?.value,
-        this.createPlaylistFormGroup.get('description')?.value,
-        []
-      ).subscribe({
-        next: (res)=>{
-          console.log(res)
-          this.dialogRef.close(true);
-        }
-      })
-
-    } else if (this.newPlaylistDestination === SourceType.SYNCIFY){
+  createPlaylist() {
+    if (this.newPlaylistDestination === SourceType.SPOTIFY) {
+      this.spotifyService
+        .createPlaylist(
+          this.createPlaylistFormGroup.get('name')?.value,
+          this.createPlaylistFormGroup.get('description')?.value,
+          []
+        )
+        .subscribe({
+          next: (res) => {
+            console.log(res);
+            this.dialogRef.close(true);
+          },
+        });
+    } else if (this.newPlaylistDestination === SourceType.SYNCIFY) {
       this.playlistsService
         .createNewPlaylist(<Playlist>{
           name: this.createPlaylistFormGroup.get('name')?.value,
           description: this.createPlaylistFormGroup.get('description')?.value,
           songCount: 0,
           source: SourceType.SYNCIFY,
-          imageUrl:
-            '',
+          imageUrl: '',
           href: '',
         })
         .subscribe({
           next: (res) => {
             console.log(res);
-            this.dialogRef.close(true)
+            this.dialogRef.close(true);
           },
         });
     }

@@ -6,7 +6,7 @@ import {
   Song,
   SourceType,
 } from '../../models/music.model';
-import { PlaylistsService } from '../../services/playlists.service';
+import { PlaylistsService } from '../../services/syncify/playlists.service';
 
 @Injectable({
   providedIn: 'root',

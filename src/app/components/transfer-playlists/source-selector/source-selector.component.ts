@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { SourceType, TransferSide } from '../../../models/music.model';
-import { SpotifyService } from '../../../services/spotify.service';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';

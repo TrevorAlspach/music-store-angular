@@ -1,6 +1,6 @@
 import { Injectable, Inject, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './auth.service';
+import { AuthService } from '../syncify/auth.service';
 import { DOCUMENT } from '@angular/common';
 
 @Injectable({
@@ -47,7 +47,7 @@ export class InactivityService {
 
   logoutUser() {
     this.ngZone.run(() => {
-      this.authService.logout(); 
+      this.authService.logout();
       //this.router.navigate(['/login']);
     });
   }

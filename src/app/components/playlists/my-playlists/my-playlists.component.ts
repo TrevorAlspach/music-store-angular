@@ -13,14 +13,14 @@ import { PlaylistsComponent } from '../playlists.component';
 import { MatDialog } from '@angular/material/dialog';
 import { switchMap } from 'rxjs';
 import { ConnectedService } from '../../../models/user.model';
-import { PlaylistsService } from '../../../services/playlists.service';
-import { SpotifySdkService } from '../../../services/spotify-sdk.service';
-import { SpotifyService } from '../../../services/spotify.service';
+import { PlaylistsService } from '../../../services/syncify/playlists.service';
+import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { PlaylistEventService } from '../playlist-event.service';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../services/syncify/auth.service';
 import { SourceType } from '../../../models/music.model';
-import { UserService } from '../../../services/user.service';
+import { UserService } from '../../../services/syncify/user.service';
 
 @Component({
   selector: 'app-my-playlists',

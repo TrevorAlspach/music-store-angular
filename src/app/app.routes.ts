@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { HomeComponent } from './components/home/home.component';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './services/syncify/auth.service';
 import { authGuard } from './guards/auth.guard';
 import { PlaylistsComponent } from './components/playlists/playlists.component';
 import { SyncPlaylistsComponent } from './components/sync-playlists/sync-playlists.component';

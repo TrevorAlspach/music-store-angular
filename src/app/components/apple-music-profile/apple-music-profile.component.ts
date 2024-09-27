@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { SpotifyUser } from '../../models/spotify-api.model';
-import { SpotifyService } from '../../services/spotify.service';
+import { SpotifyService } from '../../services/external-services/spotify.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -69,7 +69,7 @@ export class AppleMusicProfileComponent {
     this.notAuthorized = true; */
   }
 
-/*   navigateToAppleMusicAccount() {
+  /*   navigateToAppleMusicAccount() {
     window.open(this.appleMusicUser.external_urls.spotify);
   } */
 }

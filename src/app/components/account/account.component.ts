@@ -16,9 +16,9 @@ import {
   Router,
 } from '@angular/router';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/syncify/auth.service';
 import { User } from '../../models/user.model';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../services/syncify/user.service';
 import { switchMap } from 'rxjs';
 
 @Component({

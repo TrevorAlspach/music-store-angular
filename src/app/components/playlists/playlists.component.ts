@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { PlaylistsService } from '../../services/playlists.service';
+import { PlaylistsService } from '../../services/syncify/playlists.service';
 import { Playlist, SourceType, ViewType } from '../../models/music.model';
 import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { SpotifyService } from '../../services/spotify.service';
+import { SpotifyService } from '../../services/external-services/spotify.service';
 import {
   SpotifyPlaylistsResponse,
   SpotifySimplePlaylist,
@@ -24,7 +24,7 @@ import { CreatePlaylistDialogComponent } from './create-playlist-dialog/create-p
 import { PlaylistEvent, PlaylistEventService } from './playlist-event.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DashboardService } from '../dashboard/dashboard.service';
-import { SpotifySdkService } from '../../services/spotify-sdk.service';
+import { SpotifySdkService } from '../../services/external-services/spotify-sdk.service';
 import { SimplifiedPlaylist, TrackReference } from '@spotify/web-api-ts-sdk';
 
 @Component({

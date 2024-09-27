@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../services/syncify/auth.service';
 import { firstValueFrom } from 'rxjs';
 
 export const authGuard: CanActivateFn = async (route, state) => {
@@ -23,5 +23,5 @@ export const authGuard: CanActivateFn = async (route, state) => {
     router.navigate(['/login']);
     return false; 
   } */
- return true;
+  return true;
 };

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { SpotifyService } from '../../../services/spotify.service';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SpotifyUser } from '../../../models/spotify-api.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { DashboardService } from '../../dashboard/dashboard.service';
-import { SpotifySdkService } from '../../../services/spotify-sdk.service';
+import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
 import { UserProfile } from '@spotify/web-api-ts-sdk';
 import { switchMap, throwError } from 'rxjs';
 

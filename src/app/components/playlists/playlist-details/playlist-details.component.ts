@@ -16,7 +16,7 @@ import {
 } from '../../../models/music.model';
 import { CommonModule, Location } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SpotifyService } from '../../../services/spotify.service';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
 import {
   SpotifyPlaylistResponse,
   SpotifySimplePlaylist,
@@ -25,12 +25,12 @@ import {
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { PlaylistsService } from '../../../services/playlists.service';
+import { PlaylistsService } from '../../../services/syncify/playlists.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { PlaylistEventService } from '../playlist-event.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SpotifySdkService } from '../../../services/spotify-sdk.service';
+import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
 import { switchMap } from 'rxjs';
 import {
   Track,

@@ -1,19 +1,23 @@
 import { Component, computed, signal } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import { AuthService } from '../../services/syncify/auth.service';
 import { MatButtonModule } from '@angular/material/button';
-import { SongService } from '../../services/song.service';
+import { SongService } from '../../services/syncify/song.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import {MatListModule} from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-import { SpotifyWebPlayerComponent } from "../spotify-components/spotify-web-player/spotify-web-player.component";
-
+import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-player/spotify-web-player.component';
 
 @Component({
   selector: 'app-home',
@@ -31,8 +35,8 @@ import { SpotifyWebPlayerComponent } from "../spotify-components/spotify-web-pla
     MatSidenavModule,
     MatListModule,
     MatTooltipModule,
-    SpotifyWebPlayerComponent
-],
+    SpotifyWebPlayerComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

@@ -9,7 +9,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PlaylistLargeComponent } from '../playlists/playlist-large/playlist-large.component';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/syncify/auth.service';
 import { ConnectedService } from '../../models/user.model';
 import { SourceType } from '../../models/music.model';
 import { ServiceComponent } from './service/service.component';

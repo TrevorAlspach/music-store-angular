@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { SpotifyService } from '../../../services/spotify.service';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { SpotifySdkService } from '../../../services/spotify-sdk.service';
+import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
 import { DashboardService } from '../../dashboard/dashboard.service';
 
 @Component({

@@ -2,23 +2,44 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { PlaylistSelectorComponent } from './playlist-selector/playlist-selector.component';
 import { SourceSelectorComponent } from './source-selector/source-selector.component';
-import { Playlist, PlaylistDetails, Song, SourceType, TransferSide } from '../../models/music.model';
+import {
+  Playlist,
+  PlaylistDetails,
+  Song,
+  SourceType,
+  TransferSide,
+} from '../../models/music.model';
 import { SongSelectorComponent } from './song-selector/song-selector.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { TransferPlaylistsService } from './transfer-playlists.service';
-import { expand, map, merge, Observable, reduce, Subject, Subscription, switchMap, tap } from 'rxjs';
+import {
+  expand,
+  map,
+  merge,
+  Observable,
+  reduce,
+  Subject,
+  Subscription,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { SpotifyService } from '../../services/spotify.service';
+import { SpotifyService } from '../../services/external-services/spotify.service';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { SpotifyTrackWrapper } from '../../models/spotify-api.model';
-import { PlaylistsService } from '../../services/playlists.service';
+import { PlaylistsService } from '../../services/syncify/playlists.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { PlaylistDetailsComponent } from "../playlists/playlist-details/playlist-details.component";
+import { PlaylistDetailsComponent } from '../playlists/playlist-details/playlist-details.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
@@ -38,8 +59,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     MatProgressBarModule,
     PlaylistDetailsComponent,
-    MatTooltipModule
-],
+    MatTooltipModule,
+  ],
   templateUrl: './transfer-playlists.component.html',
   styleUrl: './transfer-playlists.component.scss',
 })
@@ -198,30 +219,34 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
       },
     });
 
-    this.selectedPlaylistSubscription = this.transferPlaylistsService.selectedSourcePlaylist$.subscribe({
-      next: (selectedPlaylist)=>{
-        if (selectedPlaylist !== null){
-          this.selectedPlaylist = selectedPlaylist;
-        }
-      }
-    });
+    this.selectedPlaylistSubscription =
+      this.transferPlaylistsService.selectedSourcePlaylist$.subscribe({
+        next: (selectedPlaylist) => {
+          if (selectedPlaylist !== null) {
+            this.selectedPlaylist = selectedPlaylist;
+          }
+        },
+      });
 
-    this.selectedDestinationSubscription = this.transferPlaylistsService.selectedDestination$.subscribe((selectedDestination)=>{
-      if (selectedDestination){
-        this.selectedDestination = selectedDestination;
-      }
-    })
+    this.selectedDestinationSubscription =
+      this.transferPlaylistsService.selectedDestination$.subscribe(
+        (selectedDestination) => {
+          if (selectedDestination) {
+            this.selectedDestination = selectedDestination;
+          }
+        }
+      );
   }
 
   ngOnDestroy(): void {
-      this.MusicStoreTransferPlaylistSubscription.unsubscribe();
-      this.spotifyTransferPlaylistSubscription.unsubscribe();
-      this.combinedSubjectSubscription.unsubscribe();
-      this.selectedPlaylistSubscription.unsubscribe();
+    this.MusicStoreTransferPlaylistSubscription.unsubscribe();
+    this.spotifyTransferPlaylistSubscription.unsubscribe();
+    this.combinedSubjectSubscription.unsubscribe();
+    this.selectedPlaylistSubscription.unsubscribe();
 
-      this.transferPlaylistsService.selectedSource$.next(SourceType.NONE);
-      this.transferPlaylistsService.selectedDestination$.next(SourceType.NONE);
-      this.transferPlaylistsService.selectedSourcePlaylist$.next(null);
+    this.transferPlaylistsService.selectedSource$.next(SourceType.NONE);
+    this.transferPlaylistsService.selectedDestination$.next(SourceType.NONE);
+    this.transferPlaylistsService.selectedSourcePlaylist$.next(null);
   }
 
   initiateTransfer() {
@@ -284,7 +309,7 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
     return SourceType;
   }
 
-/*   openTransferDialog() {
+  /*   openTransferDialog() {
     this.matDialog.open(TransferDialogComponent, {
       minHeight: '400px',
       minWidth: '500px',

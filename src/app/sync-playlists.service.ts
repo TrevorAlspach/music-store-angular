@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { PlaylistsService } from './services/playlists.service';
+import { PlaylistsService } from './services/syncify/playlists.service';
 import {
   BehaviorSubject,
   forkJoin,
@@ -17,9 +17,9 @@ import {
   SpotifyPlaylistDetails,
   SpotifySong,
 } from './models/music.model';
-import { SpotifySdkService } from './services/spotify-sdk.service';
+import { SpotifySdkService } from './services/external-services/spotify-sdk.service';
 import { TransferPlaylistsService } from './components/transfer-playlists/transfer-playlists.service';
-import { SpotifyService } from './services/spotify.service';
+import { SpotifyService } from './services/external-services/spotify.service';
 import {
   Track,
   Playlist as SdkPlaylist,

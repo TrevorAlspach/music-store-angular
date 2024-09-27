@@ -3,7 +3,7 @@ import { ScriptService } from '../../../scripts/script.service';
 import {
   CustomWindow,
   WindowRefService,
-} from '../../../services/window-ref.service';
+} from '../../../services/util/window-ref.service';
 import {
   exhaustMap,
   filter,
@@ -18,14 +18,14 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { SpotifySdkService } from '../../../services/spotify-sdk.service';
+import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
 import {
   AccessToken,
   PlaybackState,
   Track,
   TrackItem,
 } from '@spotify/web-api-ts-sdk';
-import { SpotifyService } from '../../../services/spotify.service';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
 import { MatSliderDragEvent, MatSliderModule } from '@angular/material/slider';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

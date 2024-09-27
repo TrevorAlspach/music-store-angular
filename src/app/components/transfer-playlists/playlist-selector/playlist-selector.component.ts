@@ -1,17 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { Playlist, PlaylistSelectedEvent, SourceType, TransferSide } from '../../../models/music.model';
-import { SpotifyService } from '../../../services/spotify.service';
+import {
+  Playlist,
+  PlaylistSelectedEvent,
+  SourceType,
+  TransferSide,
+} from '../../../models/music.model';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
 import { SpotifySimplePlaylist } from '../../../models/spotify-api.model';
 import { Subscription, map } from 'rxjs';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  MatTable,
+  MatTableDataSource,
+  MatTableModule,
+} from '@angular/material/table';
 import { TransferPlaylistsService } from '../transfer-playlists.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
-import { PlaylistsService } from '../../../services/playlists.service';
+import { PlaylistsService } from '../../../services/syncify/playlists.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
@@ -24,7 +43,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatIconModule,
     MatTableModule,
     MatCheckboxModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   templateUrl: './playlist-selector.component.html',
   styleUrl: './playlist-selector.component.scss',
@@ -36,7 +55,7 @@ export class PlaylistSelectorComponent
 
   @Input() transferSide!: TransferSide;
 
-  @Output() onPlaylistSelected = new EventEmitter<PlaylistSelectedEvent>()
+  @Output() onPlaylistSelected = new EventEmitter<PlaylistSelectedEvent>();
 
   playlistsDataSource: MatTableDataSource<Playlist> =
     new MatTableDataSource<Playlist>();
@@ -46,7 +65,7 @@ export class PlaylistSelectorComponent
   sourceSelected = false;
   isLoading = false;
 
-  readonly tableColumns = ['select','name', 'source', 'songCount'];
+  readonly tableColumns = ['select', 'name', 'source', 'songCount'];
 
   @ViewChild(MatTable) table!: MatTable<Playlist>;
 
@@ -79,7 +98,7 @@ export class PlaylistSelectorComponent
       this.selectedSourceSubscription =
         this.transferPlaylistsService.selectedDestination$.subscribe({
           next: (sourceType: SourceType) => {
-            console.log('hitting this ')
+            console.log('hitting this ');
             console.log(sourceType);
 
             if (sourceType === SourceType.NONE) {
@@ -108,7 +127,7 @@ export class PlaylistSelectorComponent
             const mappedPlaylists = [];
 
             for (let playlist of playlists) {
-              console.log(playlist)
+              console.log(playlist);
               let imageUrl: string;
               if (playlist.images && playlist.images.length > 0) {
                 imageUrl = playlist.images[0].url;
@@ -122,40 +141,40 @@ export class PlaylistSelectorComponent
                 source: SourceType.SPOTIFY,
                 imageUrl: imageUrl,
                 href: playlist.href,
-                songCount: playlist.tracks.total
+                songCount: playlist.tracks.total,
               });
             }
-            console.log(mappedPlaylists)
+            console.log(mappedPlaylists);
             this.playlistsDataSource.data = mappedPlaylists;
             this.changeDetectorRef.detectChanges();
             this.isLoading = false;
           },
         });
     }
-    if (sourceType === SourceType.SYNCIFY){
+    if (sourceType === SourceType.SYNCIFY) {
       this.playlistsService.fetchAllPlaylistsForUser().subscribe({
-        next: (playlists: Playlist[])=>{
-                      console.log(playlists);
-      for (let playlist of playlists) {
-      if (!playlist.imageUrl || playlist.imageUrl === '') {
-        playlist.imageUrl = 'assets/defaultAlbum.jpg';
-      }
-      }
+        next: (playlists: Playlist[]) => {
+          console.log(playlists);
+          for (let playlist of playlists) {
+            if (!playlist.imageUrl || playlist.imageUrl === '') {
+              playlist.imageUrl = 'assets/defaultAlbum.jpg';
+            }
+          }
 
           this.playlistsDataSource.data = playlists;
           this.changeDetectorRef.detectChanges();
           this.isLoading = false;
-        }
-      })
+        },
+      });
     }
   }
 
   rowSelected(row: Playlist) {
     //console.log(row);
 
-    if (this.selection.isSelected(row)){
+    if (this.selection.isSelected(row)) {
       this.selection.deselect(row);
-      if (this.transferSide === TransferSide.SOURCE){
+      if (this.transferSide === TransferSide.SOURCE) {
         this.transferPlaylistsService.selectedSourcePlaylist$.next(null);
       } else {
         this.transferPlaylistsService.selectedDestinationPlaylist$.next(null);
@@ -166,7 +185,6 @@ export class PlaylistSelectorComponent
         sourceType: this.sourceType,
         transferSide: this.transferSide,
       });
-      
     } else {
       if (this.transferSide === TransferSide.SOURCE) {
         this.transferPlaylistsService.selectedSourcePlaylist$.next(row);
@@ -175,13 +193,12 @@ export class PlaylistSelectorComponent
       }
       this.onPlaylistSelected.emit(<PlaylistSelectedEvent>{
         playlist: row,
-        sourceType:this.sourceType,
-        transferSide: this.transferSide
-      })
-      
-      this.selection.select(row)
+        sourceType: this.sourceType,
+        transferSide: this.transferSide,
+      });
+
+      this.selection.select(row);
     }
-    
   }
 
   get SourceType() {

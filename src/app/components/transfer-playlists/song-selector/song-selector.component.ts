@@ -1,19 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Playlist, PlaylistDetails, Song, SourceType } from '../../../models/music.model';
+import {
+  Playlist,
+  PlaylistDetails,
+  Song,
+  SourceType,
+} from '../../../models/music.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TransferPlaylistsService } from '../transfer-playlists.service';
 import { expand, reduce, Subscription, switchMap, tap } from 'rxjs';
-import { SpotifyService } from '../../../services/spotify.service';
-import { SpotifyPlaylistResponse, SpotifyTrack, SpotifyTrackWrapper, SpotifyTracksObject } from '../../../models/spotify-api.model';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
+import {
+  SpotifyPlaylistResponse,
+  SpotifyTrack,
+  SpotifyTrackWrapper,
+  SpotifyTracksObject,
+} from '../../../models/spotify-api.model';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-song-selector',
   standalone: true,
-  imports: [CommonModule,MatTableModule, MatCheckboxModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './song-selector.component.html',
   styleUrl: './song-selector.component.scss',
 })
@@ -30,8 +45,8 @@ export class SongSelectorComponent implements OnInit {
     private spotifyService: SpotifyService
   ) {}
 
-   ngOnInit() {
-     /*this.subscription = this.transferPlaylistsService.selectedPlaylist$
+  ngOnInit() {
+    /*this.subscription = this.transferPlaylistsService.selectedPlaylist$
       .pipe(tap(() => {
         this.songsDataSource.data = []
         this.isLoading = true}))
@@ -69,7 +84,7 @@ export class SongSelectorComponent implements OnInit {
           console.error('Error:', error);
         }
   });*/
-   } 
+  }
 
   getAllSongsOfPlaylist(playlistId: string) {
     const initialOffset = 0;
@@ -86,7 +101,10 @@ export class SongSelectorComponent implements OnInit {
               )
             : []
         ),
-        reduce((acc: SpotifyTrackWrapper[], response) => acc.concat(response.items), [])
+        reduce(
+          (acc: SpotifyTrackWrapper[], response) => acc.concat(response.items),
+          []
+        )
       );
   }
 
@@ -96,7 +114,7 @@ export class SongSelectorComponent implements OnInit {
     return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
   }
 
-  parseReleaseYearFromSpotifyDateString(releaseDate:string): number{
-    return Number.parseInt(releaseDate.slice(0,3));
+  parseReleaseYearFromSpotifyDateString(releaseDate: string): number {
+    return Number.parseInt(releaseDate.slice(0, 3));
   }
 }

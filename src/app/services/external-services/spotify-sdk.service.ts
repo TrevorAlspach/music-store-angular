@@ -9,7 +9,7 @@ import {
   SpotifyApi,
   Track,
 } from '@spotify/web-api-ts-sdk';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../../environments/environment.development';
 import {
   BehaviorSubject,
   concatMap,
@@ -29,10 +29,10 @@ import {
   toArray,
 } from 'rxjs';
 import { SpotifyService } from './spotify.service';
-import { SpotifyUser } from '../models/spotify-api.model';
-import { AuthService } from './auth.service';
-import { CustomWindow, WindowRefService } from './window-ref.service';
-import { ScriptService } from '../scripts/script.service';
+import { SpotifyUser } from '../../models/spotify-api.model';
+import { AuthService } from '../syncify/auth.service';
+import { CustomWindow, WindowRefService } from '../util/window-ref.service';
+import { ScriptService } from '../../scripts/script.service';
 
 @Injectable({
   providedIn: 'root',

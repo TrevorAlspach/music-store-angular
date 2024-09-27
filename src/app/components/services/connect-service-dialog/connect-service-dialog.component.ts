@@ -5,8 +5,8 @@ import {
   MAT_DIALOG_DATA,
   MatDialogModule,
 } from '@angular/material/dialog';
-import { PlaylistsService } from '../../../services/playlists.service';
-import { SpotifyService } from '../../../services/spotify.service';
+import { PlaylistsService } from '../../../services/syncify/playlists.service';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
 import { CreatePlaylistDialogComponent } from '../../playlists/create-playlist-dialog/create-playlist-dialog.component';
 import { ConnectedService } from '../../../models/user.model';
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { connectableServices, SourceType } from '../../../models/music.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SpotifySdkService } from '../../../services/spotify-sdk.service';
+import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
 
 @Component({
   selector: 'app-connect-service-dialog',
@@ -37,7 +37,6 @@ export class ConnectServiceDialogComponent implements OnInit {
   connectableServices = connectableServices;
 
   constructor(
-    private spotifyService: SpotifyService,
     private spotifySdkService: SpotifySdkService,
     private playlistsService: PlaylistsService,
     public dialogRef: MatDialogRef<CreatePlaylistDialogComponent>,

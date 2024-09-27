@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { SpotifyService } from '../../services/spotify.service';
-import { AuthService } from '../../services/auth.service';
+import { SpotifyService } from '../../services/external-services/spotify.service';
+import { AuthService } from '../../services/syncify/auth.service';
 import { SpotifyProfileComponent } from '../spotify-components/spotify-profile/spotify-profile.component';
 import { PlaylistsComponent } from '../playlists/playlists.component';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { merge, switchMap } from 'rxjs';
 import { ConnectedService } from '../../models/user.model';
 import { SourceType } from '../../models/music.model';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../services/syncify/user.service';
 import { DashboardService } from './dashboard.service';
 
 @Component({

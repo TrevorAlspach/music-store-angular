@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../../services/syncify/auth.service';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../../models/user.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
