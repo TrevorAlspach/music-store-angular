@@ -32,8 +32,7 @@ export class SpotifyAuthComponent implements OnInit {
           this.spotifySdkService.handleAuthCode(authCode).subscribe({
             next: (response) => {
               this.spotifySdkService.createSdkFromAccessToken(response);
-              //this.spotifySdkService.
-              //this.router.navigate(['dashboard']);
+              this.router.navigate(['dashboard']);
               this.dashboardService.dashboardRefreshSubject$.next(true);
             },
             error: (e: HttpErrorResponse) => {
