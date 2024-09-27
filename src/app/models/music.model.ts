@@ -20,6 +20,7 @@ export interface SpotifyPlaylistDetails extends PlaylistDetails {
 
 export enum SourceType {
   SPOTIFY = 'SPOTIFY',
+  TIDAL = 'TIDAL',
   APPLE_MUSIC = 'APPLE_MUSIC',
   SYNCIFY = 'SYNCIFY',
   YOUTUBE_MUSIC = 'YOUTUBE_MUSIC',
@@ -45,6 +46,13 @@ export const connectableServices = [
     sourceType: SourceType.SPOTIFY,
     logoPath: 'assets/Spotify_Primary_Logo_RGB_Green.png',
     name: 'Spotify',
+    supported: true,
+    alreadyConnected: false,
+  },
+  {
+    sourceType: SourceType.TIDAL,
+    logoPath: 'g',
+    name: 'Tidal',
     supported: true,
     alreadyConnected: false,
   },

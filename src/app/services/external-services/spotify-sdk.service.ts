@@ -32,7 +32,7 @@ import { SpotifyService } from './spotify.service';
 import { SpotifyUser } from '../../models/spotify-api.model';
 import { AuthService } from '../syncify/auth.service';
 import { CustomWindow, WindowRefService } from '../util/window-ref.service';
-import { ScriptService } from '../../scripts/script.service';
+import { ScriptService } from '../util/scripts/script.service';
 
 @Injectable({
   providedIn: 'root',
@@ -61,31 +61,36 @@ export class SpotifySdkService {
   );
 
   sdkReady$: Subject<boolean> = new ReplaySubject(1);
+  sdkInitialized: boolean = false;
 
   constructor(
     private spotifyService: SpotifyService,
     private authService: AuthService,
     private windowRef: WindowRefService,
     private scriptService: ScriptService
-  ) {
-    console.log('sdk init');
+  ) {}
+
+  public initializeSdk() {
     //need to find our access token or get one for the sdk
+
+    if (this.sdkInitialized) {
+      //lets not init this again
+      return;
+    }
+
     const token = this.spotifyService.getFullAccessToken();
-    console.log(token);
-    console.log('above is token on init sdk');
+
     if (token) {
       this.createSdkFromAccessToken(token);
-      //this.initWebPlayer();
     } else {
       this.handleNoAccessToken$.subscribe({
         next: (accessToken: AccessToken) => {
           this.createSdkFromAccessToken(accessToken);
-          //this.initWebPlayer();
         },
         error: () => {
           //no refresh or access token
           console.log('no refresh or access token');
-          this.sdkReady$.next(false);
+          this.sdkReady$.next(this.sdkInitialized);
         },
       });
     }
@@ -347,7 +352,8 @@ export class SpotifySdkService {
     this.sdk = SpotifyApi.withAccessToken(this.clientId, access_token);
     console.log('created spotify sdk with access token');
     this.initWebPlayer();
-    this.sdkReady$.next(true);
+    this.sdkInitialized = true;
+    this.sdkReady$.next(this.sdkInitialized);
   }
 
   public getWebPlayerDeviceId() {

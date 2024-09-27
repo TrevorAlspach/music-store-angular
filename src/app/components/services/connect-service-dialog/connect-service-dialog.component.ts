@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { connectableServices, SourceType } from '../../../models/music.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
+import { TidalSdkService } from '../../../services/external-services/tidal-sdk.service';
 
 @Component({
   selector: 'app-connect-service-dialog',
@@ -38,6 +39,7 @@ export class ConnectServiceDialogComponent implements OnInit {
 
   constructor(
     private spotifySdkService: SpotifySdkService,
+    private tidalSdkService: TidalSdkService,
     private playlistsService: PlaylistsService,
     public dialogRef: MatDialogRef<CreatePlaylistDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -63,6 +65,10 @@ export class ConnectServiceDialogComponent implements OnInit {
 
     if (sourceType === SourceType.SPOTIFY) {
       this.spotifySdkService.authenticate();
+    }
+
+    if (sourceType === SourceType.TIDAL) {
+      this.tidalSdkService.authorizeUser();
     }
   }
 }

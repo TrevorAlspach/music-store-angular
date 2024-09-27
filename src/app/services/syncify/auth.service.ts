@@ -95,4 +95,22 @@ export class AuthService {
       }
     );
   }
+
+  getTidalRefreshToken() {
+    return this.http.get<TokenResponse>(
+      this.apiBaseUrl + 'api/user/tidalRefreshToken'
+    );
+  }
+
+  updateTidalRefreshToken(token: string) {
+    return this.http.post<any>(this.apiBaseUrl + 'api/user/tidalRefreshToken', {
+      token: token,
+    });
+  }
+
+  removeTidalRefreshToken() {
+    return this.http.post<any>(this.apiBaseUrl + 'api/user/tidalRefreshToken', {
+      token: null,
+    });
+  }
 }

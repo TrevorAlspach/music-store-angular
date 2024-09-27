@@ -15,6 +15,7 @@ import { SourceType } from '../../models/music.model';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/syncify/user.service';
 import { DashboardService } from './dashboard.service';
+import { SpotifySdkService } from '../../services/external-services/spotify-sdk.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,8 +38,7 @@ export class DashboardComponent implements OnInit {
     private spotifyService: SpotifyService,
     private authService: AuthService,
     private userService: UserService,
-    private dashboardService: DashboardService,
-    private changeDetectorRef: ChangeDetectorRef
+    private spotifySdkService: SpotifySdkService
   ) {}
 
   connectedServices: ConnectedService[] = [
@@ -54,10 +54,17 @@ export class DashboardComponent implements OnInit {
           console.log(connectedServices);
           for (let service of connectedServices) {
             this.connectedServices.push(service);
+            this.initSdkForService(service.externalService);
           }
         },
         error: () => {},
       });
+  }
+
+  initSdkForService(sourceType: SourceType) {
+    if (sourceType === SourceType.SPOTIFY) {
+      this.spotifySdkService.initializeSdk();
+    }
   }
 
   clearTokens() {

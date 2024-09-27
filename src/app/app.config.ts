@@ -1,13 +1,16 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withHashLocation,
+} from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './interceptors/auth.interceptor';
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 import { environment } from '../environments/environment.development';
-import { ScriptService } from './scripts/script.service';
+import { ScriptService } from './services/util/scripts/script.service';
 import { WindowRefService } from './services/util/window-ref.service';
 
 export const appConfig: ApplicationConfig = {
@@ -42,8 +45,14 @@ export const appConfig: ApplicationConfig = {
               },
             },
           },
+          /* {
+            uri: 'http://localhost:4200/home/tidal-auth',
+            httpMethod: 'GET',
+            allowAnonymous: true,
+          }, */
         ],
       },
+      skipRedirectCallback: window.location.pathname === '/home/tidal-auth',
     }),
     provideRouter(routes, withComponentInputBinding()),
     provideAnimationsAsync(),

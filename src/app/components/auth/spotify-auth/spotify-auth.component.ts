@@ -16,9 +16,6 @@ import { DashboardService } from '../../dashboard/dashboard.service';
   styleUrl: './spotify-auth.component.scss',
 })
 export class SpotifyAuthComponent implements OnInit {
-  //spotifyAuth$
-  //successfulAuth = false;
-
   constructor(
     private spotifyService: SpotifyService,
     private spotifySdkService: SpotifySdkService,
@@ -36,7 +33,7 @@ export class SpotifyAuthComponent implements OnInit {
             next: (response) => {
               this.spotifySdkService.createSdkFromAccessToken(response);
               //this.spotifySdkService.
-              this.router.navigate(['dashboard']);
+              //this.router.navigate(['dashboard']);
               this.dashboardService.dashboardRefreshSubject$.next(true);
             },
             error: (e: HttpErrorResponse) => {

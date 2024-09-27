@@ -5,6 +5,12 @@ export const environment = {
   spotifyTokenUrl: 'https://accounts.spotify.com/api/token',
   spotifyAuthUrl: 'https://accounts.spotify.com/authorize',
 
+  tidal: {
+    clientId: 'FlohFgq0kjwtQ8HV',
+    credentialsStorageKey: 'authorizationCode',
+    redirectUri: 'http://localhost:4200/home/tidal-auth',
+  },
+
   auth0: {
     clientId: 'hKjneu0AYL1q087Bxlxg1AEX6tUR5KEI',
     domain: 'dev-5icodle12xbi8dtf.us.auth0.com',

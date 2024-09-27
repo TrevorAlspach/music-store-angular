@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ScriptService } from '../../../scripts/script.service';
+import { ScriptService } from '../../../services/util/scripts/script.service';
 import {
   CustomWindow,
   WindowRefService,

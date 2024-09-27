@@ -14,6 +14,7 @@ import { AccountComponent } from './components/account/account.component';
 import { LoginAuth0Component } from './components/auth/login-auth0/login-auth0.component';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { MyPlaylistsComponent } from './components/playlists/my-playlists/my-playlists.component';
+import { TidalAuthComponent } from './components/auth/tidal-auth/tidal-auth.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -31,11 +32,13 @@ export const routes: Routes = [
       { path: 'sync', component: SyncPlaylistsComponent },
       { path: 'transfer', component: TransferPlaylistsComponent },
       { path: 'spotify-auth', component: SpotifyAuthComponent },
+      { path: 'tidal-auth', component: TidalAuthComponent },
       {
         path: 'playlist-details/:source/:id',
         component: PlaylistDetailsComponent,
       },
     ],
   },
+
   { path: '**', redirectTo: 'home/dashboard' },
 ];
