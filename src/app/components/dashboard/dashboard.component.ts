@@ -46,12 +46,10 @@ export class DashboardComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    console.log(this.connectedServices);
     this.userService.loggedInUser$
       .pipe(switchMap(() => this.authService.connectedServices()))
       .subscribe({
         next: (connectedServices: ConnectedService[]) => {
-          console.log(connectedServices);
           for (let service of connectedServices) {
             this.connectedServices.push(service);
             this.initSdkForService(service.externalService);

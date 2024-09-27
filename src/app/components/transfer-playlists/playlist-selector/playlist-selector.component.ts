@@ -98,9 +98,6 @@ export class PlaylistSelectorComponent
       this.selectedSourceSubscription =
         this.transferPlaylistsService.selectedDestination$.subscribe({
           next: (sourceType: SourceType) => {
-            console.log('hitting this ');
-            console.log(sourceType);
-
             if (sourceType === SourceType.NONE) {
               this.sourceSelected = false;
               return;
@@ -127,7 +124,6 @@ export class PlaylistSelectorComponent
             const mappedPlaylists = [];
 
             for (let playlist of playlists) {
-              console.log(playlist);
               let imageUrl: string;
               if (playlist.images && playlist.images.length > 0) {
                 imageUrl = playlist.images[0].url;
@@ -144,7 +140,6 @@ export class PlaylistSelectorComponent
                 songCount: playlist.tracks.total,
               });
             }
-            console.log(mappedPlaylists);
             this.playlistsDataSource.data = mappedPlaylists;
             this.changeDetectorRef.detectChanges();
             this.isLoading = false;
@@ -154,7 +149,6 @@ export class PlaylistSelectorComponent
     if (sourceType === SourceType.SYNCIFY) {
       this.playlistsService.fetchAllPlaylistsForUser().subscribe({
         next: (playlists: Playlist[]) => {
-          console.log(playlists);
           for (let playlist of playlists) {
             if (!playlist.imageUrl || playlist.imageUrl === '') {
               playlist.imageUrl = 'assets/defaultAlbum.jpg';
@@ -170,8 +164,6 @@ export class PlaylistSelectorComponent
   }
 
   rowSelected(row: Playlist) {
-    //console.log(row);
-
     if (this.selection.isSelected(row)) {
       this.selection.deselect(row);
       if (this.transferSide === TransferSide.SOURCE) {

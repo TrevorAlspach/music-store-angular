@@ -51,7 +51,7 @@ export const connectableServices = [
   },
   {
     sourceType: SourceType.TIDAL,
-    logoPath: 'g',
+    logoPath: 'assets/icon-white-rgb.png',
     name: 'Tidal',
     supported: true,
     alreadyConnected: false,
