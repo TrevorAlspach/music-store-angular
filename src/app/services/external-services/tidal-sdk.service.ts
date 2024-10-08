@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { init, initializeLogin } from '@tidal-music/auth';
+import { createUserClient } from '@tidal-music/user';
+import {
+  init,
+  initializeLogin,
+  finalizeLogin,
+  credentialsProvider,
+} from '@tidal-music/auth';
 import { defer, switchMap } from 'rxjs';
 import { AuthService } from '../syncify/auth.service';
 import { environment } from '../../../environments/environment.development';
@@ -10,6 +16,22 @@ import { environment } from '../../../environments/environment.development';
 export class TidalSdkService {
   constructor(private authService: AuthService) {}
 
+  private getCurrentUser(id: string) {
+    const userClient = createUserClient(credentialsProvider);
+    return defer(() =>
+      userClient.GET(
+        '/users/me' /* , {
+        params: {
+          path: { id },
+          query: {
+            locale: 'en-US',
+          },
+        },
+      } */
+      )
+    );
+  }
+
   public authorizeUser() {
     this.initSdk()
       .pipe(switchMap(() => this.tidalLogin()))
@@ -18,6 +40,10 @@ export class TidalSdkService {
           window.open(loginUrl, '_self');
         },
       });
+  }
+
+  public finalizeLogin(queryString: string) {
+    return defer(() => finalizeLogin(queryString));
   }
 
   private tidalLogin() {
