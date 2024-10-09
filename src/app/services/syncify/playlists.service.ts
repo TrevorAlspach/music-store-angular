@@ -13,33 +13,29 @@ export class PlaylistsService {
   constructor(private http: HttpClient) {}
 
   fetchAllPlaylistsForUser() {
-    return this.http.get<Playlist[]>(
-      this.apiBaseUrl + 'api/playlist/allPlaylists'
-    );
+    return this.http.get<Playlist[]>(this.apiBaseUrl + 'playlist/allPlaylists');
   }
 
   getPlaylist(id: string) {
-    return this.http.get<PlaylistDetails>(
-      this.apiBaseUrl + `api/playlist/${id}`
-    );
+    return this.http.get<PlaylistDetails>(this.apiBaseUrl + `playlist/${id}`);
   }
 
   createNewPlaylist(playlist: Playlist) {
     return this.http.post<Playlist>(
-      this.apiBaseUrl + 'api/playlist/createPlaylist',
+      this.apiBaseUrl + 'playlist/createPlaylist',
       playlist
     );
   }
 
   deletePlaylist(id: string) {
     return this.http.delete<Playlist>(
-      this.apiBaseUrl + `api/playlist/deletePlaylist/${id}`
+      this.apiBaseUrl + `playlist/deletePlaylist/${id}`
     );
   }
 
   createNewPlaylistWithSongs(playlist: PlaylistDetails) {
     return this.http.post<Playlist>(
-      this.apiBaseUrl + 'api/playlist/createPlaylistWithSongs',
+      this.apiBaseUrl + 'playlist/createPlaylistWithSongs',
       playlist
     );
   }

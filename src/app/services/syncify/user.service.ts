@@ -23,11 +23,11 @@ export class UserService {
   }
 
   private getOrCreateUser() {
-    return this.http.get<User>(this.apiBaseUrl + 'api/user/createOrFindUser');
+    return this.http.get<User>(this.apiBaseUrl + 'user/createOrFindUser');
   }
 
   //delete current logged in user.
   deleteCurrentUser() {
-    return this.http.delete<User>(this.apiBaseUrl + `api/user/deleteUser`);
+    return this.http.delete<User>(this.apiBaseUrl + `user/deleteUser`);
   }
 }

@@ -11,6 +11,6 @@ export class SongService {
   constructor(private http: HttpClient) {}
 
   findSongByName(name: string) {
-    return this.http.get<any>(this.apiBaseUrl + 'api/song/findByName?name=123');
+    return this.http.get<any>(this.apiBaseUrl + 'song/findByName?name=123');
   }
 }
