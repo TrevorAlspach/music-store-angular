@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN npm install --legacy-peer-deps
 RUN npm install -g @angular/cli@18.0.2
-RUN ng build --configuration development
+RUN ng build --configuration production
 #RUN ng v
 
 FROM jonasal/nginx-certbot:5.2.1

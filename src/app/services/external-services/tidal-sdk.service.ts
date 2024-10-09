@@ -8,7 +8,7 @@ import {
 } from '@tidal-music/auth';
 import { defer, switchMap } from 'rxjs';
 import { AuthService } from '../syncify/auth.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

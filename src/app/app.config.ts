@@ -9,7 +9,7 @@ import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
-import { environment } from '../environments/environment.development';
+import { environment } from '../environments/environment';
 import { ScriptService } from './services/util/scripts/script.service';
 import { WindowRefService } from './services/util/window-ref.service';
 

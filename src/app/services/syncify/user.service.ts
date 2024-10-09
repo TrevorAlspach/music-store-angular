@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConnectedService, User } from '../../models/user.model';
 import { BehaviorSubject, ReplaySubject, shareReplay } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { TokenResponse } from '../../models/spotify-api.model';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 

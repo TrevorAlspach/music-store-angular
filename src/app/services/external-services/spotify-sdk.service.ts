@@ -9,7 +9,7 @@ import {
   SpotifyApi,
   Track,
 } from '@spotify/web-api-ts-sdk';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import {
   BehaviorSubject,
   concatMap,
