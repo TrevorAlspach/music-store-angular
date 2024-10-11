@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, signal } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -51,22 +51,20 @@ export class HomeComponent {
   ];
   public isExpanded = false;
 
-  collapsed = signal(false);
-  sideNavWidth = computed(() => (this.collapsed() ? '60px' : '250px'));
+  collapsed = signal(true);
+  sideNavWidth = computed(() => (this.collapsed() ? '60px' : '230px'));
 
   constructor(
     private authService: AuthService,
     private songService: SongService,
     private router: Router,
-    private auth0Service: Auth0Service
+    private auth0Service: Auth0Service,
+    private changeDetectorRefs: ChangeDetectorRef
   ) {}
 
-  hitapi() {
-    return this.songService.findSongByName('name').subscribe({
-      next: (res) => {
-        console.log(res);
-      },
-    });
+  toggleSignal(){
+    this.collapsed.set(!this.collapsed());
+    this.changeDetectorRefs.detectChanges();
   }
 
   logout() {

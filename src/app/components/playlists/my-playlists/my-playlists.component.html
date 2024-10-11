@@ -1,7 +1,7 @@
 <h2>Playlists</h2>
 @for(service of this.connectedServices; track service){
-<app-playlists
+<app-playlists-v2
   style="width: 100% !important"
   [source]="service.externalService"
-></app-playlists>
+></app-playlists-v2>
 }

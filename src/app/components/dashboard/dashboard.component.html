@@ -1,23 +1,19 @@
-<!-- <div>
-   <h1>Home</h1> 
-  <div class="header-bottom-border"></div>
-</div> -->
-
 <h1>Home</h1>
-<div class="flex-row flex-fill-item gap-3" style="height: 60%">
-  <!-- style="height: 100%; width: 100%; gap: 3%" -->
+<div class="flex-row gap-3">
   <div class="services-container">
     <app-services class="flex-fill-item"></app-services>
   </div>
   <div class="playlists-container">
-    <h2>Playlists</h2>
+    <!-- <h2>Playlists</h2> -->
     @for(service of this.connectedServices; track service.externalService){
-    <app-playlists
+<!--     <app-playlists
       style="width: 100% !important"
       [source]="service.externalService"
-    ></app-playlists>
+    ></app-playlists> -->
+    <div class="playlists-wrapper">
+    <app-playlists-v2
+      [source]="service.externalService"
+    ></app-playlists-v2></div>
     }
   </div>
 </div>
-
-<!-- <app-playlists></app-playlists> -->

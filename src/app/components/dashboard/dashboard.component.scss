@@ -12,14 +12,22 @@
 
 .services-container{
     flex: 0 0 25%;
+    max-width: 25%;
+    min-width: 280px;
 }
 
 .playlists-container{
     flex: 0 0 75%;
-    width: 75%;
+    max-width: 75%;
+    //box-sizing: border-box;
+    //overflow: hidden;
     //flex-grow: 0;
 }
 
 .gap-3{
-    gap:3%;
+    gap:20px;
+}
+
+.playlists-wrapper{
+padding-bottom: 30px;
 }

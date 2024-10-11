@@ -43,7 +43,7 @@ export class ServicesComponent implements OnInit {
   };
 
   connectedServices: ConnectedService[] = [
-    { externalService: SourceType.SYNCIFY, imgPath: 'assets/guitar_icon.jpg' },
+    { externalService: SourceType.SYNCIFY, imgPath: 'assets/syncify.png' },
   ];
 
   ngOnInit(): void {
@@ -66,7 +66,7 @@ export class ServicesComponent implements OnInit {
     }
 
     if (connectedService.externalService === SourceType.SYNCIFY) {
-      return 'assets/guitar_icon.jpg';
+      return 'assets/syncify.png';
     }
 
     if (connectedService.externalService === SourceType.APPLE_MUSIC) {

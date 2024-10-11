@@ -79,9 +79,9 @@
       <h1>{{ this.selectedPlaylist.name }}</h1>
       <img *ngIf="this.selectedPlaylist.source === SourceType.SPOTIFY" src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="logo-source" [matTooltip]="'Spotify Playlist'">
       <img *ngIf="this.selectedPlaylist.source === SourceType.APPLE_MUSIC" src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="logo-source" [matTooltip]="'Apple Music Playlist'"> 
-      <img *ngIf="this.selectedPlaylist.source === SourceType.SYNCIFY" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'Syncify Playlist'">  
-      <img *ngIf="this.selectedPlaylist.source === SourceType.JSON" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'JSON'">
-      <img *ngIf="this.selectedPlaylist.source === SourceType.CSV" src="../../../assets/guitar_icon.jpg" class="logo-source" [matTooltip]="'CSV'">
+      <img *ngIf="this.selectedPlaylist.source === SourceType.SYNCIFY" src="../../../assets/syncify.png" class="logo-source" [matTooltip]="'Syncify Playlist'">  
+      <img *ngIf="this.selectedPlaylist.source === SourceType.JSON" src="../../../assets/syncify.png" class="logo-source" [matTooltip]="'JSON'">
+      <img *ngIf="this.selectedPlaylist.source === SourceType.CSV" src="../../../assets/syncify.png" class="logo-source" [matTooltip]="'CSV'">
       </div>
       <p>{{ this.selectedPlaylist.description }}</p>
       <p>{{ this.selectedPlaylist.songCount }}{{ " songs" }}</p>
@@ -96,7 +96,7 @@
               <img src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="logo-destination">
             }
             @if(this.selectedDestination === SourceType.SYNCIFY){
-              <img src="../../../assets/guitar_icon.jpg" class="logo-destination">
+              <img src="../../../assets/syncify.png" class="logo-destination">
             }
             
           </div>

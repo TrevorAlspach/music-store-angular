@@ -1,0 +1,14 @@
+<h2>{{ source | titlecase }}</h2>
+<!-- <div class="flex-row" *ngIf="this.playlists.length > 0">
+    <button
+      mat-icon-button
+      (click)="openCreatePlaylistDialog(source)"
+      [matTooltip]="'Create Playlist'"
+    >
+      <mat-icon color="primary">add</mat-icon>
+    </button>
+  </div> -->
+<div class="playlists-grid-container">
+    @for(playlist of this.playlists; track playlist){
+        <playlist-large class="playlists-grid-item" [playlist]="playlist"></playlist-large>    }
+</div>

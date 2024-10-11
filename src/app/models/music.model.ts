@@ -58,7 +58,7 @@ export const connectableServices = [
   },
   {
     sourceType: SourceType.SYNCIFY,
-    logoPath: 'assets/guitar_icon.jpg',
+    logoPath: 'assets/syncify.png',
     name: 'Syncify',
     supported: true,
     alreadyConnected: false,
