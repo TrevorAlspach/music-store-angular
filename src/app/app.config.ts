@@ -45,11 +45,9 @@ export const appConfig: ApplicationConfig = {
               },
             },
           },
-          /* {
-            uri: 'http://localhost:4200/home/tidal-auth',
-            httpMethod: 'GET',
-            allowAnonymous: true,
-          }, */
+          {
+            uri: environment.auth0.interceptor.auth0Uri
+          }
         ],
       },
       skipRedirectCallback: window.location.pathname === '/home/tidal-auth',

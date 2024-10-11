@@ -19,6 +19,7 @@ export const environment = {
     scope: 'admin email',
     interceptor: {
       uri: 'http://localhost:8080/*',
+      auth0Uri: 'https://dev-5icodle12xbi8dtf.us.auth0.com/*'
     },
   },
 };

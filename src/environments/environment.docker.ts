@@ -19,6 +19,7 @@ export const environment = {
     scope: 'admin email',
     interceptor: {
       uri: 'https://syncify.duckdns.org/api/*',
+      auth0Uri: 'https://dev-5icodle12xbi8dtf.us.auth0.com/*'
     },
   },
 };
