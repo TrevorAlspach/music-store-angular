@@ -12,6 +12,7 @@ import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 import { environment } from '../environments/environment';
 import { ScriptService } from './services/util/scripts/script.service';
 import { WindowRefService } from './services/util/window-ref.service';
+import { DocumentRefService } from './services/util/document-ref.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -46,8 +47,8 @@ export const appConfig: ApplicationConfig = {
             },
           },
           {
-            uri: environment.auth0.interceptor.auth0Uri
-          }
+            uri: environment.auth0.interceptor.auth0Uri,
+          },
         ],
       },
       skipRedirectCallback: window.location.pathname === '/home/tidal-auth',
@@ -57,5 +58,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authHttpInterceptorFn])),
     ScriptService,
     WindowRefService,
+    DocumentRefService,
   ],
 };

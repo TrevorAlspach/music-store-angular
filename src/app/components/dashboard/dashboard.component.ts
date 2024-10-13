@@ -5,7 +5,6 @@ import { AuthService } from '../../services/syncify/auth.service';
 import { SpotifyProfileComponent } from '../spotify-components/spotify-profile/spotify-profile.component';
 import { PlaylistsComponent } from '../playlists/playlists.component';
 import { HttpClient } from '@angular/common/http';
-import { AppleMusicProfileComponent } from '../apple-music-profile/apple-music-profile.component';
 import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-player/spotify-web-player.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ServicesComponent } from '../services/services.component';
@@ -16,7 +15,8 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/syncify/user.service';
 import { DashboardService } from './dashboard.service';
 import { SpotifySdkService } from '../../services/external-services/spotify-sdk.service';
-import { PlaylistsV2Component } from "../playlists/playlists-v2/playlists-v2.component";
+import { PlaylistsV2Component } from '../playlists/playlists-v2/playlists-v2.component';
+import { AppleMusicService } from '../../services/external-services/apple-music.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,12 +26,11 @@ import { PlaylistsV2Component } from "../playlists/playlists-v2/playlists-v2.com
     MatButtonModule,
     SpotifyProfileComponent,
     PlaylistsComponent,
-    AppleMusicProfileComponent,
     SpotifyWebPlayerComponent,
     MatGridListModule,
     ServicesComponent,
-    PlaylistsV2Component
-],
+    PlaylistsV2Component,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -40,7 +39,8 @@ export class DashboardComponent implements OnInit {
     private spotifyService: SpotifyService,
     private authService: AuthService,
     private userService: UserService,
-    private spotifySdkService: SpotifySdkService
+    private spotifySdkService: SpotifySdkService,
+    private appleMusicService: AppleMusicService
   ) {}
 
   connectedServices: ConnectedService[] = [
@@ -56,6 +56,8 @@ export class DashboardComponent implements OnInit {
             this.connectedServices.push(service);
             this.initSdkForService(service.externalService);
           }
+
+          this.appleMusicService.init();
         },
         error: () => {},
       });
@@ -65,6 +67,9 @@ export class DashboardComponent implements OnInit {
     if (sourceType === SourceType.SPOTIFY) {
       this.spotifySdkService.initializeSdk();
     }
+
+    // if (sourceType === SourceType.APPLE_MUSIC){
+    // }
   }
 
   clearTokens() {

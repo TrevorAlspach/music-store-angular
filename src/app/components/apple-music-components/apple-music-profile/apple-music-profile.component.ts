@@ -1,8 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { SpotifyUser } from '../../models/spotify-api.model';
-import { SpotifyService } from '../../services/external-services/spotify.service';
-import { DashboardService } from '../dashboard/dashboard.service';
+import { SpotifyService } from '../../../services/external-services/spotify.service';
+import { DashboardService } from '../../dashboard/dashboard.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';

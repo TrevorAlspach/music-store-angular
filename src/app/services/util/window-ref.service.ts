@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 export interface CustomWindow extends Window {
   onSpotifyWebPlaybackSDKReady: any;
+  MusicKit: any;
 }
 
 function getWindow(): any {
