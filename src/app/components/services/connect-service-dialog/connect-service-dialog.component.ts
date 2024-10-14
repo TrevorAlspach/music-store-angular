@@ -17,6 +17,10 @@ import { connectableServices, SourceType } from '../../../models/music.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
 import { TidalSdkService } from '../../../services/external-services/tidal-sdk.service';
+import { AppleMusicService } from '../../../services/external-services/apple-music.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-connect-service-dialog',
@@ -29,6 +33,7 @@ import { TidalSdkService } from '../../../services/external-services/tidal-sdk.s
     ReactiveFormsModule,
     MatInputModule,
     MatTooltipModule,
+    MatProgressBarModule,
   ],
   templateUrl: './connect-service-dialog.component.html',
   styleUrl: './connect-service-dialog.component.scss',
@@ -37,13 +42,16 @@ export class ConnectServiceDialogComponent implements OnInit {
   alreadyConnectedServices: ConnectedService[];
   connectableServices = connectableServices;
 
+  loading: boolean = false;
+
   constructor(
     private spotifySdkService: SpotifySdkService,
     private tidalSdkService: TidalSdkService,
     private playlistsService: PlaylistsService,
     public dialogRef: MatDialogRef<CreatePlaylistDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private appleMusicService: AppleMusicService
   ) {
     this.alreadyConnectedServices = data;
   }
@@ -69,6 +77,22 @@ export class ConnectServiceDialogComponent implements OnInit {
 
     if (sourceType === SourceType.TIDAL) {
       this.tidalSdkService.authorizeUser();
+    }
+
+    if (sourceType === SourceType.APPLE_MUSIC) {
+      console.log('in here');
+      this.loading = true;
+      this.appleMusicService.musicKitInit$
+        .pipe(switchMap(() => this.appleMusicService.startAuth()))
+        .subscribe({
+          next: (expirationTimestamp) => {
+            this.loading = false;
+            console.log('Authorized user with Apple Music');
+          },
+          error: () => {},
+        });
+
+      this.appleMusicService.init();
     }
   }
 }

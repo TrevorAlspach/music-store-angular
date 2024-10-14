@@ -43,7 +43,12 @@ export class ServicesComponent implements OnInit {
   };
 
   connectedServices: ConnectedService[] = [
-    { externalService: SourceType.SYNCIFY, imgPath: 'assets/syncify.png' },
+    {
+      externalService: SourceType.SYNCIFY,
+      imgPath: 'assets/syncify.png',
+      displayName: 'Syncify',
+      expired: false,
+    },
   ];
 
   ngOnInit(): void {

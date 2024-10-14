@@ -7,10 +7,9 @@
         @for(service of this.connectedServices; track service.externalService){
         <mat-list-item>
           <img matListItemAvatar [src]="service.imgPath" alt="..." />
-          <span matListItemTitle>{{
-            service.externalService | titlecase
-          }}</span>
+          <span matListItemTitle>{{ service.displayName }}</span>
           <span matListItemLine>{{ "Connected" }}</span>
+          <span matListItemLine>{{ service.expired ? "Expired" : "" }}</span>
         </mat-list-item>
         }
         <mat-list-item (click)="openConnectDialog()">

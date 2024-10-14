@@ -21,7 +21,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { CreatePlaylistDialogComponent } from './../create-playlist-dialog/create-playlist-dialog.component';
-import { PlaylistEvent, PlaylistEventService } from './../playlist-event.service';
+import {
+  PlaylistEvent,
+  PlaylistEventService,
+} from './../playlist-event.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
@@ -47,6 +50,8 @@ import { SimplifiedPlaylist, TrackReference } from '@spotify/web-api-ts-sdk';
 })
 export class PlaylistsV2Component implements OnInit {
   @Input() source!: SourceType;
+
+  @Input() displayName!: string;
 
   @ViewChild('slickModalSpotify') slickModal!: SlickCarouselComponent;
   slideConfig = {
@@ -253,4 +258,3 @@ export class PlaylistsV2Component implements OnInit {
     return SourceType;
   }
 }
-

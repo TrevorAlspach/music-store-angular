@@ -6,14 +6,16 @@
   <div class="playlists-container">
     <!-- <h2>Playlists</h2> -->
     @for(service of this.connectedServices; track service.externalService){
-<!--     <app-playlists
+    <!--     <app-playlists
       style="width: 100% !important"
       [source]="service.externalService"
     ></app-playlists> -->
     <div class="playlists-wrapper">
-    <app-playlists-v2
-      [source]="service.externalService"
-    ></app-playlists-v2></div>
+      <app-playlists-v2
+        [source]="service.externalService"
+        [displayName]="service.displayName"
+      ></app-playlists-v2>
+    </div>
     }
   </div>
 </div>

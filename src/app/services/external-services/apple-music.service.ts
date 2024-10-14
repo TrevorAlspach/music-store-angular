@@ -10,8 +10,9 @@ import {
 import { ScriptService } from '../util/scripts/script.service';
 import { CustomWindow, WindowRefService } from '../util/window-ref.service';
 import { UserService } from '../syncify/user.service';
-import { map, switchMap } from 'rxjs';
+import { defer, map, ReplaySubject, Subject, switchMap } from 'rxjs';
 import { TokenResponse } from '../../models/spotify-api.model';
+import { ExpirationTimestamp } from '../../models/apple-music.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,9 @@ export class AppleMusicService {
   private musicKit!: any;
   private window!: CustomWindow;
   private document!: CustomDocument;
+
+  public musicKitInit$: Subject<boolean> = new ReplaySubject(1);
+  private musicKitInitialized = false;
 
   constructor(
     private http: HttpClient,
@@ -31,6 +35,10 @@ export class AppleMusicService {
   ) {}
 
   public init() {
+    if (this.musicKitInitialized === true) {
+      return;
+    }
+
     this.loadMusicKitScript();
 
     this.document = this.docRef.customDocument;
@@ -51,8 +59,9 @@ export class AppleMusicService {
                 developerToken: token,
                 app: {
                   name: 'Syncify',
-                  build: '1978.4.1',
+                  build: '0.1',
                 },
+                storefrontId: 'us',
               });
             } catch (err) {
               // Handle configuration error
@@ -62,9 +71,32 @@ export class AppleMusicService {
             // MusicKit instance is available
             this.musicKit = this.window.MusicKit.getInstance();
             console.log(this.musicKit);
+            this.musicKitInitialized = true;
+            this.musicKitInit$.next(this.musicKitInitialized);
           },
         });
     });
+  }
+
+  public alreadyAuthorized() {
+    console.log('AUTHORIZED??' + this.musicKit.isAuthorized);
+    return this.musicKit.isAuthorized;
+  }
+
+  public startAuth() {
+    return this.authorizeForUser().pipe(
+      switchMap((done) =>
+        this.authService.updateAppleMusicUserTokenExpiration()
+      )
+    );
+  }
+
+  private authorizeForUser() {
+    return defer(() => this.musicKit.authorize());
+  }
+
+  public getMusicKitInstance() {
+    return this.musicKit;
   }
 
   private getDeveloperToken() {

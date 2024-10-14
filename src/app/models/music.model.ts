@@ -39,7 +39,7 @@ export const connectableServices = [
     sourceType: SourceType.APPLE_MUSIC,
     logoPath: 'assets/Apple_Music_Icon_RGB_sm_073120.svg',
     name: 'Apple Music',
-    supported: false,
+    supported: true,
     alreadyConnected: false,
   },
   {

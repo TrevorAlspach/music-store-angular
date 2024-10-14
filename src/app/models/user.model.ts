@@ -12,5 +12,7 @@ export interface User {
 
 export interface ConnectedService {
   externalService: SourceType;
+  expired: boolean;
+  displayName: string;
   imgPath: string;
 }

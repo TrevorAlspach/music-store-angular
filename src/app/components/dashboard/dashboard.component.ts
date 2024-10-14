@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-player/spotify-web-player.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ServicesComponent } from '../services/services.component';
-import { merge, switchMap } from 'rxjs';
+import { exhaustMap, merge, mergeMap, switchMap, throwError } from 'rxjs';
 import { ConnectedService } from '../../models/user.model';
 import { SourceType } from '../../models/music.model';
 import { CommonModule } from '@angular/common';
@@ -44,7 +44,12 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   connectedServices: ConnectedService[] = [
-    { externalService: SourceType.SYNCIFY, imgPath: 'assets/guitar_icon.jpg' },
+    {
+      externalService: SourceType.SYNCIFY,
+      imgPath: 'assets/syncify.png',
+      expired: false,
+      displayName: 'Syncify',
+    },
   ];
 
   ngOnInit(): void {
@@ -54,22 +59,40 @@ export class DashboardComponent implements OnInit {
         next: (connectedServices: ConnectedService[]) => {
           for (let service of connectedServices) {
             this.connectedServices.push(service);
-            this.initSdkForService(service.externalService);
+            this.initSdkForService(service.externalService, service.expired);
           }
-
-          this.appleMusicService.init();
         },
         error: () => {},
       });
   }
 
-  initSdkForService(sourceType: SourceType) {
+  initSdkForService(sourceType: SourceType, expired: boolean) {
     if (sourceType === SourceType.SPOTIFY) {
       this.spotifySdkService.initializeSdk();
     }
 
-    // if (sourceType === SourceType.APPLE_MUSIC){
-    // }
+    if (sourceType === SourceType.APPLE_MUSIC) {
+      this.appleMusicService.musicKitInit$
+        .pipe(
+          switchMap(() => {
+            if (this.appleMusicService.alreadyAuthorized() || !expired) {
+              console.log('User is already authorized with Apple Music');
+              return this.authService.getAppleMusicUserTokenExpiration(); // Return the existing token
+            } else {
+              // If not authorized, trigger authorization
+              //return this.appleMusicService.startAuth();
+              return throwError(() => 'User will need to reauthorize');
+            }
+          })
+        )
+        .subscribe({
+          next: (expirationTimestamp) => {
+            console.log('Authorized user with Apple Music');
+          },
+          error: () => {},
+        });
+      this.appleMusicService.init();
+    }
   }
 
   clearTokens() {

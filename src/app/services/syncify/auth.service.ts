@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConnectedService, User } from '../../models/user.model';
-import { shareReplay } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { TokenResponse } from '../../models/spotify-api.model';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
+import { ExpirationTimestamp } from '../../models/apple-music.model';
 
 @Injectable({
   providedIn: 'root',
@@ -58,22 +59,26 @@ export class AuthService {
     });
   }
 
-  getAppleMusicRefreshToken() {
-    return this.http.get<TokenResponse>(
-      this.apiBaseUrl + 'user/appleMusicRefreshToken'
+  getAppleMusicUserTokenExpiration() {
+    return this.http.get<ExpirationTimestamp>(
+      this.apiBaseUrl + 'user/appleMusicUserToken'
     );
   }
 
-  updateAppleMusicRefreshToken(token: string) {
-    return this.http.post<any>(
-      this.apiBaseUrl + 'user/appleMusicRefreshToken',
-      {
-        token: token,
+  updateAppleMusicUserTokenExpiration(): Observable<ExpirationTimestamp> {
+    let now = new Date();
+    now.setTime(now.getTime() + 3600 * 1000);
+    let timestamp = now.getTime();
+
+    return this.http.post<ExpirationTimestamp>(
+      this.apiBaseUrl + 'user/appleMusicUserToken',
+      <ExpirationTimestamp>{
+        expiresAt: timestamp,
       }
     );
   }
 
-  removeAppleMusicRefreshToken() {
+  removeAppleMusicUserToken() {
     return this.http.post<any>(
       this.apiBaseUrl + 'user/appleMusicRefreshToken',
       {
