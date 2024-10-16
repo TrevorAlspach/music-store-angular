@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+/* import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { PlaylistsService } from '../../../services/syncify/playlists.service';
 import { Playlist, SourceType, ViewType } from '../../../models/music.model';
 import { MatListModule } from '@angular/material/list';
@@ -56,6 +63,29 @@ export class PlaylistsV2Component implements OnInit {
   playlistsLoading = false;
   playlistsLoadError = false;
 
+  slidesToShow = 5;
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.updateSlidesToShow(event.target.innerWidth); // Update slides count on window resize
+  }
+
+  private updateSlidesToShow(width: number) {
+    if (width < 576) {
+      // Extra small devices (phones)
+      this.slidesToShow = 1;
+    } else if (width < 768) {
+      // Small devices (tablets)
+      this.slidesToShow = 2;
+    } else if (width < 992) {
+      // Medium devices (desktops)
+      this.slidesToShow = 3;
+    } else {
+      // Large devices (large desktops)
+      this.slidesToShow = 4;
+    }
+    this.changeDetectorRef.markForCheck();
+  }
+
   constructor(
     private playlistsService: PlaylistsService,
     private spotifyService: SpotifyService,
@@ -64,8 +94,11 @@ export class PlaylistsV2Component implements OnInit {
     private snackBar: MatSnackBar,
     private dashboardService: DashboardService,
     private spotifySdkService: SpotifySdkService,
-    private appleMusicService: AppleMusicService
-  ) {}
+    private appleMusicService: AppleMusicService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
+    this.updateSlidesToShow(window.innerWidth);
+  }
   ngOnInit(): void {
     this.loadPlaylists();
 
@@ -216,4 +249,4 @@ export class PlaylistsV2Component implements OnInit {
   get SourceType() {
     return SourceType;
   }
-}
+} */
