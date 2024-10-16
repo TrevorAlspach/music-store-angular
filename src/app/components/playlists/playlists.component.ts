@@ -208,7 +208,7 @@ export class PlaylistsComponent implements OnInit {
 
   getAppleMusicPlaylists() {
     this.playlistsLoading = true;
-    this.appleMusicService.musicKitInit$
+    this.appleMusicService.userTokenInit$
       .pipe(
         switchMap((ready) => {
           if (ready) {

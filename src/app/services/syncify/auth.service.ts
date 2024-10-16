@@ -16,7 +16,7 @@ export class AuthService {
   constructor(private http: HttpClient, private auth0Service: Auth0Service) {}
 
   logout() {
-    //localStorage.clear();
+    localStorage.clear();
     return this.auth0Service.logout({});
   }
 
@@ -59,21 +59,21 @@ export class AuthService {
     });
   }
 
-  getAppleMusicUserTokenExpiration() {
-    return this.http.get<ExpirationTimestamp>(
+  getAppleMusicUserToken() {
+    return this.http.get<TokenResponse>(
       this.apiBaseUrl + 'user/appleMusicUserToken'
     );
   }
 
-  updateAppleMusicUserTokenExpiration(): Observable<ExpirationTimestamp> {
-    let now = new Date();
+  updateAppleMusicUserToken(token: string): Observable<TokenResponse> {
+    /* let now = new Date();
     now.setTime(now.getTime() + 3600 * 1000);
-    let timestamp = now.getTime();
+    let timestamp = now.getTime(); */
 
-    return this.http.post<ExpirationTimestamp>(
+    return this.http.post<TokenResponse>(
       this.apiBaseUrl + 'user/appleMusicUserToken',
-      <ExpirationTimestamp>{
-        expiresAt: timestamp,
+      <TokenResponse>{
+        token: token,
       }
     );
   }

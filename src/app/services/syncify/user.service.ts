@@ -32,10 +32,7 @@ export class UserService {
         })
       )
       .subscribe({
-        next: (auth0User) => {
-          //console.log(auth0User);
-          //console.log('auth0user')
-        },
+        next: (auth0User) => {},
       });
   }
 

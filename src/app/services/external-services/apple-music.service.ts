@@ -34,6 +34,7 @@ export class AppleMusicService {
   private document!: CustomDocument;
 
   public musicKitInit$: Subject<boolean> = new ReplaySubject(1);
+  public userTokenInit$: Subject<boolean> = new ReplaySubject(1);
   private musicKitInitialized = false;
 
   constructor(
@@ -54,7 +55,6 @@ export class AppleMusicService {
 
     this.document = this.docRef.customDocument;
     this.document.addEventListener('musickitloaded', async () => {
-      console.log('event was fired');
       this.window = this.windowRef.nativeWindow;
 
       this.userService.loggedInUser$
@@ -90,7 +90,6 @@ export class AppleMusicService {
   }
 
   public alreadyAuthorized() {
-    console.log('AUTHORIZED??' + this.musicKit.isAuthorized);
     return this.musicKit.isAuthorized;
   }
 
@@ -99,7 +98,7 @@ export class AppleMusicService {
       switchMap((done) => {
         localStorage.setItem('appleMusicUserToken', this.getUserToken());
         console.log(localStorage.getItem('appleMusicUserToken'));
-        return this.authService.updateAppleMusicUserTokenExpiration();
+        return this.authService.updateAppleMusicUserToken(this.getUserToken());
       })
     );
   }
@@ -120,6 +119,11 @@ export class AppleMusicService {
     const userToken = localStorage.getItem('appleMusicUserToken');
     console.log(userToken);
     this.getMusicKitInstance().musicUserToken = userToken;
+    console.log(this.getUserToken());
+  }
+
+  public setUserToken(token: string) {
+    this.getMusicKitInstance().musicUserToken = token;
     console.log(this.getUserToken());
   }
 

@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-player/spotify-web-player.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ServicesComponent } from '../services/services.component';
-import { exhaustMap, merge, mergeMap, switchMap, throwError } from 'rxjs';
+import { exhaustMap, merge, mergeMap, of, switchMap, throwError } from 'rxjs';
 import { ConnectedService } from '../../models/user.model';
 import { SourceType } from '../../models/music.model';
 import { CommonModule } from '@angular/common';
@@ -18,6 +18,7 @@ import { SpotifySdkService } from '../../services/external-services/spotify-sdk.
 /* import { PlaylistsV2Component } from '../playlists/playlists-v2/playlists-v2.component'; */
 import { AppleMusicService } from '../../services/external-services/apple-music.service';
 import { PlaylistsComponent } from '../playlists/playlists.component';
+import { TokenResponse } from '../../models/spotify-api.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -60,14 +61,14 @@ export class DashboardComponent implements OnInit {
         next: (connectedServices: ConnectedService[]) => {
           for (let service of connectedServices) {
             this.connectedServices.push(service);
-            this.initSdkForService(service.externalService, service.expired);
+            this.initSdkForService(service.externalService);
           }
         },
         error: () => {},
       });
   }
 
-  initSdkForService(sourceType: SourceType, expired: boolean) {
+  initSdkForService(sourceType: SourceType /* expired: boolean */) {
     if (sourceType === SourceType.SPOTIFY) {
       this.spotifySdkService.initializeSdk();
     }
@@ -76,22 +77,32 @@ export class DashboardComponent implements OnInit {
       this.appleMusicService.musicKitInit$
         .pipe(
           switchMap(() => {
-            if (this.appleMusicService.alreadyAuthorized() && !expired) {
+            if (this.appleMusicService.alreadyAuthorized() /* && !expired */) {
               console.log('User is already authorized with Apple Music');
-              return this.authService.getAppleMusicUserTokenExpiration(); // Return the existing token
+              return of(
+                this.appleMusicService.getMusicKitInstance().musicUserToken
+              );
+              // Return the existing token
             } else {
-              // If not authorized, trigger authorization
-              //this.appleMusicService.setUserTokenFromStorage();
-              return throwError(() => 'User will need to reauthorize');
+              return this.authService.getAppleMusicUserToken().pipe(
+                switchMap((tokenResponse: TokenResponse) => {
+                  if (tokenResponse.token) {
+                    this.appleMusicService.setUserToken(tokenResponse.token);
+                    return of(tokenResponse.token);
+                  } else {
+                    return throwError(() => 'User will need to reauthorize');
+                  }
+                })
+              );
             }
           })
         )
         .subscribe({
-          next: (expirationTimestamp) => {
-            console.log('Authorized user with Apple Music');
+          next: (token) => {
+            this.appleMusicService.userTokenInit$.next(true);
           },
           error: (e) => {
-            //console.log(e)
+            console.log(e);
           },
         });
       this.appleMusicService.init();
