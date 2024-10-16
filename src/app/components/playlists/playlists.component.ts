@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+/* import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { PlaylistsService } from '../../services/syncify/playlists.service';
 import { Playlist, SourceType, ViewType } from '../../models/music.model';
 import { MatListModule } from '@angular/material/list';
@@ -47,6 +47,8 @@ import { SimplifiedPlaylist, TrackReference } from '@spotify/web-api-ts-sdk';
 })
 export class PlaylistsComponent implements OnInit {
   @Input() source!: SourceType;
+
+  @Input() displayName!: string;
 
   @ViewChild('slickModalSpotify') slickModal!: SlickCarouselComponent;
   slideConfig = {
@@ -253,3 +255,4 @@ export class PlaylistsComponent implements OnInit {
     return SourceType;
   }
 }
+ */

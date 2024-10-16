@@ -13,10 +13,6 @@ import {
 import { PlaylistLargeComponent } from './../playlist-large/playlist-large.component';
 import { map, switchMap, throwError } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import {
-  SlickCarouselComponent,
-  SlickCarouselModule,
-} from 'ngx-slick-carousel';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,6 +25,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { SpotifySdkService } from '../../../services/external-services/spotify-sdk.service';
 import { SimplifiedPlaylist, TrackReference } from '@spotify/web-api-ts-sdk';
+import { AppleMusicService } from '../../../services/external-services/apple-music.service';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @Component({
   selector: 'app-playlists-v2',
@@ -39,11 +37,11 @@ import { SimplifiedPlaylist, TrackReference } from '@spotify/web-api-ts-sdk';
     MatButtonModule,
     PlaylistLargeComponent,
     MatIconModule,
-    SlickCarouselModule,
     MatCardModule,
     MatTooltipModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    CarouselModule,
   ],
   templateUrl: './playlists-v2.component.html',
   styleUrl: './playlists-v2.component.scss',
@@ -52,50 +50,6 @@ export class PlaylistsV2Component implements OnInit {
   @Input() source!: SourceType;
 
   @Input() displayName!: string;
-
-  @ViewChild('slickModalSpotify') slickModal!: SlickCarouselComponent;
-  slideConfig = {
-    slidesToShow: 5,
-    slidesToScroll: 5,
-    arrows: false,
-    responsive: [
-      {
-        breakpoint: 812,
-        settings: {
-          slidesToShow: 2,
-          infinite: true,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          infinite: true,
-        },
-      },
-      {
-        breakpoint: 1408,
-        settings: {
-          slidesToShow: 4,
-          infinite: true,
-        },
-      },
-      {
-        breakpoint: 1920,
-        settings: {
-          slidesToShow: 5,
-          infinite: true,
-        },
-      },
-      {
-        breakpoint: 2560,
-        settings: {
-          slidesToShow: 6,
-          infinite: true,
-        },
-      },
-    ],
-  };
 
   playlists: Playlist[] = [];
 
@@ -109,7 +63,8 @@ export class PlaylistsV2Component implements OnInit {
     private playlistEventService: PlaylistEventService,
     private snackBar: MatSnackBar,
     private dashboardService: DashboardService,
-    private spotifySdkService: SpotifySdkService
+    private spotifySdkService: SpotifySdkService,
+    private appleMusicService: AppleMusicService
   ) {}
   ngOnInit(): void {
     this.loadPlaylists();
@@ -146,6 +101,8 @@ export class PlaylistsV2Component implements OnInit {
       this.getSpotifyPlaylists();
     } else if (this.source === SourceType.SYNCIFY) {
       this.getSyncifyPlaylists();
+    } else if (this.source === SourceType.APPLE_MUSIC) {
+      this.getAppleMusicPlaylists();
     }
   }
 
@@ -194,6 +151,16 @@ export class PlaylistsV2Component implements OnInit {
       });
   }
 
+  getAppleMusicPlaylists() {
+    this.playlistsLoading = true;
+    this.appleMusicService.getPlaylistsOfCurrentUser().subscribe({
+      next: (obj) => {
+        console.log(obj);
+      },
+      error: () => {},
+    });
+  }
+
   getSyncifyPlaylists() {
     this.playlistsLoading = true;
     this.playlistsService.fetchAllPlaylistsForUser().subscribe({
@@ -207,14 +174,6 @@ export class PlaylistsV2Component implements OnInit {
         this.playlists = [];
       },
     });
-  }
-
-  spotifyCarouselBack() {
-    this.slickModal.slickPrev();
-  }
-
-  spotifyCarouselNext() {
-    this.slickModal.slickNext();
   }
 
   openCreatePlaylistDialog(sourceType: SourceType) {

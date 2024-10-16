@@ -4,7 +4,7 @@ import { SignupComponent } from './components/auth/signup/signup.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthService } from './services/syncify/auth.service';
 import { authGuard } from './guards/auth.guard';
-import { PlaylistsComponent } from './components/playlists/playlists.component';
+/* import { PlaylistsComponent } from './components/playlists/playlists.component'; */
 import { SyncPlaylistsComponent } from './components/sync-playlists/sync-playlists.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SpotifyAuthComponent } from './components/auth/spotify-auth/spotify-auth.component';

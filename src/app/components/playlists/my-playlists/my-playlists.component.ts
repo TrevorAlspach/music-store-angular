@@ -7,9 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { PlaylistLargeComponent } from '../playlist-large/playlist-large.component';
-import { PlaylistsComponent } from '../playlists.component';
 import { MatDialog } from '@angular/material/dialog';
 import { switchMap } from 'rxjs';
 import { ConnectedService } from '../../../models/user.model';
@@ -32,12 +30,11 @@ import { PlaylistsV2Component } from '../playlists-v2/playlists-v2.component';
     MatButtonModule,
     PlaylistLargeComponent,
     MatIconModule,
-    SlickCarouselModule,
     MatCardModule,
     MatTooltipModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    PlaylistsComponent,
+    /* PlaylistsComponent, */
     PlaylistsV2Component,
   ],
   templateUrl: './my-playlists.component.html',

@@ -113,4 +113,8 @@ export class AppleMusicService {
       .catch((error) => console.log(error));
     console.log('script loaded ', data);
   }
+
+  public getPlaylistsOfCurrentUser() {
+    return defer(() => this.musicKit.api.music('v1/me/library/playlists', {}));
+  }
 }

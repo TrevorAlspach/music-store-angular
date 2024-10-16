@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SpotifyService } from '../../services/external-services/spotify.service';
 import { AuthService } from '../../services/syncify/auth.service';
 import { SpotifyProfileComponent } from '../spotify-components/spotify-profile/spotify-profile.component';
-import { PlaylistsComponent } from '../playlists/playlists.component';
+/* import { PlaylistsComponent } from '../playlists/playlists.component'; */
 import { HttpClient } from '@angular/common/http';
 import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-player/spotify-web-player.component';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -25,7 +25,7 @@ import { AppleMusicService } from '../../services/external-services/apple-music.
     CommonModule,
     MatButtonModule,
     SpotifyProfileComponent,
-    PlaylistsComponent,
+    /* PlaylistsComponent, */
     SpotifyWebPlayerComponent,
     MatGridListModule,
     ServicesComponent,
