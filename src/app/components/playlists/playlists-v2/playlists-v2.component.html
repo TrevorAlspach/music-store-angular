@@ -25,7 +25,7 @@
     </button>
   </div>
   } @else {
-  <div *ngIf="this.playlists.length > 0">
+  <!--   <div *ngIf="this.playlists.length > 0">
     <div class="playlists-grid-container">
       @for(playlist of this.playlists; track playlist){
       <playlist-large
@@ -34,6 +34,36 @@
       ></playlist-large>
       }
     </div>
+  </div> -->
+  <div
+    *ngIf="this.playlists.length > 0"
+    class="flex-row align-center justify-content"
+  >
+    <mat-icon
+      class="arrow-button arrow-button-left"
+      (click)="carousel.previousSlide()"
+      >chevron_left</mat-icon
+    >
+    <div style="width: 100%">
+      <carousel
+        #carousel
+        [itemsPerSlide]="slidesToShow"
+        [showIndicators]="false"
+        [noWrap]="false"
+        [interval]="0"
+        [isAnimated]="true"
+      >
+        <slide *ngFor="let playlist of this.playlists; let index = index">
+          <playlist-large
+            [playlist]="playlist"
+            class="playlists-grid-item"
+          ></playlist-large>
+        </slide>
+      </carousel>
+    </div>
+    <mat-icon class="arrow-button" (click)="carousel.nextSlide()"
+      >chevron_right</mat-icon
+    >
   </div>
   <div
     *ngIf="this.playlists.length === 0"
@@ -58,27 +88,3 @@
 <div *ngIf="playlistsLoading" class="align-center justify-content flex-col">
   <mat-spinner></mat-spinner>
 </div>
-
-<carousel>
-  <slide>
-    <img
-      src="assets/images/nature/1.jpg"
-      alt="first slide"
-      style="display: block; width: 100%"
-    />
-  </slide>
-  <slide>
-    <img
-      src="assets/images/nature/2.jpg"
-      alt="second slide"
-      style="display: block; width: 100%"
-    />
-  </slide>
-  <slide>
-    <img
-      src="assets/images/nature/3.jpg"
-      alt="third slide"
-      style="display: block; width: 100%"
-    />
-  </slide>
-</carousel>

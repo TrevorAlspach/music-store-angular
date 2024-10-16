@@ -15,8 +15,9 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/syncify/user.service';
 import { DashboardService } from './dashboard.service';
 import { SpotifySdkService } from '../../services/external-services/spotify-sdk.service';
-import { PlaylistsV2Component } from '../playlists/playlists-v2/playlists-v2.component';
+/* import { PlaylistsV2Component } from '../playlists/playlists-v2/playlists-v2.component'; */
 import { AppleMusicService } from '../../services/external-services/apple-music.service';
+import { PlaylistsComponent } from '../playlists/playlists.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,11 +26,11 @@ import { AppleMusicService } from '../../services/external-services/apple-music.
     CommonModule,
     MatButtonModule,
     SpotifyProfileComponent,
-    /* PlaylistsComponent, */
+    PlaylistsComponent,
     SpotifyWebPlayerComponent,
     MatGridListModule,
     ServicesComponent,
-    PlaylistsV2Component,
+    /* PlaylistsV2Component, */
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

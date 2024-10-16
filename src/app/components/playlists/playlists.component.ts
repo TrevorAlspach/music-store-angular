@@ -1,4 +1,4 @@
-/* import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { PlaylistsService } from '../../services/syncify/playlists.service';
 import { Playlist, SourceType, ViewType } from '../../models/music.model';
 import { MatListModule } from '@angular/material/list';
@@ -255,4 +255,3 @@ export class PlaylistsComponent implements OnInit {
     return SourceType;
   }
 }
- */

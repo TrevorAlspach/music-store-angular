@@ -17,15 +17,43 @@
     gap: 24px; 
 }
 
-.playlists-grid-item{
+/* .playlists-grid-item{
     min-width: 175px;
     min-height: 200px;
     //max-width: 150px;
     scroll-snap-align: start;
     box-sizing: border-box;
     //overflow: hidden;
-}
+} */
 
 .heading-no-margin{
     margin-bottom: 0;
+}
+
+/* .carousel-control-prev-icon,
+.carousel-control-next-icon {
+    visibility: hidden !important;
+    background-image: '' !important;
+    margin-left: 100px !important;
+} */
+
+::ng-deep .carousel-control-prev{
+    visibility: hidden !important;
+    display: none !important;
+    pointer-events: none !important;
+    /* margin-right: 240px !important; */
+}
+
+::ng-deep .carousel-control-next {
+    visibility: hidden !important;
+    display: none !important;
+    pointer-events: none !important;
+    /* margin-right: 240px !important; */
+}
+
+.arrow-button{
+    cursor:pointer;
+}
+.arrow-button-left {
+    margin-right: 3%;
 }

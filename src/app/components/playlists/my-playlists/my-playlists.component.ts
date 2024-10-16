@@ -19,7 +19,8 @@ import { PlaylistEventService } from '../playlist-event.service';
 import { AuthService } from '../../../services/syncify/auth.service';
 import { SourceType } from '../../../models/music.model';
 import { UserService } from '../../../services/syncify/user.service';
-import { PlaylistsV2Component } from '../playlists-v2/playlists-v2.component';
+import { PlaylistsComponent } from '../playlists.component';
+/* import { PlaylistsV2Component } from '../playlists-v2/playlists-v2.component'; */
 
 @Component({
   selector: 'app-my-playlists',
@@ -34,8 +35,8 @@ import { PlaylistsV2Component } from '../playlists-v2/playlists-v2.component';
     MatTooltipModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    /* PlaylistsComponent, */
-    PlaylistsV2Component,
+    PlaylistsComponent,
+    /* PlaylistsV2Component, */
   ],
   templateUrl: './my-playlists.component.html',
   styleUrl: './my-playlists.component.scss',
