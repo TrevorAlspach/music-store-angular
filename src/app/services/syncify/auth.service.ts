@@ -16,7 +16,7 @@ export class AuthService {
   constructor(private http: HttpClient, private auth0Service: Auth0Service) {}
 
   logout() {
-    localStorage.clear();
+    //localStorage.clear();
     return this.auth0Service.logout({});
   }
 

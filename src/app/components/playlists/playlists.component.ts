@@ -26,6 +26,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { SpotifySdkService } from '../../services/external-services/spotify-sdk.service';
 import { SimplifiedPlaylist, TrackReference } from '@spotify/web-api-ts-sdk';
+import { AppleMusicService } from '../../services/external-services/apple-music.service';
+import {
+  LibraryPlaylist,
+  LibraryPlaylistsResponse,
+  LibraryPlaylistsResponseWrapper,
+} from '../../models/apple-music.model';
 
 @Component({
   selector: 'app-playlists',
@@ -106,7 +112,8 @@ export class PlaylistsComponent implements OnInit {
     private playlistEventService: PlaylistEventService,
     private snackBar: MatSnackBar,
     private dashboardService: DashboardService,
-    private spotifySdkService: SpotifySdkService
+    private spotifySdkService: SpotifySdkService,
+    private appleMusicService: AppleMusicService
   ) {}
   ngOnInit(): void {
     this.loadPlaylists();
@@ -128,6 +135,12 @@ export class PlaylistsComponent implements OnInit {
         ) {
           this.getSyncifyPlaylists();
         }
+        if (
+          playlistEvent.source === SourceType.APPLE_MUSIC &&
+          this.source === SourceType.APPLE_MUSIC
+        ) {
+          this.getAppleMusicPlaylists();
+        }
       },
     });
 
@@ -143,6 +156,8 @@ export class PlaylistsComponent implements OnInit {
       this.getSpotifyPlaylists();
     } else if (this.source === SourceType.SYNCIFY) {
       this.getSyncifyPlaylists();
+    } else if (this.source === SourceType.APPLE_MUSIC) {
+      this.getAppleMusicPlaylists();
     }
   }
 
@@ -191,6 +206,52 @@ export class PlaylistsComponent implements OnInit {
       });
   }
 
+  getAppleMusicPlaylists() {
+    this.playlistsLoading = true;
+    this.appleMusicService.musicKitInit$
+      .pipe(
+        switchMap((ready) => {
+          if (ready) {
+            return this.appleMusicService.getPlaylistsOfCurrentUser();
+          } else {
+            return throwError(() => {
+              console.log('sdk not init yet');
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: async (playlists: LibraryPlaylist[]) => {
+          console.log(playlists);
+          for (let playlist of playlists) {
+            let imageUrl: string;
+            if (playlist.attributes.artwork.url) {
+              const isValid = await this.isImageValid(
+                playlist.attributes.artwork.url
+              );
+              imageUrl = isValid
+                ? playlist.attributes.artwork.url
+                : 'assets/defaultAlbum.jpg';
+            } else {
+              imageUrl = 'assets/defaultAlbum.jpg';
+            }
+
+            this.playlists.push({
+              name: playlist.attributes.name,
+              id: playlist.id,
+              source: SourceType.APPLE_MUSIC,
+              imageUrl: imageUrl,
+              href: playlist.href,
+              songCount: 0,
+            });
+          }
+
+          this.playlistsLoading = false;
+        },
+        error: () => {},
+      });
+  }
+
   getSyncifyPlaylists() {
     this.playlistsLoading = true;
     this.playlistsService.fetchAllPlaylistsForUser().subscribe({
@@ -203,6 +264,15 @@ export class PlaylistsComponent implements OnInit {
         this.playlistsLoadError = true;
         this.playlists = [];
       },
+    });
+  }
+
+  isImageValid(url: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => resolve(true); // Image loaded successfully
+      img.onerror = () => resolve(false); // Error loading image
     });
   }
 

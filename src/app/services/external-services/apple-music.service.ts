@@ -10,9 +10,20 @@ import {
 import { ScriptService } from '../util/scripts/script.service';
 import { CustomWindow, WindowRefService } from '../util/window-ref.service';
 import { UserService } from '../syncify/user.service';
-import { defer, map, ReplaySubject, Subject, switchMap } from 'rxjs';
+import {
+  defer,
+  map,
+  Observable,
+  ReplaySubject,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { TokenResponse } from '../../models/spotify-api.model';
-import { ExpirationTimestamp } from '../../models/apple-music.model';
+import {
+  ExpirationTimestamp,
+  LibraryPlaylistsResponse,
+  LibraryPlaylistsResponseWrapper,
+} from '../../models/apple-music.model';
 
 @Injectable({
   providedIn: 'root',
@@ -85,9 +96,11 @@ export class AppleMusicService {
 
   public startAuth() {
     return this.authorizeForUser().pipe(
-      switchMap((done) =>
-        this.authService.updateAppleMusicUserTokenExpiration()
-      )
+      switchMap((done) => {
+        localStorage.setItem('appleMusicUserToken', this.getUserToken());
+        console.log(localStorage.getItem('appleMusicUserToken'));
+        return this.authService.updateAppleMusicUserTokenExpiration();
+      })
     );
   }
 
@@ -97,6 +110,17 @@ export class AppleMusicService {
 
   public getMusicKitInstance() {
     return this.musicKit;
+  }
+
+  private getUserToken() {
+    return this.getMusicKitInstance().musicUserToken;
+  }
+
+  public setUserTokenFromStorage() {
+    const userToken = localStorage.getItem('appleMusicUserToken');
+    console.log(userToken);
+    this.getMusicKitInstance().musicUserToken = userToken;
+    console.log(this.getUserToken());
   }
 
   private getDeveloperToken() {
@@ -115,6 +139,20 @@ export class AppleMusicService {
   }
 
   public getPlaylistsOfCurrentUser() {
-    return defer(() => this.musicKit.api.music('v1/me/library/playlists', {}));
+    return (
+      defer(() =>
+        this.musicKit.api.music('v1/me/library/playlists', {})
+      ) as Observable<LibraryPlaylistsResponseWrapper>
+    ).pipe(map((response) => response.data.data));
+  }
+
+  public getPlaylist(id: string) {
+    return (
+      defer(() =>
+        this.musicKit.api.music(`v1/me/library/playlists/${id}`, {
+          include: ['tracks'],
+        })
+      ) as Observable<LibraryPlaylistsResponseWrapper>
+    ).pipe(map((response) => response.data.data));
   }
 }

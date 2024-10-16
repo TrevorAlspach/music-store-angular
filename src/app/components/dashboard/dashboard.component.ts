@@ -76,12 +76,12 @@ export class DashboardComponent implements OnInit {
       this.appleMusicService.musicKitInit$
         .pipe(
           switchMap(() => {
-            if (this.appleMusicService.alreadyAuthorized() || !expired) {
+            if (this.appleMusicService.alreadyAuthorized() && !expired) {
               console.log('User is already authorized with Apple Music');
               return this.authService.getAppleMusicUserTokenExpiration(); // Return the existing token
             } else {
               // If not authorized, trigger authorization
-              //return this.appleMusicService.startAuth();
+              //this.appleMusicService.setUserTokenFromStorage();
               return throwError(() => 'User will need to reauthorize');
             }
           })
@@ -90,7 +90,9 @@ export class DashboardComponent implements OnInit {
           next: (expirationTimestamp) => {
             console.log('Authorized user with Apple Music');
           },
-          error: () => {},
+          error: (e) => {
+            //console.log(e)
+          },
         });
       this.appleMusicService.init();
     }

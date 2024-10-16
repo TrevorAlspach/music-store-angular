@@ -1,5 +1,5 @@
 <div style="width: 100%">
-  <h3>{{ source | titlecase }}</h3>
+  <h2>{{ displayName | titlecase }}</h2>
   <!--   <div class="toggle-grid-list-container">
     <button
       mat-icon-button
@@ -16,7 +16,7 @@
       <mat-icon color="primary">grid_view</mat-icon>
     </button>
   </div> -->
-  <div class="flex-row" *ngIf="this.playlists.length > 0">
+  <!--   <div class="flex-row" *ngIf="this.playlists.length > 0">
     <button
       mat-icon-button
       (click)="openCreatePlaylistDialog(source)"
@@ -24,7 +24,7 @@
     >
       <mat-icon color="primary">add</mat-icon>
     </button>
-  </div>
+  </div> -->
   <div id="spotify-section">
     <div
       style="display: flex; align-items: center; width: 100%"

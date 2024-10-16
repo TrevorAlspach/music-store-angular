@@ -87,6 +87,9 @@ export class ConnectServiceDialogComponent implements OnInit {
         .subscribe({
           next: (expirationTimestamp) => {
             this.loading = false;
+            const userMusicToken =
+              this.appleMusicService.getMusicKitInstance().musicUserToken;
+
             console.log('Authorized user with Apple Music');
           },
           error: () => {},

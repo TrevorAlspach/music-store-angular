@@ -107,7 +107,6 @@ export class SpotifySdkService {
   public deleteAllTracksFromPlaylist(playlistId: string) {
     return this.getAllTracksFromPlaylist(playlistId).pipe(
       concatMap((tracks: Track[]) => {
-        console.log('in concat map');
         return this.deleteTracksInBatches(playlistId, tracks);
       })
     );
@@ -121,8 +120,6 @@ export class SpotifySdkService {
     // Fetch the first page of tracks
     return this.getPageOfPlaylistTracks(playlistId, limit, offset).pipe(
       expand((response: Page<PlaylistedTrack<Track>>) => {
-        console.log('response below');
-        console.log(response);
         allTracks = allTracks.concat(response.items.map((item) => item.track)); // Collect tracks
 
         // Check if there are more tracks to fetch
@@ -258,7 +255,6 @@ export class SpotifySdkService {
 
   public getPlayerState() {
     if (this.player) {
-      //console.log('getplayerstate player is not nul')
       return defer(() => this.player.getCurrentState());
     } else {
       return of(null);
@@ -274,11 +270,9 @@ export class SpotifySdkService {
     this.window = this.windowRef.nativeWindow;
 
     this.window.onSpotifyWebPlaybackSDKReady = () => {
-      console.log('spotify callback');
       //const token = this.getSpotifyAccessToken();
       this.getAccessTokenUsedByCurrentSdkInstance().subscribe((token) => {
         if (token) {
-          console.log('player should be init now');
           this.player = new Spotify.Player({
             name: 'Web Playback SDK Quick Start Player',
             getOAuthToken: (cb) => {
@@ -311,7 +305,6 @@ export class SpotifySdkService {
           });
 
           this.player.addListener('player_state_changed', (playbackState) => {
-            //console.log(playbackState);
             this.playerState$.next(playbackState);
           });
 

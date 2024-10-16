@@ -37,6 +37,8 @@ import {
   Playlist as SdkPlaylist,
   PlaylistedTrack,
 } from '@spotify/web-api-ts-sdk';
+import { AppleMusicService } from '../../../services/external-services/apple-music.service';
+import { AMTrack, LibraryPlaylist } from '../../../models/apple-music.model';
 
 @Component({
   selector: 'app-playlist-details',
@@ -76,6 +78,7 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
     private playlistsService: PlaylistsService,
     private playlistEventService: PlaylistEventService,
     private spotifySdkService: SpotifySdkService,
+    private appleMusicService: AppleMusicService,
     private router: Router
   ) {}
 
@@ -171,6 +174,65 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
         },
       });
     }
+
+    if (this.source === SourceType.APPLE_MUSIC) {
+      this.appleMusicService.getPlaylist(this.id).subscribe({
+        next: async (playlists: LibraryPlaylist[]) => {
+          const playlist = playlists[0];
+          console.log(playlist);
+          let imageUrl: string;
+          if (playlist.attributes.artwork.url) {
+            const isValid = await this.isImageValid(
+              playlist.attributes.artwork.url
+            );
+            imageUrl = isValid
+              ? playlist.attributes.artwork.url
+              : 'assets/defaultAlbum.jpg';
+          } else {
+            imageUrl = 'assets/defaultAlbum.jpg';
+          }
+
+          this.playlist = <PlaylistDetails>{
+            name: playlist.attributes.name,
+            id: playlist.id,
+            description: playlist.attributes.description
+              ? playlist.attributes.description.standard
+              : '',
+            songCount: playlist.relationships.tracks.meta.total,
+            source: SourceType.APPLE_MUSIC,
+            imageUrl: imageUrl,
+            href: playlist.href,
+            songs: playlist.relationships.tracks?.data.map((track: AMTrack) => {
+              return <Song>{
+                id: track.id,
+                name: track.attributes.name,
+                album: track.attributes.albumName,
+                artist: track.attributes.artistName,
+                time: this.millisToMinutesAndSeconds(
+                  track.attributes.durationInMillis
+                ),
+                imageUrl: track.attributes.artwork.url,
+                releaseYear: Number(track.attributes.releaseDate.slice(0, 4)),
+                hovered: false,
+                href: track.href,
+                genre: track.attributes.genreNames[0],
+                remoteId: track.id,
+              };
+            }),
+          };
+          this.isLoading = false;
+        },
+      });
+    }
+  }
+
+  isImageValid(url: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => resolve(true); // Image loaded successfully
+      img.onerror = () => resolve(false); // Error loading image
+    });
   }
 
   viewPlaylistInSpotify() {
