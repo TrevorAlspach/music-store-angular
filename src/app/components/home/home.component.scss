@@ -29,9 +29,7 @@
 }
 
 .example-container {
-    //height: calc(100vh - 64px);
     height: 100%;
-    //height: calc(100% - 64px);
     max-width: 100% !important;
     width: 100% !important;
 }
@@ -40,7 +38,7 @@
     display: flex;
     flex-grow: 1;
     //flex: 1;
-    //padding: 3%;
+    padding: 1%;
     margin-top: 15px;
     margin-left: 15px;
     margin-right: 30px;

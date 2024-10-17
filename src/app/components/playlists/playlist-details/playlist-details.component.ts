@@ -87,9 +87,9 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    /* if (changes['id'].previousValue) {
+    if (changes['id'].previousValue) {
       this.loadPlaylistDetails();
-    } */
+    }
   }
 
   loadPlaylistDetails() {

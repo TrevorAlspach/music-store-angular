@@ -32,6 +32,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PlaylistsService } from '../../../services/syncify/playlists.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AppleMusicService } from '../../../services/external-services/apple-music.service';
+import { LibraryPlaylist } from '../../../models/apple-music.model';
 
 @Component({
   selector: 'app-playlist-selector',
@@ -73,7 +75,8 @@ export class PlaylistSelectorComponent
     private spotifyService: SpotifyService,
     private transferPlaylistsService: TransferPlaylistsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private playlistsService: PlaylistsService
+    private playlistsService: PlaylistsService,
+    private appleMusicService: AppleMusicService
   ) {}
 
   ngOnInit(): void {}
@@ -157,6 +160,33 @@ export class PlaylistSelectorComponent
 
           this.playlistsDataSource.data = playlists;
           this.changeDetectorRef.detectChanges();
+          this.isLoading = false;
+        },
+      });
+    }
+
+    if (sourceType === SourceType.APPLE_MUSIC) {
+      this.appleMusicService.getPlaylistsOfCurrentUser().subscribe({
+        next: (playlists: LibraryPlaylist[]) => {
+          for (let playlist of playlists) {
+            let imageUrl: string = 'assets/defaultAlbum.jpg';
+            if (playlist.attributes.artwork.url) {
+              imageUrl = this.appleMusicService.formatImageUrl(
+                playlist.attributes.artwork.url,
+                200,
+                200
+              );
+            }
+
+            this.playlistsDataSource.data.push({
+              name: playlist.attributes.name,
+              id: playlist.id,
+              source: SourceType.APPLE_MUSIC,
+              imageUrl: imageUrl,
+              href: playlist.href,
+              songCount: 0,
+            });
+          }
           this.isLoading = false;
         },
       });

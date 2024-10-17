@@ -263,17 +263,6 @@ export class SpotifyService {
       .pipe(this.customCatchErrorOperator());
   }
 
-  /*  getUserProfile(): Observable<SpotifyUser> {
-    return this.http
-      .get<any>('https://api.spotify.com/v1/me', {
-        headers: new HttpHeaders({
-          Authorization: `Bearer ${this.getStoredAccessToken()}`,
-        }),
-      })
-      .pipe(this.customCatchErrorOperator())
-      .pipe(tap((userProfile) => (this.authenticatedUser = userProfile)));
-  } */
-
   getAccessToken(authCode: string) {
     const codeVerifier = localStorage.getItem('code_verifier') as string;
 

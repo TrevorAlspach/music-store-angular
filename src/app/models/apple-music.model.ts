@@ -12,6 +12,10 @@ export interface LibraryPlaylistsResponse {
   data: LibraryPlaylist[];
 }
 
+export interface PlaylistSongsResponse {
+  data: AMTracks;
+}
+
 export interface LibraryPlaylist {
   id: string;
   type: string;
@@ -27,7 +31,7 @@ export interface AMPlaylistRelationship {
 export interface AMTracks {
   data: AMTrack[];
   href: string;
-  next: string;
+  next?: string;
   meta: AMTracksMetadata;
 }
 

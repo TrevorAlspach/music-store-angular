@@ -25,6 +25,7 @@ export const routes: Routes = [
     component: HomeComponent,
     canActivate: [authGuardFn],
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'auth', component: LoginAuth0Component },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'account', component: AccountComponent },

@@ -12,17 +12,21 @@ import { CustomWindow, WindowRefService } from '../util/window-ref.service';
 import { UserService } from '../syncify/user.service';
 import {
   defer,
+  expand,
   map,
   Observable,
+  reduce,
   ReplaySubject,
   Subject,
   switchMap,
 } from 'rxjs';
 import { TokenResponse } from '../../models/spotify-api.model';
 import {
+  AMTracks,
   ExpirationTimestamp,
   LibraryPlaylistsResponse,
   LibraryPlaylistsResponseWrapper,
+  PlaylistSongsResponse,
 } from '../../models/apple-music.model';
 
 @Injectable({
@@ -159,6 +163,36 @@ export class AppleMusicService {
         })
       ) as Observable<LibraryPlaylistsResponseWrapper>
     ).pipe(map((response) => response.data.data));
+  }
+
+  private getSongsOfPlaylist(playlistId: string, nextUrlSection?: string) {
+    let urlSection: string;
+    if (nextUrlSection) {
+      urlSection = nextUrlSection;
+    } else {
+      urlSection = `v1/me/library/playlists/${playlistId}/tracks`;
+    }
+
+    return (
+      defer(() =>
+        this.musicKit.api.music(urlSection, { limit: 100 })
+      ) as Observable<PlaylistSongsResponse>
+    ).pipe(map((response) => response.data));
+  }
+
+  public getAllSongsOfPlaylist(playlistId: string) {
+    return this.getSongsOfPlaylist(playlistId).pipe(
+      expand((tracksObj) =>
+        tracksObj.next
+          ? this.getSongsOfPlaylist(playlistId, tracksObj.next)
+          : []
+      ),
+      reduce((acc: AMTracks, tracksObj) => {
+        acc.data.push(...tracksObj.data);
+        return acc;
+      }),
+      map((tracksObjAccumulator: AMTracks) => tracksObjAccumulator.data)
+    );
   }
 
   public async playSong(id: string) {
