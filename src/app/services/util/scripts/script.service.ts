@@ -32,6 +32,10 @@ export class ScriptService {
         let script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = this.scripts[name].src;
+        if (name === 'appleMusicKit') {
+          script.setAttribute('data-web-components', ''); // Set the data attribute
+          script.async = true;
+        }
         if (script.readyState) {
           //IE
           script.onreadystatechange = () => {

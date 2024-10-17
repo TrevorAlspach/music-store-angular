@@ -226,16 +226,11 @@ export class PlaylistsComponent implements OnInit {
           for (let playlist of playlists) {
             let imageUrl: string = 'assets/defaultAlbum.jpg';
             if (playlist.attributes.artwork.url) {
-              imageUrl = playlist.attributes.artwork.url;
-              /* const isValid = await this.isImageValid(
-                playlist.attributes.artwork.url
+              imageUrl = this.appleMusicService.formatImageUrl(
+                playlist.attributes.artwork.url,
+                200,
+                200
               );
-              imageUrl = isValid
-                ? playlist.attributes.artwork.url
-                : 'assets/defaultAlbum.jpg';
-            } else {
-              imageUrl = 'assets/defaultAlbum.jpg';
-            } */
             }
 
             this.playlists.push({
@@ -266,15 +261,6 @@ export class PlaylistsComponent implements OnInit {
         this.playlistsLoadError = true;
         this.playlists = [];
       },
-    });
-  }
-
-  isImageValid(url: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.src = url;
-      img.onload = () => resolve(true); // Image loaded successfully
-      img.onerror = () => resolve(false); // Error loading image
     });
   }
 

@@ -159,4 +159,8 @@ export class AppleMusicService {
       ) as Observable<LibraryPlaylistsResponseWrapper>
     ).pipe(map((response) => response.data.data));
   }
+
+  public formatImageUrl(url: string, width: number, height: number) {
+    return url.replace('{w}x{h}', `${width}x${height}`);
+  }
 }

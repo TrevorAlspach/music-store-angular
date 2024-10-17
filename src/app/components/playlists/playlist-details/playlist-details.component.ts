@@ -211,7 +211,11 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
                 time: this.millisToMinutesAndSeconds(
                   track.attributes.durationInMillis
                 ),
-                imageUrl: track.attributes.artwork.url,
+                imageUrl: this.appleMusicService.formatImageUrl(
+                  track.attributes.artwork.url,
+                  40,
+                  40
+                ),
                 releaseYear: Number(track.attributes.releaseDate.slice(0, 4)),
                 hovered: false,
                 href: track.href,
