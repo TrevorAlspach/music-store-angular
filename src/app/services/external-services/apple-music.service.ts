@@ -11,23 +11,39 @@ import { ScriptService } from '../util/scripts/script.service';
 import { CustomWindow, WindowRefService } from '../util/window-ref.service';
 import { UserService } from '../syncify/user.service';
 import {
+  catchError,
   defer,
+  delayWhen,
   expand,
+  filter,
+  forkJoin,
+  from,
   map,
   Observable,
+  of,
   reduce,
   ReplaySubject,
+  retry,
+  retryWhen,
   Subject,
   switchMap,
+  take,
+  tap,
+  throwError,
+  timer,
 } from 'rxjs';
 import { TokenResponse } from '../../models/spotify-api.model';
 import {
+  AMSearchResults,
+  AMTrack,
   AMTracks,
   ExpirationTimestamp,
   LibraryPlaylistsResponse,
   LibraryPlaylistsResponseWrapper,
   PlaylistSongsResponse,
 } from '../../models/apple-music.model';
+import { Song } from '../../models/music.model';
+import { SearchResults } from '@spotify/web-api-ts-sdk';
 
 @Injectable({
   providedIn: 'root',
@@ -193,6 +209,59 @@ export class AppleMusicService {
       }),
       map((tracksObjAccumulator: AMTracks) => tracksObjAccumulator.data)
     );
+  }
+
+  public createPlaylist(name: string, description: string, songs: Song[]) {
+    const searchRequests: Observable<AMTrack | null>[] = [];
+    for (let song of songs) {
+      searchRequests.push(
+        this.searchCatalogForSong(song.name, song.artist, song.album)
+      );
+    }
+    return forkJoin(searchRequests);
+  }
+
+  public searchCatalogForSong(
+    title: string,
+    artistName: string,
+    albumName: string
+  ): Observable<AMTrack | null> {
+    //return defer(() =>
+    return from(
+      this.musicKit.api.music('v1/catalog/us/search', {
+        term: title,
+        limit: 10,
+        types: ['songs'],
+      })
+    )
+      .pipe(
+        retry({
+          count: 5,
+          delay: (error, retryCount) => {
+            console.log(error);
+            console.log('THIS IS THE ERROR FROM 429');
+            console.log(
+              `Rate limit hit. Retrying in 10 seconds... (${retryCount}/5)`
+            );
+            return timer(10000);
+          },
+        })
+      ) /* as Observable<AMSearchResults> */
+      .pipe(
+        map((searchResults: any) => {
+          for (let result of searchResults.results.songs.data) {
+            if (
+              result.attributes.artistName === artistName ||
+              result.attributes.albumName === albumName
+            ) {
+              return result;
+            }
+          }
+          return null;
+        })
+        //filter((result) => result !== null)
+      );
+    // );
   }
 
   public async playSong(id: string) {

@@ -1,3 +1,45 @@
+export interface AMSearchResults {
+  results: SongSearchResultsWrapper;
+}
+
+export interface SongSearchResultsWrapper {
+  songs: SongSearchResults;
+}
+
+export interface SongSearchResults {
+  data: AMTrack[];
+  href: string;
+  next: string;
+}
+
+export interface SongSearchResult {}
+
+export interface PlaylistToCreate {
+  attributes: PlaylistCreationAttributes;
+  relationships: PlaylistCreationRelationships;
+}
+
+export interface PlaylistCreationAttributes {
+  name: string;
+  description: string;
+}
+
+export interface PlaylistCreationRelationships {
+  tracks: NewPlaylistTracksWrapper;
+  parent: ParentFolder;
+}
+
+export interface NewPlaylistTracksWrapper {
+  data: NewPlaylistTrack[];
+}
+
+export interface NewPlaylistTrack {
+  id: string;
+  type: string;
+}
+
+export interface ParentFolder {}
+
 export interface ExpirationTimestamp {
   expiresAt: number;
 }

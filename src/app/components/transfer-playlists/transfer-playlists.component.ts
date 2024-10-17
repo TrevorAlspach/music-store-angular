@@ -104,6 +104,8 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.appleMusicService.createPlaylist('', '', []);
+
     this.combinedSubject$ = merge(
       this.transferPlaylistsService.selectedSource$,
       this.transferPlaylistsService.selectedDestination$,
@@ -194,6 +196,15 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
       source === SourceType.APPLE_MUSIC
     ) {
       this.transferFromAppleMusicToSyncify(playlistToTransfer).subscribe(
+        (res) => {
+          this.transferComplete = true;
+        }
+      );
+    } else if (
+      destination === SourceType.APPLE_MUSIC &&
+      source === SourceType.SYNCIFY
+    ) {
+      this.transferFromSyncifyToAppleMusic(playlistToTransfer).subscribe(
         (res) => {
           this.transferComplete = true;
         }
@@ -351,6 +362,30 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
           };
           return this.transferPlaylistsService.transferSongsToMusicStore(
             newPlaylist
+          );
+        })
+      );
+  }
+
+  transferFromSyncifyToAppleMusic(playlist: Playlist) {
+    return this.playlistsService
+      .getPlaylist(playlist.id as string)
+      .pipe(
+        map((playlist: PlaylistDetails) => {
+          return playlist.songs;
+        })
+      )
+      .pipe(
+        tap((songs) => {
+          this.total = songs.length;
+        })
+      )
+      .pipe(
+        switchMap((allSongs) => {
+          return this.appleMusicService.createPlaylist(
+            this.createDestinationPlaylistFormGroup.get('name')?.value,
+            this.createDestinationPlaylistFormGroup.get('description')?.value,
+            allSongs
           );
         })
       );
