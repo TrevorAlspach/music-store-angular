@@ -42,8 +42,15 @@
     <div style="padding-top: 6px">{{ this.playlist.name }}</div>
     <img
       *ngIf="this.playlist.source === SourceType.SPOTIFY"
-      style="padding-top: 6px"
+      style="margin-top: 5px"
       src="../../../assets/Spotify_Primary_Logo_RGB_Green.png"
+      class="spotify-logo"
+      [matTooltip]="'Spotify Playlist'"
+    />
+    <img
+      *ngIf="this.playlist.source === SourceType.APPLE_MUSIC"
+      style="margin-top: 5px"
+      src="assets\Apple_Music_Icon_RGB_sm_073120.svg"
       class="spotify-logo"
       [matTooltip]="'Spotify Playlist'"
     />
