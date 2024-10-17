@@ -53,6 +53,10 @@ export class PlaylistLargeComponent implements OnInit {
     }
   }
 
+  imageLoadFailed($event: any) {
+    this.playlist.imageUrl = 'assets/defaultAlbum.jpg';
+  }
+
   ngOnInit(): void {
     if (!this.playlist.imageUrl || this.playlist.imageUrl === '') {
       this.playlist.imageUrl = 'assets/defaultAlbum.jpg';

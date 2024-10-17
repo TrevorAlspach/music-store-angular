@@ -221,12 +221,13 @@ export class PlaylistsComponent implements OnInit {
         })
       )
       .subscribe({
-        next: async (playlists: LibraryPlaylist[]) => {
+        next: (playlists: LibraryPlaylist[]) => {
           console.log(playlists);
           for (let playlist of playlists) {
-            let imageUrl: string;
+            let imageUrl: string = 'assets/defaultAlbum.jpg';
             if (playlist.attributes.artwork.url) {
-              const isValid = await this.isImageValid(
+              imageUrl = playlist.attributes.artwork.url;
+              /* const isValid = await this.isImageValid(
                 playlist.attributes.artwork.url
               );
               imageUrl = isValid
@@ -234,6 +235,7 @@ export class PlaylistsComponent implements OnInit {
                 : 'assets/defaultAlbum.jpg';
             } else {
               imageUrl = 'assets/defaultAlbum.jpg';
+            } */
             }
 
             this.playlists.push({
