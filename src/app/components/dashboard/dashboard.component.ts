@@ -77,6 +77,7 @@ export class DashboardComponent implements OnInit {
       this.appleMusicService.musicKitInit$
         .pipe(
           switchMap(() => {
+            console.log('in the int of am service');
             if (this.appleMusicService.alreadyAuthorized() /* && !expired */) {
               console.log('User is already authorized with Apple Music');
               return of(

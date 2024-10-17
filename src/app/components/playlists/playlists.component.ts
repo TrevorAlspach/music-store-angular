@@ -118,7 +118,7 @@ export class PlaylistsComponent implements OnInit {
   ngOnInit(): void {
     this.loadPlaylists();
 
-    this.playlistEventService.playlistEvent$.subscribe({
+    /*     this.playlistEventService.playlistEvent$.subscribe({
       next: (playlistEvent: PlaylistEvent) => {
         this.snackBar.open(playlistEvent.message, 'Close', {
           duration: 5000,
@@ -142,7 +142,7 @@ export class PlaylistsComponent implements OnInit {
           this.getAppleMusicPlaylists();
         }
       },
-    });
+    }); */
 
     this.dashboardService.dashboardRefreshSubject$.subscribe({
       next: (val) => {

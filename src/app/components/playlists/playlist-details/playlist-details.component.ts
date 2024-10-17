@@ -245,7 +245,6 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
 
   playSong(song: Song) {
     if (this.source === SourceType.SPOTIFY) {
-      const spotifyPlaylist = this.playlist as SpotifyPlaylistDetails;
       const spotifySong = song as SpotifySong;
       this.spotifySdkService
         .startPlayback([spotifySong.contextUri])
@@ -254,6 +253,8 @@ export class PlaylistDetailsComponent implements OnInit, OnChanges {
           switchMap(() => this.spotifySdkService.preparePlayer())
         )
         .subscribe(() => {});
+    } else if (this.source === SourceType.APPLE_MUSIC) {
+      this.appleMusicService.playSong(song.remoteId);
     }
   }
 

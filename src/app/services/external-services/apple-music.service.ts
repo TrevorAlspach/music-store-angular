@@ -33,8 +33,9 @@ export class AppleMusicService {
   private window!: CustomWindow;
   private document!: CustomDocument;
 
-  public musicKitInit$: Subject<boolean> = new ReplaySubject(1);
+  public musicKitInit$: Subject<boolean> = new Subject();
   public userTokenInit$: Subject<boolean> = new ReplaySubject(1);
+  public newSongPlaying$: Subject<any> = new ReplaySubject(1);
   private musicKitInitialized = false;
 
   constructor(
@@ -158,6 +159,30 @@ export class AppleMusicService {
         })
       ) as Observable<LibraryPlaylistsResponseWrapper>
     ).pipe(map((response) => response.data.data));
+  }
+
+  public async playSong(id: string) {
+    await this.musicKit.setQueue({
+      song: id,
+    });
+    this.newSongPlaying$.next(this.musicKit.nowPlayingItem);
+    //this.musicKit.changeToMediaAtIndex(0);
+  }
+
+  public playTackAtQueueStart() {
+    return defer(() => this.musicKit.changeToMediaAtIndex(0));
+  }
+
+  public async stopPlayer() {
+    await this.musicKit.pause();
+  }
+
+  public getTrackPositionOfPlayingSong() {
+    return this.musicKit.currentPlaybackTime;
+  }
+
+  getTrackDurationOfPlayingSong() {
+    return this.musicKit.currentPlaybackDuration;
   }
 
   public formatImageUrl(url: string, width: number, height: number) {

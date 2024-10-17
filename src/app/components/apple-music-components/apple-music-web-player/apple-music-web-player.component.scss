@@ -1,0 +1,98 @@
+.spotify-logo {
+    width: auto;
+    height: 30px;
+    align-self: center;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.track-section {
+    align-items: center;
+    gap: 5px;
+}
+
+.track-details {
+    min-width: 250px;
+    max-width: 400px;
+    display: flex;
+    //align-items: center;
+    justify-content: left;
+    gap: -5px;
+    flex-direction: column;
+}
+
+.player-album-cover {
+    width: 50px;
+    height: 50px;
+    //height: auto;
+    border-radius: 5px;
+}
+
+.profile-image {
+    border-radius: 5px;
+}
+
+.card-size {
+    height: 80%;
+}
+
+.small-icon-button {
+    width: 30px !important;
+    height: 30px !important;
+    padding: 0px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    &>*[role=img] {
+        width: 24px;
+        height: 24px;
+        font-size: 24px;
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    .mat-mdc-button-touch-target {
+        width: 30px !important;
+        height: 30px !important;
+    }
+}
+
+.track-name {
+    //margin-top: 5px;
+    line-height: 20px;
+    font-size: small;
+    font-weight: 500;
+}
+
+.track-artist {
+    font-size: small;
+    line-height: 20px;
+    //margin-bottom: 5px;
+}
+
+.track-time {
+    font-size: small;
+    line-height: 15px;
+}
+
+.gap-5 {
+    gap: 5px;
+}
+
+.gap-15 {
+    gap: 15px;
+}
+
+.negative-margin-top {
+    margin-top: -5px;
+}
+
+.progress-bar {
+    width: 500px;
+}

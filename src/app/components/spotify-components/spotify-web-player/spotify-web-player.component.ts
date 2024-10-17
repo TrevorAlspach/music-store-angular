@@ -72,42 +72,6 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    /*     this.spotifySdkService.playerReady$
-      .pipe(
-        filter((ready) => {
-          console.log('in filter');
-          this.deviceReady = ready;
-          return ready;
-        }),
-          switchMap(()=>
-            this.spotifySdkService.getCurrentlyPlayingTrack()),
-
-              retry({
-        count: 5,
-        delay: 1000
-      })
-      )
-      .subscribe((playbackState) => {
-        console.log(playbackState)
-        if (playbackState) {
-          console.log('player state is here');
-          this.updateCurrentTrackDetails(
-            playbackState
-          );
-        }
-        console.log('player state is not here');
-
-        this.updatePlayerStateInterval = setInterval(() => {
-          this.spotifySdkService.getPlayerState().subscribe({
-            next: (playbackState) => {
-              if (playbackState) {
-                this.spotifySdkService.playerState$.next(playbackState);
-              }
-            },
-          });
-        }, 1000);
-      }); */
-
     this.spotifySdkService.playerReady$.subscribe((ready) => {
       this.deviceReady = ready;
       this.updatePlayerStateInterval = setInterval(() => {
@@ -161,27 +125,6 @@ export class SpotifyWebPlayerComponent implements OnInit, OnDestroy {
   }
 
   togglePlay() {
-    /*     const webPlayerDeviceId = this.spotifySdkService.getWebPlayerDeviceId();
-    this.spotifySdkService
-      .getPlaybackState()
-      .pipe(
-        switchMap((playbackState) => {
-          if (!playbackState) {
-            return this.spotifySdkService
-              .transferPlayback(webPlayerDeviceId)
-              .pipe(
-                switchMap(() => this.spotifySdkService.getPlaybackState())
-              );
-          } else if (playbackState.device.id !== webPlayerDeviceId) {
-            return this.spotifySdkService.transferPlayback(webPlayerDeviceId);
-          } else {
-            return of(playbackState);
-          }
-        }),
-        switchMap((playback) => {
-          return this.spotifySdkService.getPlayerState();
-        })
-      ) */
     this.spotifySdkService.preparePlayer().subscribe({
       next: (playbackState: Spotify.PlaybackState | null) => {
         if (playbackState) {

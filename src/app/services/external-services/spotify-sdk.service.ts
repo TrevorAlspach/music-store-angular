@@ -45,6 +45,8 @@ export class SpotifySdkService {
   public playerState$: Subject<Spotify.PlaybackState> = new Subject();
   public playerReady$: Subject<boolean> = new BehaviorSubject(false);
 
+  public newSongPlaying$: Subject<any> = new Subject();
+
   deviceId!: string;
 
   sdk!: SpotifyApi;
@@ -221,7 +223,12 @@ export class SpotifySdkService {
     //this.player.resume();
   }
 
+  public stopPlayer() {
+    this.player.pause();
+  }
+
   public preparePlayer(contextUri?: string) {
+    this.newSongPlaying$.next(true);
     const webPlayerDeviceId = this.getWebPlayerDeviceId();
     return this.getPlaybackState().pipe(
       switchMap((playbackState) => {

@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-player/spotify-web-player.component';
+import { MusicPlayerComponent } from '../music-player/music-player.component';
 
 @Component({
   selector: 'app-home',
@@ -36,6 +37,7 @@ import { SpotifyWebPlayerComponent } from '../spotify-components/spotify-web-pla
     MatListModule,
     MatTooltipModule,
     SpotifyWebPlayerComponent,
+    MusicPlayerComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -62,7 +64,7 @@ export class HomeComponent {
     private changeDetectorRefs: ChangeDetectorRef
   ) {}
 
-  toggleSignal(){
+  toggleSignal() {
     this.collapsed.set(!this.collapsed());
     this.changeDetectorRefs.detectChanges();
   }
