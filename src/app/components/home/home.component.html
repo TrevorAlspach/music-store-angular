@@ -47,9 +47,9 @@
 </div>
 
 <mat-menu #menu="matMenu" xPosition="before">
-  <button mat-menu-item>
+  <button mat-menu-item (click)="navigateToAccount()">
     <mat-icon>settings</mat-icon>
-    <span>Settings</span>
+    <span>Account</span>
   </button>
   <mat-divider></mat-divider>
   <button mat-menu-item (click)="logout()">

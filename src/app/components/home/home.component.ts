@@ -72,4 +72,8 @@ export class HomeComponent {
   logout() {
     this.authService.logout();
   }
+
+  navigateToAccount() {
+    this.router.navigate(['/home/account']);
+  }
 }
