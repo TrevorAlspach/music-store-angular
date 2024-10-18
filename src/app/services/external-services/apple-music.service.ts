@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../syncify/auth.service';
@@ -13,12 +13,14 @@ import { UserService } from '../syncify/user.service';
 import {
   catchError,
   defer,
+  delay,
   delayWhen,
   expand,
   filter,
   forkJoin,
   from,
   map,
+  mergeMap,
   Observable,
   of,
   reduce,
@@ -31,16 +33,20 @@ import {
   tap,
   throwError,
   timer,
+  toArray,
 } from 'rxjs';
 import { TokenResponse } from '../../models/spotify-api.model';
 import {
   AMSearchResults,
   AMTrack,
   AMTracks,
+  CreatedPlaylistResponseWrapper,
   ExpirationTimestamp,
   LibraryPlaylistsResponse,
   LibraryPlaylistsResponseWrapper,
   PlaylistSongsResponse,
+  PlaylistToCreate,
+  TrackNotFoundError,
 } from '../../models/apple-music.model';
 import { Song } from '../../models/music.model';
 import { SearchResults } from '@spotify/web-api-ts-sdk';
@@ -211,39 +217,97 @@ export class AppleMusicService {
     );
   }
 
+  /**
+   * This code does the following:
+   * 1. Create search request for each track in songs to find it in the apple music catalog.
+   * 2. Submits search requests in batches of 10 every 500ms to Apple Music API, until all are complete. Each request has retries in place if rate limit is hit
+   * 3. Results are accumulated into a final array of apple music tracks. This is then provided in playlist creation request
+   */
   public createPlaylist(name: string, description: string, songs: Song[]) {
-    const searchRequests: Observable<AMTrack | null>[] = [];
+    const tracksNotFound: TrackNotFoundError[] = [];
+    const searchRequests: Observable<AMTrack | TrackNotFoundError>[] = [];
     for (let song of songs) {
       searchRequests.push(
         this.searchCatalogForSong(song.name, song.artist, song.album)
       );
     }
-    return forkJoin(searchRequests);
+
+    return from(searchRequests)
+      .pipe(
+        mergeMap((searchRequest, index) => {
+          return of(searchRequest).pipe(
+            delay(500),
+            switchMap((request) => request)
+          );
+        }, 10),
+        reduce(
+          (acc, track) => {
+            if ((track as TrackNotFoundError).isError) {
+              tracksNotFound.push(track as TrackNotFoundError); // Accumulate not found tracks in a separate array
+            } else {
+              acc.push(track as AMTrack); // Accumulate valid tracks in the accumulator
+            }
+            return acc;
+          },
+          [] as AMTrack[] // Initial accumulator for valid tracks
+        )
+      )
+      .pipe(
+        switchMap((tracks) => {
+          return this.http.post(
+            'https://api.music.apple.com/v1/me/library/playlists',
+            <PlaylistToCreate>{
+              relationships: {
+                tracks: {
+                  data: tracks.map((track: AMTrack) => {
+                    return {
+                      id: track.id,
+                      type: 'songs',
+                    };
+                  }),
+                },
+              },
+              attributes: {
+                name: name,
+                description: description,
+              },
+            },
+            {
+              headers: new HttpHeaders({
+                Authorization: `Bearer ${this.musicKit.developerToken}`,
+                'Media-User-Token': `${this.musicKit.musicUserToken}`,
+              }),
+            }
+          ) as Observable<CreatedPlaylistResponseWrapper>;
+        })
+      );
   }
 
   public searchCatalogForSong(
     title: string,
     artistName: string,
     albumName: string
-  ): Observable<AMTrack | null> {
-    //return defer(() =>
-    return from(
-      this.musicKit.api.music('v1/catalog/us/search', {
-        term: title,
-        limit: 10,
-        types: ['songs'],
+  ): Observable<AMTrack | TrackNotFoundError> {
+    return this.http
+      .get(`https://api.music.apple.com/v1/catalog/us/search`, {
+        params: {
+          term: title,
+          limit: 10,
+          types: ['songs'],
+        },
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${this.musicKit.developerToken}`,
+          'Media-User-Token': `${this.musicKit.musicUserToken}`,
+        }),
       })
-    )
       .pipe(
         retry({
           count: 5,
           delay: (error, retryCount) => {
-            console.log(error);
-            console.log('THIS IS THE ERROR FROM 429');
-            console.log(
-              `Rate limit hit. Retrying in 10 seconds... (${retryCount}/5)`
+            console.warn(
+              `Rate limit hit. Retrying in 5 seconds... (${retryCount}/5)`
             );
-            return timer(10000);
+            return timer(5000);
           },
         })
       ) /* as Observable<AMSearchResults> */
@@ -257,11 +321,17 @@ export class AppleMusicService {
               return result;
             }
           }
-          return null;
+          if (searchResults.results.songs.data.length === 0) {
+            return <TrackNotFoundError>{
+              name: title,
+              artist: artistName,
+              album: albumName,
+              isError: true,
+            };
+          }
+          return searchResults.results.songs.data[0];
         })
-        //filter((result) => result !== null)
       );
-    // );
   }
 
   public async playSong(id: string) {
@@ -269,7 +339,6 @@ export class AppleMusicService {
       song: id,
     });
     this.newSongPlaying$.next(this.musicKit.nowPlayingItem);
-    //this.musicKit.changeToMediaAtIndex(0);
   }
 
   public playTackAtQueueStart() {
@@ -290,5 +359,9 @@ export class AppleMusicService {
 
   public formatImageUrl(url: string, width: number, height: number) {
     return url.replace('{w}x{h}', `${width}x${height}`);
+  }
+
+  public isMusicKitInitialized() {
+    return this.musicKitInitialized;
   }
 }

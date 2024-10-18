@@ -359,4 +359,8 @@ export class SpotifySdkService {
   public getWebPlayerDeviceId() {
     return this.deviceId;
   }
+
+  public isSdkInitialized() {
+    return this.sdkInitialized;
+  }
 }

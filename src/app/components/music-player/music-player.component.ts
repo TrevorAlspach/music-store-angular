@@ -28,12 +28,18 @@ export class MusicPlayerComponent implements OnInit {
 
   ngOnInit(): void {
     this.appleMusicService.newSongPlaying$.subscribe(() => {
-      this.spotifySdkService.stopPlayer();
+      if (this.spotifySdkService.isSdkInitialized()) {
+        this.spotifySdkService.stopPlayer();
+      }
+
       this.activeService = SourceType.APPLE_MUSIC;
     });
 
     this.spotifySdkService.newSongPlaying$.subscribe(() => {
-      this.appleMusicService.stopPlayer();
+      if (this.appleMusicService.isMusicKitInitialized()) {
+        this.appleMusicService.stopPlayer();
+      }
+
       this.activeService = SourceType.SPOTIFY;
     });
   }

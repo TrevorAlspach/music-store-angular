@@ -44,7 +44,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PlaylistDetailsComponent } from '../playlists/playlist-details/playlist-details.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppleMusicService } from '../../services/external-services/apple-music.service';
-import { AMTrack } from '../../models/apple-music.model';
+import {
+  AMTrack,
+  CreatedPlaylistResponseWrapper,
+  PlaylistToCreate,
+} from '../../models/apple-music.model';
 
 @Component({
   selector: 'app-transfer-playlists',
@@ -205,7 +209,8 @@ export class TransferPlaylistsComponent implements OnInit, OnDestroy {
       source === SourceType.SYNCIFY
     ) {
       this.transferFromSyncifyToAppleMusic(playlistToTransfer).subscribe(
-        (res) => {
+        (createdPlaylist: CreatedPlaylistResponseWrapper) => {
+          console.log(createdPlaylist);
           this.transferComplete = true;
         }
       );

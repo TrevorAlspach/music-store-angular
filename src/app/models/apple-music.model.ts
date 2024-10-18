@@ -14,9 +14,24 @@ export interface SongSearchResults {
 
 export interface SongSearchResult {}
 
+export interface TrackNotFoundError {
+  name: string;
+  artist: string;
+  album: string;
+  isError: boolean;
+}
+
 export interface PlaylistToCreate {
   attributes: PlaylistCreationAttributes;
   relationships: PlaylistCreationRelationships;
+}
+
+export interface CreatedPlaylistResponseWrapper {
+  data: CreatedPlaylistResponse;
+}
+
+export interface CreatedPlaylistResponse {
+  data: LibraryPlaylist;
 }
 
 export interface PlaylistCreationAttributes {

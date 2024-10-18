@@ -1,5 +1,8 @@
 <h1>Transfer Playlist</h1>
-<p>Transfer your playlists to another service. Select Source and Destination services to begin</p>
+<p>
+  Transfer your playlists to another service. Select Source and Destination
+  services to begin
+</p>
 
 <mat-stepper
   labelPosition="bottom"
@@ -8,7 +11,9 @@
   [linear]="true"
 >
   <mat-step>
-    <ng-template matStepLabel><!-- Select Source and Destination --></ng-template>
+    <ng-template matStepLabel
+      ><!-- Select Source and Destination --></ng-template
+    >
     <div>
       <h1 class="title-center">Select Source and Destination</h1>
       <div class="flex-container-source">
@@ -52,7 +57,12 @@
           Confirm Selection
         </button>
       </div>
-      <app-playlist-details *ngIf="this.selectedPlaylist" [id]="this.selectedPlaylist.id" [source]="selectedPlaylist.source" [readonly]="true"></app-playlist-details>
+      <app-playlist-details
+        *ngIf="this.selectedPlaylist"
+        [id]="this.selectedPlaylist.id"
+        [source]="selectedPlaylist.source"
+        [readonly]="true"
+      ></app-playlist-details>
     </div>
   </mat-step>
   <mat-step>
@@ -61,44 +71,74 @@
     >
     <button mat-icon-button matStepperPrevious>
       <mat-icon>arrow_backward</mat-icon>
-      
     </button>
-    
-    <div style="justify-content: center; display: flex;">
+
+    <div style="justify-content: center; display: flex">
       <form
         [formGroup]="this.createDestinationPlaylistFormGroup"
         (ngSubmit)="initiateTransfer()"
       >
-        
         <div class="transfer-summary-col">
           <div class="transfer-summary" *ngIf="this.selectedPlaylist">
-             <div class="playlist-info">
-    <img [src]="this.selectedPlaylist.imageUrl" class="playlist-cover-image" />
-    <div class="playlist-text">
-      <div class="flex-container-row" style="width:100%">
-      <h1>{{ this.selectedPlaylist.name }}</h1>
-      <img *ngIf="this.selectedPlaylist.source === SourceType.SPOTIFY" src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="logo-source" [matTooltip]="'Spotify Playlist'">
-      <img *ngIf="this.selectedPlaylist.source === SourceType.APPLE_MUSIC" src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="logo-source" [matTooltip]="'Apple Music Playlist'"> 
-      <img *ngIf="this.selectedPlaylist.source === SourceType.SYNCIFY" src="../../../assets/syncify.png" class="logo-source" [matTooltip]="'Syncify Playlist'">  
-      <img *ngIf="this.selectedPlaylist.source === SourceType.JSON" src="../../../assets/syncify.png" class="logo-source" [matTooltip]="'JSON'">
-      <img *ngIf="this.selectedPlaylist.source === SourceType.CSV" src="../../../assets/syncify.png" class="logo-source" [matTooltip]="'CSV'">
-      </div>
-      <p>{{ this.selectedPlaylist.description }}</p>
-      <p>{{ this.selectedPlaylist.songCount }}{{ " songs" }}</p>
-
-    </div>
-  </div>
+            <div class="playlist-info">
+              <img
+                [src]="this.selectedPlaylist.imageUrl"
+                class="playlist-cover-image"
+              />
+              <div class="playlist-text">
+                <div class="flex-container-row" style="width: 100%">
+                  <h1>{{ this.selectedPlaylist.name }}</h1>
+                  <img
+                    *ngIf="this.selectedPlaylist.source === SourceType.SPOTIFY"
+                    src="../../../assets/Spotify_Primary_Logo_RGB_Green.png"
+                    class="logo-source"
+                    [matTooltip]="'Spotify Playlist'"
+                  />
+                  <img
+                    *ngIf="
+                      this.selectedPlaylist.source === SourceType.APPLE_MUSIC
+                    "
+                    src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg"
+                    class="logo-source"
+                    [matTooltip]="'Apple Music Playlist'"
+                  />
+                  <img
+                    *ngIf="this.selectedPlaylist.source === SourceType.SYNCIFY"
+                    src="../../../assets/syncify.png"
+                    class="logo-source"
+                    [matTooltip]="'Syncify Playlist'"
+                  />
+                  <img
+                    *ngIf="this.selectedPlaylist.source === SourceType.JSON"
+                    src="../../../assets/syncify.png"
+                    class="logo-source"
+                    [matTooltip]="'JSON'"
+                  />
+                  <img
+                    *ngIf="this.selectedPlaylist.source === SourceType.CSV"
+                    src="../../../assets/syncify.png"
+                    class="logo-source"
+                    [matTooltip]="'CSV'"
+                  />
+                </div>
+                <p>{{ this.selectedPlaylist.description }}</p>
+                <p>{{ this.selectedPlaylist.songCount }}{{ " songs" }}</p>
+              </div>
+            </div>
             <mat-icon>arrow_forward</mat-icon>
             @if(this.selectedDestination === SourceType.SPOTIFY){
-              <img src="../../../assets/Spotify_Primary_Logo_RGB_Green.png" class="logo-destination"> 
+            <img
+              src="../../../assets/Spotify_Primary_Logo_RGB_Green.png"
+              class="logo-destination"
+            />
+            } @if(this.selectedDestination === SourceType.APPLE_MUSIC){
+            <img
+              src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg"
+              class="logo-destination"
+            />
+            } @if(this.selectedDestination === SourceType.SYNCIFY){
+            <img src="../../../assets/syncify.png" class="logo-destination" />
             }
-            @if(this.selectedDestination === SourceType.APPLE_MUSIC){
-              <img src="../../../assets/Apple_Music_Icon_RGB_sm_073120.svg" class="logo-destination">
-            }
-            @if(this.selectedDestination === SourceType.SYNCIFY){
-              <img src="../../../assets/syncify.png" class="logo-destination">
-            }
-            
           </div>
 
           <div class="transfer-dialog-form">
@@ -112,33 +152,48 @@
               <input matInput formControlName="description" />
             </mat-form-field>
             <button
-          mat-raised-button
-          type="submit"
-          color="primary"
-          matStepperNext
-          [disabled]="this.createDestinationPlaylistFormGroup.invalid === true"
-          matStepperNext
-        >
-          Begin Transfer
-        </button>
-        <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+              mat-raised-button
+              type="submit"
+              color="primary"
+              matStepperNext
+              [disabled]="
+                this.createDestinationPlaylistFormGroup.invalid === true
+              "
+              matStepperNext
+            >
+              Begin Transfer
+            </button>
+            <!-- <button mat-button mat-dialog-close>Cancel</button> -->
           </div>
         </div>
-         
       </form>
     </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel
-      ><!-- Transfer --></ng-template
-    >
+    <ng-template matStepLabel><!-- Transfer --></ng-template>
     <div *ngIf="!this.transferComplete">
-    <h2>Transfer In Progress</h2>
-    <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
-  </div>
-    <div *ngIf="this.transferComplete">
-      <h2>Transfer Complete</h2>
+      <h2>Transfer In Progress</h2>
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
-
+    <div
+      *ngIf="this.transferComplete"
+      class="flex-row justify-center align-center"
+    >
+      <mat-card style="width: 50%">
+        <mat-card-content>
+          <div class="flex-row gap-20">
+            <h2>Transfer Completed</h2>
+            <mat-icon style="color: green; padding-top: 1px"
+              >check_circle</mat-icon
+            >
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button>
+            {{ "View in " }}{{ this.selectedDestination }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   </mat-step>
 </mat-stepper>

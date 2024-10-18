@@ -80,6 +80,10 @@ export class DashboardComponent implements OnInit {
             console.log('in the int of am service');
             if (this.appleMusicService.alreadyAuthorized() /* && !expired */) {
               console.log('User is already authorized with Apple Music');
+              localStorage.setItem(
+                'appleMusicUserToken',
+                this.appleMusicService.getMusicKitInstance().musicUserToken
+              );
               return of(
                 this.appleMusicService.getMusicKitInstance().musicUserToken
               );
