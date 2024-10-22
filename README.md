@@ -21,9 +21,11 @@ cd music-store-angular
 ```
 ### Install dependencies
 ```bash
-npm ci
+npm ci 
 ```
+
 ###Running the app (Development)
+
 By default, the app runs in development mode and expects the Spring Boot backend at localhost:8080.
 Start the development server:
 ```bash
