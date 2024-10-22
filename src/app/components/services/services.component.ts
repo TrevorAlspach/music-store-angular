@@ -15,6 +15,8 @@ import { SourceType } from '../../models/music.model';
 import { ServiceComponent } from './service/service.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConnectServiceDialogComponent } from './connect-service-dialog/connect-service-dialog.component';
+import { UserService } from '../../services/syncify/user.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-services',
@@ -35,7 +37,11 @@ import { ConnectServiceDialogComponent } from './connect-service-dialog/connect-
   styleUrl: './services.component.scss',
 })
 export class ServicesComponent implements OnInit {
-  constructor(private authService: AuthService, private matDialog: MatDialog) {}
+  constructor(
+    private authService: AuthService,
+    private matDialog: MatDialog,
+    private userService: UserService
+  ) {}
 
   readonly addExternalServiceListItem = {
     externalService: SourceType.NONE,
@@ -52,8 +58,8 @@ export class ServicesComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.authService
-      .connectedServices()
+    this.userService.loggedInUser$
+      .pipe(switchMap(() => this.authService.connectedServices()))
       .subscribe((connectedServices: ConnectedService[]) => {
         for (let service of connectedServices) {
           this.connectedServices.push({

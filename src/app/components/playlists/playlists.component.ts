@@ -32,6 +32,7 @@ import {
   LibraryPlaylistsResponse,
   LibraryPlaylistsResponseWrapper,
 } from '../../models/apple-music.model';
+import { UserService } from '../../services/syncify/user.service';
 
 @Component({
   selector: 'app-playlists',
@@ -113,7 +114,8 @@ export class PlaylistsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dashboardService: DashboardService,
     private spotifySdkService: SpotifySdkService,
-    private appleMusicService: AppleMusicService
+    private appleMusicService: AppleMusicService,
+    private userService: UserService
   ) {}
   ngOnInit(): void {
     this.loadPlaylists();
@@ -163,6 +165,7 @@ export class PlaylistsComponent implements OnInit {
 
   getSpotifyPlaylists() {
     this.playlistsLoading = true;
+
     this.spotifySdkService.sdkReady$
       .pipe(
         switchMap((ready) => {
@@ -251,17 +254,21 @@ export class PlaylistsComponent implements OnInit {
 
   getSyncifyPlaylists() {
     this.playlistsLoading = true;
-    this.playlistsService.fetchAllPlaylistsForUser().subscribe({
-      next: (res) => {
-        this.playlistsLoading = false;
-        this.playlists = res;
-      },
-      error: (err) => {
-        this.playlistsLoading = false;
-        this.playlistsLoadError = true;
-        this.playlists = [];
-      },
-    });
+    this.userService.loggedInUser$
+      .pipe(
+        switchMap((user) => this.playlistsService.fetchAllPlaylistsForUser())
+      )
+      .subscribe({
+        next: (res) => {
+          this.playlistsLoading = false;
+          this.playlists = res;
+        },
+        error: (err) => {
+          this.playlistsLoading = false;
+          this.playlistsLoadError = true;
+          this.playlists = [];
+        },
+      });
   }
 
   spotifyCarouselBack() {
